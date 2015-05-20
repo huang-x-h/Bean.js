@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "browserify ./src/core.js | uglifyjs -mc > static/bundle.js",
-    "watch": "watchify ./src/core.js -o ./build/bundle.js -dv",
+    "build": "browserify ./src/bundle.js | uglifyjs -mc > static/bundle.js",
+    "watch": "watchify ./src/bundle.js -o ./build/bundle.js -dv",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
