@@ -19,6 +19,7 @@
   "dependencies": {
     "bootstrap": "^3.3.4",
     "handlebars": "^3.0.3",
+    "jquery": "^1.11.3",
     "underscore": "^1.8.3"
   },
   "browser": {
