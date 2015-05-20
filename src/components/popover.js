@@ -6,7 +6,7 @@ var $ = require('jquery');
 var plugin = require('../plugin');
 var Tooltips = require('./tooltip');
 
-module.exports = plugin('popover', $.extend({}, Tooltips.prototype, {
+plugin('popover', $.extend({}, Tooltips.prototype, {
     options: {
         placement: 'bottom',
         trigger: 'click',
@@ -37,7 +37,7 @@ module.exports = plugin('popover', $.extend({}, Tooltips.prototype, {
     },
 
     getContent: function () {
-        var $e = this.element;
+        var $e = this.$element;
         var o = this.options;
 
         return $e.attr('data-content')
