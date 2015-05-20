@@ -16,6 +16,7 @@ module.exports = Class.extend({
         this.options = $.extend({}, this.options, this.$element.data(), options);
 
         this._create();
+        this.delegateEvents();
     },
 
     _create: $.noop,
