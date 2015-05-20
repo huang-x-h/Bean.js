@@ -8,7 +8,7 @@ var TRANSITION_DURATION = 150;
 
 module.exports = plugin('tab', {
     show: function () {
-        var $this = this.element
+        var $this = this.$element
         var $ul = $this.closest('ul:not(.dropdown-menu)')
         var selector = $this.data('target')
 
