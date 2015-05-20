@@ -8,7 +8,6 @@ var ztesoft = require('../../core');
 var TRANSITION_DURATION = 150;
 var dismiss = '[data-dismiss="alert"]';
 var template = require('./alert.hbs');
-require('../../transition');
 
 plugin('alert', {
     options: {
@@ -20,7 +19,7 @@ plugin('alert', {
         if (this.options.dismissible)
             this.$element.on('click', dismiss, $.proxy(this.close, this));
         else
-            this.timer = setTimeout($.proxy(this.close, this), this.options.dismissible);
+            setTimeout($.proxy(this.close, this), this.options.duration);
     },
 
     close: function (e) {
@@ -42,32 +41,36 @@ plugin('alert', {
         }
 
         $.support.transition && $el.hasClass('fade') ?
-            $el.one('bsTransitionEnd', removeElement)
+            $el.one('bsTransitionEnd', $.proxy(removeElement, this))
                 .emulateTransitionEnd(TRANSITION_DURATION) :
             removeElement()
     }
 });
 
+var $toast = $('<div class="alert-toast"></div>').appendTo(document.body);
+
 ztesoft.warn = function (message) {
-    var $alert = $(template({
+    $(template({
         type: 'alert-warning',
         message: message,
         dismissible: false
-    })).alert().appendTo(document.body);
+    })).alert().appendTo($toast);
 };
 
 ztesoft.info = function (message) {
-    var $alert = $(template({
+    $(template({
         type: 'alert-info',
         message: message,
         dismissible: false
-    })).alert().appendTo(document.body);
+    })).alert().appendTo($toast);
 };
 
 ztesoft.error = function (message) {
-    var $alert = $(template({
-        type: 'alert-error',
+    $(template({
+        type: 'alert-danger',
         message: message,
         dismissible: true
-    })).alert().appendTo(document.body);
+    })).alert({
+        dismissible: true
+    }).appendTo($toast);
 };
