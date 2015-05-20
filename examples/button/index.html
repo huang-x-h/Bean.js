@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta charset="UTF-8">
+        <title>Button</title>
+        <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    </head>
+    <body>
+        <button type="button" id="myButton" data-toggle="button" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+            Loading state
+        </button>
+        <script src="../../build/bundle.js"></script>
+        <script>
+            $('#myButton').button();
+
+            $('#myButton').on('click', function () {
+                var $btn = $(this).button('setState', 'loading');
+
+                setTimeout(function() {
+                    // business logic...
+                    $btn.button('setState', 'reset')
+                }, 1000);
+            })
+        </script>
+    </body>
+</html>
