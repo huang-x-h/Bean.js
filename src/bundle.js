@@ -10,3 +10,4 @@ require('./components/popover');
 require('./components/collapse');
 require('./components/modal');
 require('./components/alert');
+require('./components/dropdown');

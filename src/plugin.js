@@ -37,8 +37,6 @@ function plugin(widgetName, prototype) {
     var old = $.fn[widgetName];
 
     $.fn[widgetName] = Plugin;
-    $.fn[widgetName].Constructor = widgetClass;
-
 
     // Widget NO CONFLICT
     // ====================
