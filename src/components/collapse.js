@@ -4,7 +4,6 @@
 var $ = require('jquery');
 var plugin = require('../plugin');
 var TRANSITION_DURATION = 350;
-require('../transition');
 
 plugin('collapse', {
     options: {

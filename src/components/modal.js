@@ -6,7 +6,6 @@ var $ = require('jquery');
 var plugin = require('../plugin');
 var TRANSITION_DURATION = 300
 var BACKDROP_TRANSITION_DURATION = 150
-require('../transition');
 
 plugin('modal', {
     options: {
