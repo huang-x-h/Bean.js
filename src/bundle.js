@@ -11,3 +11,4 @@ require('./components/collapse');
 require('./components/modal');
 require('./components/alert');
 require('./components/dropdown');
+require('./components/pagination');
