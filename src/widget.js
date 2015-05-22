@@ -47,26 +47,8 @@ module.exports = Class.extend({
         this.$element.off(eventName + '.' + this.widgetName, selector, listener);
     },
 
-    trigger: function (type, event, data) {
-        var prop, orig,
-            callback = this.options[type];
-
-        data = data || {};
-        event = $.Event(event);
-        event.type = (type + '.' + this.widgetName).toLowerCase();
-        event.target = this.$element[0];
-
-        // copy original event properties over to the new event
-        orig = event.originalEvent;
-        if (orig) {
-            for (prop in orig) {
-                if (!( prop in event )) {
-                    event[prop] = orig[prop];
-                }
-            }
-        }
-
-        this.$element.trigger(event, data);
+    trigger: function (type, data) {
+        this.$element.trigger((type + '.' + this.widgetName).toLowerCase(), data);
     },
 
     destroy: function () {
