@@ -127,6 +127,6 @@ plugin('pagination', {
     },
 
     dispatchPageChange: function () {
-        this.trigger('pageChange', this.pageIndex);
+        this.trigger('pagechange', this.pageIndex);
     }
 });
