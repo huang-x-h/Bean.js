@@ -13,7 +13,10 @@
   "license": "MIT",
   "devDependencies": {
     "browserify": "^10.2.0",
+    "gulp-autoprefixer": "^2.3.0",
+    "gulp-sass": "^2.0.1",
     "hbsfy": "^2.2.1",
+    "require-dir": "^0.3.0",
     "uglify-js": "^2.4.22",
     "watchify": "^3.2.1"
   },
