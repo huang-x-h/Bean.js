@@ -2,6 +2,8 @@
  * Created by huangxinghui on 2015/5/20.
  */
 
+require('./utils/ajax');
+
 require('./transition');
 require('./components/button');
 require('./components/tab');
