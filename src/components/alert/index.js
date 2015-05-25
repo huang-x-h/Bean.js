@@ -47,30 +47,38 @@ plugin('alert', {
     }
 });
 
-var $toast = $('<div class="alert-toast"></div>').appendTo(document.body);
+var $toast;
+
+function appendToToast($el) {
+    if (!$toast) {
+        $toast = $('<div class="alert-toast"></div>').appendTo(document.body);
+    }
+
+    $toast.append($el);
+}
 
 ztesoft.warn = function (message) {
-    $(template({
+    appendToToast($(template({
         type: 'alert-warning',
         message: message,
         dismissible: false
-    })).alert().appendTo($toast);
+    })).alert());
 };
 
 ztesoft.info = function (message) {
-    $(template({
+    appendToToast($(template({
         type: 'alert-info',
         message: message,
         dismissible: false
-    })).alert().appendTo($toast);
+    })).alert());
 };
 
 ztesoft.error = function (message) {
-    $(template({
+    appendToToast($(template({
         type: 'alert-danger',
         message: message,
         dismissible: true
     })).alert({
         dismissible: true
-    }).appendTo($toast);
+    }));
 };
