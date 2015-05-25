@@ -13,6 +13,8 @@
         <script>
             ztesoft.ajax('https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js', {
                 type: 'GET'
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                ztesoft.error('loading error');
             });
         </script>
     </body>
