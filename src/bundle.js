@@ -12,3 +12,4 @@ require('./components/modal');
 require('./components/alert');
 require('./components/dropdown');
 require('./components/pagination');
+require('./components/loading');
