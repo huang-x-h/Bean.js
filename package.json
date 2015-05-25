@@ -6,7 +6,6 @@
   "scripts": {
     "build": "browserify ./src/bundle.js | uglifyjs -mc > static/bundle.js",
     "watch": "watchify ./src/bundle.js -o ./build/bundle.js -dv",
-    "scss": "scss -C ./scss/main.scss ./build/main.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
