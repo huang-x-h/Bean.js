@@ -7,7 +7,7 @@ var plugin = require('../../plugin');
 var template = require('./loading.hbs');
 
 plugin('loading', {
-    _create: function () {
+    start: function () {
         this.$element.append(template);
     },
 
