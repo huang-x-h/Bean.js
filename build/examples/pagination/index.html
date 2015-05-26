@@ -5,13 +5,13 @@
               content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta charset="UTF-8">
         <title>Pagination</title>
-        <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="../../bootstrapcss/bootstrap.css">
     </head>
     <body>
         <nav data-toggle="pagination" data-total-size="90" data-page-size="5">
         </nav>
         <ul id="message"></ul>
-        <script src="../../build/bundle.js"></script>
+        <script src="../../bundle.js"></script>
         <script>
             $('[data-toggle="pagination"]').pagination()
             $('[data-toggle="pagination"]').on('pagechange.pagination', function(e, pageIndex) {
