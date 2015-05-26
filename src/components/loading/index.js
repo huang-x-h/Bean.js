@@ -7,11 +7,21 @@ var plugin = require('../../plugin');
 var template = require('./loading.hbs');
 
 plugin('loading', {
-    start: function () {
-        this.$element.append(template);
+    options: {
+        customClass: null
+    },
+
+    _create: function () {
+        this.$loading = $(template({
+            customClass: this.options.customClass
+        }));
+        this.$element.append(this.$loading);
     },
 
     finish: function () {
-        this.$element.find('.loading-screen').remove();
+        this.$loading.remove();
+
+        // remove widget
+        this.destroy();
     }
 });
