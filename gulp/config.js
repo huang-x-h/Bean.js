@@ -1,4 +1,4 @@
-var dest = "./build";
+var dest = './build';
 var src = './src';
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
         }
     },
     sass: {
-        src: './scss/mian.scss',
+        src: './scss/main.scss',
         dest: dest
     }
 };
