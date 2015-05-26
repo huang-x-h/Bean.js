@@ -3,6 +3,7 @@
  */
 
 require('./utils/ajax');
+require('./utils/block');
 
 require('./transition');
 require('./components/button');

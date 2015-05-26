@@ -5,7 +5,11 @@
   right: 0;
   top: 0;
   z-index: 1000000;
-  background-color: #FFF;
+  background-color: #fff;
+
+  &.pg-blocking {
+    opacity: 0;
+  }
 }
 
 .loading-center-outer {

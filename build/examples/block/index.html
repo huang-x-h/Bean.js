@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta charset="UTF-8">
+        <title>Block</title>
+        <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../../main.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">Panel heading without title</div>
+                <div class="panel-body">
+                    Panel content
+                    <button type="button" onclick="clickHandler()">Block</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="../../bundle.js"></script>
+        <script>
+            function clickHandler() {
+                ztesoft.block();
+
+                setTimeout(function () {
+                    ztesoft.unblock();
+                }, 3000);
+            }
+        </script>
+    </body>
+</html>
