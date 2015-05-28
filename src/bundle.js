@@ -16,3 +16,4 @@ require('./components/alert');
 require('./components/dropdown');
 require('./components/pagination');
 require('./components/loading');
+require('./components/slideout');
