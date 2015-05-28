@@ -17,6 +17,10 @@
                 background-color: #1D1F20;
             }
 
+            #rightMenu {
+                right: 0;
+            }
+
             .slideout-panel {
                 background-color: #fff;
                 height: 100%;
@@ -24,26 +28,37 @@
         </style>
     </head>
     <body>
-        <nav id="menu" class="slideout-menu menu">
+        <nav id="leftMenu" class="slideout-menu menu">
             <ul class="nav nav-pills nav-stacked">
-                <li><a href="javascript:;">Home</a></li>
-                <li><a href="javascript:;">Home</a></li>
-                <li><a href="javascript:;">Home</a></li>
+                <li><a href="javascript:;">Left</a></li>
+                <li><a href="javascript:;">Left</a></li>
+                <li><a href="javascript:;">Left</a></li>
             </ul>
         </nav>
 
         <div id="panel" class="slideout-panel">
-            <h1>Hello, world!</h1>
-            <p>...</p>
-            <p><a class="btn btn-primary btn-lg" href="#" role="button">Show/Hide Menu</a></p>
+            <button type="button" class="btn btn-primary js-left">Left Menu</button>
+            <button type="button" class="btn btn-primary pull-right js-right">Right Menu</button>
         </div>
+
+        <nav id="rightMenu" class="slideout-menu menu">
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="javascript:;">Right</a></li>
+                <li><a href="javascript:;">Right</a></li>
+                <li><a href="javascript:;">Right</a></li>
+            </ul>
+        </nav>
 
         <script src="../../bundle.js"></script>
         <script>
-            $('#menu').slideout({panel: $('#panel')});
+            $('#leftMenu').slideout({panel: $('#panel')});
+            $('#rightMenu').slideout({panel: $('#panel'), side: 'right'});
 
-            $('.btn').on('click', function () {
-                $('#menu').slideout('toggle');
+            $('.js-left').on('click', function () {
+                $('#leftMenu').slideout('toggle');
+            });
+            $('.js-right').on('click', function () {
+                $('#rightMenu').slideout('toggle');
             });
         </script>
     </body>

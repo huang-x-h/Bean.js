@@ -9,8 +9,8 @@ var $body = $(document.body);
 
 plugin('slideout', {
     options: {
-        fx: 'ease',
-        padding: 256
+        padding: 256,
+        side: 'left'
     },
 
     _create: function () {
@@ -23,7 +23,7 @@ plugin('slideout', {
 
         // Sets options
         this._translateTo = this.options.padding;
-        this._orientation = this.options.side === 'right' ? -1 : 1;
+        this._orientation = this.options.side === 'left' ? 1 : -1;
         this._translateTo *= this._orientation;
     },
 
