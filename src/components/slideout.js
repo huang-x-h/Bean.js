@@ -4,7 +4,7 @@
 
 var $ = require('jquery');
 var plugin = require('../plugin');
-var TRANSITION_DURATION = 150;
+var TRANSITION_DURATION = 500;
 var $body = $(document.body);
 
 plugin('slideout', {
@@ -17,15 +17,12 @@ plugin('slideout', {
         // Sets default values
         this._opening = false;
         this._opened = false;
-        this._preventOpen = false;
 
         // Sets panel
         this.panel = this.options.panel;
 
         // Sets options
-        this._fx = this.options.fx;
-        this._duration = this.options.duration;
-        this._padding = this._translateTo = this.options.padding;
+        this._translateTo = this.options.padding;
         this._orientation = this.options.side === 'right' ? -1 : 1;
         this._translateTo *= this._orientation;
     },
@@ -41,6 +38,7 @@ plugin('slideout', {
 
         function complete() {
             that.panel.removeClass('animate');
+            $body.on('click.slideout', $.proxy(that._bodyClick, that));
         }
         this.$element.one('bsTransitionEnd', complete)
             .emulateTransitionEnd(TRANSITION_DURATION);
@@ -79,5 +77,12 @@ plugin('slideout', {
 
     _translateXTo: function (translateX) {
         this.panel[0].style['-webkit-transform'] = this.panel[0].style.transform = 'translate3d(' + translateX + 'px, 0, 0)';
+    },
+
+    _bodyClick: function (e) {
+        if (e.target === this.panel[0]) {
+            this.close();
+            $body.off('.slideout');
+        }
     }
 });
