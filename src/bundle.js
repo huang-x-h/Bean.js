@@ -17,3 +17,5 @@ require('./components/dropdown');
 require('./components/pagination');
 require('./components/loading');
 require('./components/slideout');
+require('./components/list');
+require('./components/combobox');
