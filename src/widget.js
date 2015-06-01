@@ -21,6 +21,8 @@ module.exports = Class.extend({
 
     _create: $.noop,
 
+    _destroy: $.noop,
+
     delegateEvents: function (events) {
         if (!(events || (events = this.events))) return;
 
@@ -52,6 +54,8 @@ module.exports = Class.extend({
     },
 
     destroy: function () {
+        this._destroy();
+
         this.undelegateEvents();
         this.$element.removeData(this.widgetName);
     }
