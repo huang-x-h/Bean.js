@@ -24,7 +24,8 @@ plugin('combobox', {
 
     events: {
         'click button': '_onButtonClick',
-        'change.list ul': '_onListChange'
+        'change.list ul': '_onListChange',
+        'click.list ul': '_onListClick'
     },
 
     _create: function () {
@@ -94,6 +95,10 @@ plugin('combobox', {
         return this._opened;
     },
 
+    _destroy: function () {
+        this.$list.destroy();
+    },
+
     _onButtonClick: function (e) {
         this.toggle();
     },
@@ -102,6 +107,11 @@ plugin('combobox', {
         var item = this.selectedItem();
 
         this.$text.val(item[this.options.dataTextField]);
+        this.close();
+        this.trigger('change');
+    },
+
+    _onListClick: function (e) {
         this.close();
     }
 });

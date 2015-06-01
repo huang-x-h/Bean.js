@@ -4,7 +4,7 @@
         <meta name="viewport"
               content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta charset="UTF-8">
-        <title>Tooltip</title>
+        <title>ComboBox</title>
         <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
         <link rel="stylesheet" href="../../main.css">
     </head>
@@ -14,11 +14,15 @@
         </div>
         <script src="../../bundle.js"></script>
         <script>
-            $('[data-toggle="combobox"]').combobox({
+            var $combobox = $('[data-toggle="combobox"]').combobox({
                 dataSource: [
                     {text: 'Hello', value: 'Hello'},
                     {text: 'World', value: 'World'}
                 ]
+            });
+
+            $combobox.on('change.combobox', function () {
+                console.log('value=', $combobox.combobox('value'))
             })
         </script>
     </body>
