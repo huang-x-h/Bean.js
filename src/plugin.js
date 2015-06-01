@@ -14,24 +14,27 @@ function plugin(widgetName, prototype) {
 
     function Plugin(option) {
         var isMethodCall = typeof option === "string",
-            args = Array.prototype.slice.call(arguments, 1);
+            args = Array.prototype.slice.call(arguments, 1),
+            returnValue = this;
 
         if (isMethodCall) {
-            return this.each(function () {
+            this.each(function () {
                 var $this = $(this);
                 var data = $this.data(widgetName);
 
                 if (!data) $this.data(widgetName, data = new widgetClass(this));
-                data[option].apply(data, args);
+                returnValue = data[option].apply(data, args);
             });
         } else {
-            return this.each(function () {
+            this.each(function () {
                 var $this = $(this);
                 var options = typeof option == 'object' && option;
 
                 $this.data(widgetName, new widgetClass(this, options));
             });
         }
+
+        return returnValue;
     }
 
     var old = $.fn[widgetName];
