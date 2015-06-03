@@ -57,6 +57,14 @@ function appendToToast($el) {
     $toast.append($el);
 }
 
+ztesoft.success = function (message) {
+    appendToToast($(template({
+        type: 'alert-success',
+        message: message,
+        dismissible: false
+    })).alert());
+};
+
 ztesoft.warn = function (message) {
     appendToToast($(template({
         type: 'alert-warning',
