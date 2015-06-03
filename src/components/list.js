@@ -55,7 +55,7 @@ plugin('list', {
 
     selectedItem: function (value) {
         if (arguments.length === 0) {
-            return this._dataSource[this._selectedIndex];
+            return this._dataSource && this._dataSource[this._selectedIndex];
         } else {
             // TODO
         }
@@ -86,7 +86,7 @@ plugin('list', {
     _setSelectedIndex: function (index) {
         this.$element.find('li.active').removeClass('active');
         this.$element.find('li').eq(index).addClass('active');
-        this.trigger('change');
+        this.trigger('change', this.selectedItem());
     },
 
     _checkIndex: function (index) {
