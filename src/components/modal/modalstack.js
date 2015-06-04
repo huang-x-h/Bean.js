@@ -38,12 +38,19 @@ function removeModalWindow(modalInstance, callback) {
 }
 
 function checkRemoveBackdrop(callback) {
+    var currBackdropIndex;
     //remove backdrop if no longer needed
-    if ($backdropElement && backdropIndex() == -1) {
-        removeAfterAnimate($backdropElement, BACKDROP_TRANSITION_DURATION, function () {
-            $backdropElement = null;
+    if ($backdropElement) {
+        currBackdropIndex = backdropIndex()
+        if (currBackdropIndex == -1) {
+            removeAfterAnimate($backdropElement, BACKDROP_TRANSITION_DURATION, function () {
+                $backdropElement = null;
+                callback();
+            });
+        } else {
+            $backdropElement.css('z-index', 1040 + (currBackdropIndex && 1 || 0) + currBackdropIndex * 10);
             callback();
-        });
+        }
     } else {
         callback();
     }
