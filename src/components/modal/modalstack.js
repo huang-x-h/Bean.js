@@ -17,14 +17,14 @@ function backdropIndex() {
     var topBackdropIndex = -1;
     var opened = openedWindows.keys();
     for (var i = 0; i < opened.length; i++) {
-        if (openedWindows.get(opened[i]).backdrop) {
+        if (openedWindows.get(opened[i]).value.backdrop) {
             topBackdropIndex = i;
         }
     }
     return topBackdropIndex;
 }
 
-function removeModalWindow(modalInstance) {
+function removeModalWindow(modalInstance, callback) {
     var modalWindow = openedWindows.get(modalInstance).value;
 
     openedWindows.remove(modalInstance);
@@ -33,16 +33,19 @@ function removeModalWindow(modalInstance) {
     modalWindow.$modalElement.off('.data-api');
     removeAfterAnimate(modalWindow.$modalElement, TRANSITION_DURATION, function () {
         $body.toggleClass(OPENED_MODAL_CLASS, openedWindows.length() > 0);
-        checkRemoveBackdrop();
+        checkRemoveBackdrop(callback);
     });
 }
 
-function checkRemoveBackdrop() {
+function checkRemoveBackdrop(callback) {
     //remove backdrop if no longer needed
     if ($backdropElement && backdropIndex() == -1) {
         removeAfterAnimate($backdropElement, BACKDROP_TRANSITION_DURATION, function () {
             $backdropElement = null;
+            callback();
         });
+    } else {
+        callback();
     }
 }
 
@@ -73,17 +76,23 @@ var modalStack = {
 
         var currBackdropIndex = backdropIndex(), $modalElement;
 
-        if (currBackdropIndex === -1 && !$backdropElement) {
-            $backdropElement = $(backdropTpl());
-            $body.append($backdropElement);
-        } else {
-            $backdropElement.css('z-index', 1040 + (currBackdropIndex && 1 || 0) + index * 10);
+        if (currBackdropIndex >= 0) {
+            if (!$backdropElement) {
+                $backdropElement = $(backdropTpl());
+                $body.append($backdropElement);
+            } else {
+                $backdropElement.css('z-index', 1040 + (currBackdropIndex && 1 || 0) + currBackdropIndex * 10);
+            }
         }
 
         $modalElement = $(modalTpl({'z-index': 1050 + (openedWindows.length() - 1) * 10
             , 'content': options.content}));
-        $modalElement.on('click.dismiss.data-api', '[data-dismiss]', function (e) {
-                modalStack.close(modalInstance, 'dismiss click')
+        $modalElement
+            .on('click.dismiss.data-api', '[data-dismiss]', function (e) {
+                modalStack.dismiss(modalInstance, 'dismiss click');
+            })
+            .on('click.close.data-api', '[data-close]', function (e) {
+                modalStack.close(modalInstance, 'close click');
             });
 
         $body.append($modalElement);
@@ -97,8 +106,9 @@ var modalStack = {
     close: function (modalInstance, result) {
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
-            //modalWindow.value.deferred.resolve(result);
-            removeModalWindow(modalInstance);
+            removeModalWindow(modalInstance, function () {
+                modalWindow.value.deferred.resolve(result);
+            });
             modalWindow.value.modalOpener.focus();
             return true;
         }
@@ -109,8 +119,9 @@ var modalStack = {
     dismiss: function (modalInstance, reason) {
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
-            modalWindow.value.deferred.reject(reason);
-            removeModalWindow(modalInstance);
+            removeModalWindow(modalInstance, function () {
+                modalWindow.value.deferred.reject(reason);
+            });
             modalWindow.value.modalOpener.focus();
             return true;
         }
