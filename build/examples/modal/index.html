@@ -8,29 +8,91 @@
         <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
     </head>
     <body>
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-            Launch demo modal
-        </button>
-
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
+        <div class="container">
+            <!-- Button trigger modal -->
+            <button id="btnModal" type="button" class="btn btn-primary btn-lg">
+                modal
+            </button>
+            <button id="btnModalBackdrop" type="button" class="btn btn-primary btn-lg">
+                modal with backdrop
+            </button>
         </div>
+
+        <script id="modalTpl" type="text/template">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Hello</td>
+                        <td>World</td>
+                    </tr>
+                    <tr>
+                        <td>Hello</td>
+                        <td>World</td>
+                    </tr>
+                    <tr>
+                        <td>Hello</td>
+                        <td>World</td>
+                    </tr>
+                    <tr>
+                        <td>Hello</td>
+                        <td>World</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss>Close</button>
+                <button type="button" class="btn btn-primary" data-close>Save changes</button>
+            </div>
+        </script>
+        <script id="modalTpl2" type="text/template">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss>Close</button>
+                <button type="button" class="btn btn-primary" data-close>Save changes</button>
+            </div>
+        </script>
+
         <script src="../../bundle.js"></script>
+        <script>
+            $('#btnModal').on('click', function (e) {
+                var modal = ztesoft.openModal({
+                    content: $('#modalTpl').html(),
+                    backdrop: false
+                });
+
+                modal.result.then(function (result) {
+                    ztesoft.openModal({
+                        content: $('#modalTpl').html()
+                    });
+                    ztesoft.openModal({
+                        content: $('#modalTpl2').html()
+                    });
+                }, function (error) {
+                    console.error(error)
+                })
+            });
+
+            $('#btnModalBackdrop').on('click', function (e) {
+                var modal = ztesoft.openModal({
+                    content: $('#modalTpl').html()
+                });
+
+                modal.result.then(function (result) {
+                    console.log(result);
+                }, function (error) {
+                    console.error(error)
+                })
+            });
+        </script>
     </body>
 </html>
