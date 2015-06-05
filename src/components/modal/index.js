@@ -8,7 +8,8 @@ var modalStack = require('./modalstack');
 var DEFAULTS ={
     content: '',
     backdrop: true,
-    keyboard: true
+    keyboard: true,
+    size: null
 };
 
 ztesoft.openModal = function (options) {
