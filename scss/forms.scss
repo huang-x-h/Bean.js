@@ -1,0 +1,31 @@
+.has-information {
+  position: relative;
+
+  // Ensure icons don't overlap text
+  .form-control {
+    padding-left: ($input-height-base * 1.25);
+  }
+}
+
+.form-control-information {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2; // Ensure icon is above input groups
+  display: block;
+  width: $input-height-base;
+  height: $input-height-base;
+  line-height: $input-height-base;
+  text-align: center;
+  pointer-events: none;
+}
+.input-lg + .form-control-information {
+  width: $input-height-large;
+  height: $input-height-large;
+  line-height: $input-height-large;
+}
+.input-sm + .form-control-information {
+  width: $input-height-small;
+  height: $input-height-small;
+  line-height: $input-height-small;
+}
