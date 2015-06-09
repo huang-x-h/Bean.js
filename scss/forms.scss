@@ -1,4 +1,4 @@
-.has-information {
+.has-prompt {
   position: relative;
 
   // Ensure icons don't overlap text
@@ -7,7 +7,7 @@
   }
 }
 
-.form-control-information {
+.form-control-prompt {
   position: absolute;
   top: 0;
   left: 0;
@@ -19,12 +19,12 @@
   text-align: center;
   pointer-events: none;
 }
-.input-lg + .form-control-information {
+.input-lg + .form-control-prompt {
   width: $input-height-large;
   height: $input-height-large;
   line-height: $input-height-large;
 }
-.input-sm + .form-control-information {
+.input-sm + .form-control-prompt {
   width: $input-height-small;
   height: $input-height-small;
   line-height: $input-height-small;
