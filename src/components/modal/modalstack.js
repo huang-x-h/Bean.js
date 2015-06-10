@@ -3,6 +3,7 @@
  */
 
 var $ = require('jquery');
+var $body = require('../../body');
 var StackedMap = require('./stackedmap');
 var modalTpl = require('./modal.hbs');
 var backdropTpl = require('./backdrop.hbs');
@@ -10,7 +11,6 @@ var openedWindows = StackedMap.createNew();
 var OPENED_MODAL_CLASS = 'modal-open';
 var BACKDROP_TRANSITION_DURATION = 150;
 var TRANSITION_DURATION = 300;
-var $body = $(document.body);
 var $backdropElement;
 
 function backdropIndex() {
