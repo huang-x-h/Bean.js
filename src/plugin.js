@@ -47,7 +47,7 @@ function plugin(widgetName, prototype) {
     $.fn[widgetName].noConflict = function () {
         $.fn[widgetName] = old;
         return this;
-    }
+    };
 
     return widgetClass;
 }
