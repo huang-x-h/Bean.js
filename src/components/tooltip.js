@@ -5,7 +5,6 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var plugin = require('../plugin');
-var Widget = require('../widget');
 var TRANSITION_DURATION = 150;
 
 module.exports = plugin('tooltip', {
