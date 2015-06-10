@@ -345,10 +345,10 @@ module.exports = plugin('tooltip', {
     },
 
     destroy: function () {
-        var that = this
-        clearTimeout(this.timeout)
+        var that = this;
+        clearTimeout(this.timeout);
         this.hide(function () {
-            Widget.fn.destroy.call(that);
+            that._super.destroy();
         })
     }
 });
