@@ -4,9 +4,10 @@
 
 var $ = require('jquery');
 var plugin = require('../plugin');
+var Widget = require('../widget');
 var TRANSITION_DURATION = 150;
 
-module.exports = plugin('tab', {
+var Tab = Widget.extend({
     show: function () {
         var $this = this.$element
         var $ul = $this.closest('ul:not(.dropdown-menu)')
@@ -96,10 +97,14 @@ module.exports = plugin('tab', {
     }
 });
 
+plugin('tab', Tab);
+
+module.exports = Tab;
+
 var clickHandler = function (e) {
     e.preventDefault();
     $(this).tab('show');
-}
+};
 
 $(document)
     .on('click.bs.tab.data-api', '[data-toggle="tab"]', clickHandler)

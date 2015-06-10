@@ -5,6 +5,7 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var plugin = require('../../plugin');
+var Widget = require('../../widget');
 var template = require('./combobox.hbs');
 require('../list');
 
@@ -12,7 +13,7 @@ function itemRendererHandler (data) {
     return '<a href="javascript:;">' + data[this.options.dataTextField] + '</a>';
 }
 
-plugin('combobox', {
+var ComboBox = Widget.extend({
     options: {
         placeholder: 'Please Select...',
         dataSource: null,
@@ -115,3 +116,7 @@ plugin('combobox', {
         this.close();
     }
 });
+
+plugin('combobox', ComboBox);
+
+module.exports = ComboBox;

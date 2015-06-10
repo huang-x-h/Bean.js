@@ -3,9 +3,10 @@
  */
 var $ = require('jquery');
 var plugin = require('../plugin');
+var Widget = require('../widget');
 var TRANSITION_DURATION = 350;
 
-plugin('collapse', {
+var Collapse = Widget.extend({
     options: {
         toggle: true
     },
@@ -141,6 +142,10 @@ plugin('collapse', {
             .attr('aria-expanded', isOpen)
     }
 });
+
+plugin('collapse', Collapse);
+
+module.exports = Collapse;
 
 function getTargetFromTrigger($trigger) {
     var href

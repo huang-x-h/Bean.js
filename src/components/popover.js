@@ -6,12 +6,15 @@ var $ = require('jquery');
 var plugin = require('../plugin');
 var Tooltips = require('./tooltip');
 
-plugin('popover', $.extend({}, Tooltips.prototype, {
+var PopOver = Tooltips.extend({
     options: {
+        animation: true,
         placement: 'bottom',
         trigger: 'click',
         html: true,
+        title: '',
         content: '',
+        container: false,
         template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
     },
 
@@ -49,4 +52,8 @@ plugin('popover', $.extend({}, Tooltips.prototype, {
     arrow: function () {
         return (this.$arrow = this.$arrow || this.tip().find('.arrow'));
     }
-}));
+});
+
+plugin('popover', PopOver);
+
+module.exports = PopOver;

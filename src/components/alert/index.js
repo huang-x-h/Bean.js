@@ -4,12 +4,15 @@
 
 var $ = require('jquery');
 var plugin = require('../../plugin');
+var Widget = require('../../widget');
 var ztesoft = require('../../core');
-var TRANSITION_DURATION = 150;
-var dismiss = '[data-dismiss="alert"]';
+var $body = require('../../body');
 var template = require('./alert.hbs');
 
-plugin('alert', {
+var TRANSITION_DURATION = 150;
+var dismiss = '[data-dismiss="alert"]';
+
+var Alert = Widget.extend({
     options: {
         duration: 2000,
         dismissible: false
@@ -47,11 +50,13 @@ plugin('alert', {
     }
 });
 
+plugin('alert', Alert);
+
 var $toast;
 
 function appendToToast($el) {
     if (!$toast) {
-        $toast = $('<div class="alert-toast"></div>').appendTo(document.body);
+        $toast = $body.append($('<div class="alert-toast"></div>'));
     }
 
     $toast.append($el);

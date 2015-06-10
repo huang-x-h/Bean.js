@@ -4,9 +4,10 @@
 
 var $ = require('jquery');
 var plugin = require('../../plugin');
+var Widget = require('../../widget');
 var template = require('./loading.hbs');
 
-plugin('loading', {
+var Loading = Widget.extend({
     options: {
         customClass: null
     },
@@ -25,3 +26,7 @@ plugin('loading', {
         this.destroy();
     }
 });
+
+plugin('loading', Loading);
+
+module.exports = Loading;

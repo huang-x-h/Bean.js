@@ -5,6 +5,7 @@
 var $ = require('jquery');
 var Handlebars = require("hbsfy/runtime");
 var plugin = require('../../plugin');
+var Widget = require('../../widget');
 var template = require('./pagination.hbs');
 
 Handlebars.registerHelper('pagination', function (context, options) {
@@ -25,7 +26,7 @@ Handlebars.registerHelper('pagination', function (context, options) {
     return out;
 });
 
-plugin('pagination', {
+var Pagination = Widget.extend({
     options: {
         pageSize: 10,
         totalSize: 50
@@ -130,3 +131,7 @@ plugin('pagination', {
         this.trigger('pagechange', this.pageIndex);
     }
 });
+
+plugin('pagination', Pagination);
+
+module.exports = Pagination;

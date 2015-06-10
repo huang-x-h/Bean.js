@@ -3,14 +3,12 @@
  */
 
 var $ = require('jquery');
-var Widget = require('./widget');
 
 module.exports = plugin;
 
-function plugin(widgetName, prototype) {
-    var widgetClass = Widget.extend($.extend(prototype, {
-        widgetName: widgetName
-    }));
+function plugin(widgetName, widgetClass) {
+    // add widgetName to widget prototype
+    widgetClass.prototype.widgetName = widgetName;
 
     function Plugin(option) {
         var isMethodCall = typeof option === "string",
@@ -48,6 +46,4 @@ function plugin(widgetName, prototype) {
         $.fn[widgetName] = old;
         return this;
     };
-
-    return widgetClass;
 }

@@ -4,10 +4,11 @@
 
 var $ = require('jquery');
 var plugin = require('../plugin');
+var Widget = require('../widget');
+var $body = require('../body');
 var TRANSITION_DURATION = 500;
-var $body = $(document.body);
 
-plugin('slideout', {
+var SlideOut = Widget.extend({
     options: {
         padding: 256,
         side: 'left'
@@ -86,3 +87,7 @@ plugin('slideout', {
         }
     }
 });
+
+plugin('slideout', SlideOut);
+
+module.exports = SlideOut;

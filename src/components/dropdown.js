@@ -5,9 +5,10 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var plugin = require('../plugin');
+var Widget = require('../widget');
 var toggle = '[data-toggle="dropdown"]';
 
-plugin('dropdown', {
+var DropDown = Widget.extend({
     options: {
         triggerEvent: 'click',
         target: null
@@ -52,6 +53,10 @@ plugin('dropdown', {
         }
     }
 });
+
+plugin('dropdown', DropDown);
+
+module.exports = DropDown;
 
 function clearMenus(e) {
     if (e && e.which === 3) return;

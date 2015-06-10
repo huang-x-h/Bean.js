@@ -4,10 +4,11 @@
 
 var $ = require('jquery');
 var _ = require('underscore');
+var Widget = require('../widget');
 var plugin = require('../plugin');
 var TRANSITION_DURATION = 150;
 
-module.exports = plugin('tooltip', {
+var ToolTip = Widget.extend({
     options: {
         animation: true,
         placement: 'top',
@@ -351,3 +352,7 @@ module.exports = plugin('tooltip', {
         })
     }
 });
+
+plugin('tooltip', ToolTip);
+
+module.exports = ToolTip;

@@ -4,8 +4,9 @@
 
 var $ = require('jquery');
 var plugin = require('../plugin');
+var Widget = require('../widget');
 
-module.exports = plugin('button', {
+var Button = Widget.extend({
     options: {
         loadingText: 'loading...'
     },
@@ -56,3 +57,7 @@ module.exports = plugin('button', {
         if (changed) this.$element.toggleClass('active')
     }
 });
+
+plugin('button', Button);
+
+module.exports = Button;

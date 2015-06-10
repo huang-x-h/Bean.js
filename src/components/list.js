@@ -5,12 +5,13 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var plugin = require('../plugin');
+var Widget = require('../widget');
 
 function itemRendererHandler (data) {
     return '<a href="javascript:;">' + data[this.options.dataTextField] + '</a>';
 }
 
-plugin('list', {
+var List = Widget.extend({
     options: {
         dataSource: null,
         dataTextField: 'text',
@@ -96,3 +97,7 @@ plugin('list', {
         return index;
     }
 });
+
+plugin('list', List);
+
+module.exports = List;
