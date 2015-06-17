@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta charset="UTF-8">
+        <title>NumberStepper</title>
+        <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../../main.css">
+    </head>
+    <body>
+        <div class="container" style="padding-top: 50px">
+            <div class="btn-group" data-toggle="numberstepper">
+                <button type="button" class="btn btn-default ns-minus-button"><span class="glyphicon glyphicon-minus"></span></button>
+                <input type="text" class="ns-input form-control">
+                <button type="button" class="btn btn-default ns-plus-button"><span class="glyphicon glyphicon-plus"></span></button>
+            </div>
+        </div>
+        <script src="../../bundle.js"></script>
+        <script>
+            $('[data-toggle="numberstepper"]').numberstepper();
+        </script>
+    </body>
+</html>
