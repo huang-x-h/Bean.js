@@ -6,7 +6,7 @@ var $ = require('jquery');
 var plugin = require('../../plugin');
 var Widget = require('../../widget');
 
-var NumberStepper = Widget.extend({
+var Stepper = Widget.extend({
     options: {
         minValue: 1,
         maxValue: 10,
@@ -64,6 +64,6 @@ var NumberStepper = Widget.extend({
     }
 });
 
-plugin('numberstepper', NumberStepper);
+plugin('stepper', Stepper);
 
-module.exports = NumberStepper;
+module.exports = Stepper;
