@@ -5,7 +5,7 @@
               content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta charset="UTF-8">
         <title>Modal</title>
-        <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../../main.css">
     </head>
     <body>
         <div class="container">
@@ -14,7 +14,13 @@
                 modal
             </button>
             <button id="btnModalBackdrop" type="button" class="btn btn-primary btn-lg">
-                modal with backdrop
+                modal backdrop
+            </button>
+            <button id="btnSmallModal" type="button" class="btn btn-primary btn-lg">
+                modal small
+            </button>
+            <button id="btnLargeModal" type="button" class="btn btn-primary btn-lg">
+                modal large
             </button>
         </div>
 
@@ -54,7 +60,7 @@
                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
             </div>
             <div class="modal-body">
-                ...
+                Content asdfll;aj sdhfncvzx;lajsfowquenrlnljsadlf as;fdja sdlfnxnclvgsa;ldjf;lsajfd;lajsdf;lajsdlfjas;ljfdlsajdf;lasjdflsajfd;lsajfjas;lfdl
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss>Close</button>
@@ -80,6 +86,20 @@
                 }, function (error) {
                     console.error(error)
                 })
+            });
+
+            $('#btnSmallModal').on('click', function (e) {
+                ztesoft.openModal({
+                    content: $('#modalTpl').html(),
+                    size: 'sm'
+                });
+            });
+
+            $('#btnLargeModal').on('click', function (e) {
+                ztesoft.openModal({
+                    content: $('#modalTpl').html(),
+                    size: 'lg'
+                });
             });
 
             $('#btnModalBackdrop').on('click', function (e) {
