@@ -14,14 +14,14 @@ var Stepper = Widget.extend({
     },
 
     events: {
-        'click .ns-minus-button': 'minus',
-        'click .ns-plus-button': 'plus'
+        'click .stepper-minus-button': 'minus',
+        'click .stepper-plus-button': 'plus'
     },
 
     _create: function () {
         this.$input = this.$element.find('input');
-        this.$minusButton = this.$element.find('.ns-minus-button');
-        this.$plusButton = this.$element.find('.ns-plus-button');
+        this.$minusButton = this.$element.find('.stepper-minus-button');
+        this.$plusButton = this.$element.find('.stepper-plus-button');
         this.value(this.options.value);
     },
 
