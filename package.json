@@ -8,7 +8,7 @@
     "watch": "watchify ./src/bundle.js -o ./build/bundle.js -dv",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "huang.xinghui <huang.x.hui@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "browser-sync": "^2.7.4",
@@ -24,6 +24,7 @@
     "bootstrap": "^3.3.4",
     "handlebars": "^3.0.3",
     "jquery": "^1.11.3",
+    "moment": "^2.10.3",
     "underscore": "^1.8.3"
   },
   "browserify": {
