@@ -10,5 +10,5 @@ var gulp = require('gulp'),
 gulp.task('server', function(done) {
     http.createServer(
         st({ path: server.basePath, index: 'index.html', cache: false })
-    ).listen(8080, done);
+    ).listen(3000, done);
 });
