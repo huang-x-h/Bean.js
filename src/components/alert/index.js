@@ -56,7 +56,7 @@ var $toast;
 
 function appendToToast($el) {
     if (!$toast) {
-        $toast = $body.append($('<div class="alert-toast"></div>'));
+        $toast = $('<div class="alert-toast"></div>').appendTo($body);
     }
 
     $toast.append($el);
