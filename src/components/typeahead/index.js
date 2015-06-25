@@ -28,7 +28,6 @@ var Typeahead = Widget.extend({
     events: {
         'input': '_onInput',
         'keydown': '_onKeyDown',
-        'click .glyphicon-remove': '_onClear',
         'mousedown li': '_onMouseDown'
     },
 
@@ -46,64 +45,12 @@ var Typeahead = Widget.extend({
         this._inputHandler(e);
     },
 
-    _onKeyDown: function (e) {
-        var c = e.keyCode;
-
-        // If the dropdown `ul` is in view, then act on keydown for the following keys:
-        // Enter / Esc / Up / Down
-        if (this.isOpen()) {
-            if (c === 13) { // Enter
-                e.preventDefault();
-                this._onEnter();
-            }
-            else if (c === 27) { // Esc
-                this.close();
-            }
-            else if (c === 38 || c === 40) { // Down/Up arrow
-                e.preventDefault();
-                this[c === 38 ? "previous" : "next"]();
-            }
-        }
-    },
-
-    _onClear: function (e) {
-        this.$input.val('');
-        this.$close.addClass('hide');
-    },
-
     _onMouseDown: function (e) {
         var $li = $(e.currentTarget),
             index = this.$list.find('li').index($li);
 
         this._selectedIndex = index;
         this._select();
-    },
-
-    _onEnter: function () {
-        var index = this.$list.find('.active').index();
-
-        this._selectedIndex = index;
-        this._select();
-    },
-
-    previous: function () {
-        this.goto(this._selectedIndex - 1);
-    },
-
-    next: function () {
-        this.goto(this._selectedIndex + 1);
-    },
-
-    goto: function (index) {
-        this._selectedIndex = this._checkIndex(index);
-        this._activeSelectedIndex(this._selectedIndex);
-    },
-
-    _checkIndex: function (index) {
-        if (index < 0) return this._dataSource.length - 1;
-        if ((index >= this._dataSource.length)) return 0;
-
-        return index;
     },
 
     _select: function () {
@@ -152,15 +99,11 @@ var Typeahead = Widget.extend({
     _remoteQuery: function (input) {
         var that = this;
         $.ajax({
-            url: this.options.remote
+            url: this.options.remote,
+            type: 'POST'
         }).then(function (data) {
-            that.dataSource = data;
+            that._dataSource = data;
         });
-    },
-
-    _activeSelectedIndex: function (index) {
-        this.$list.find('li.active').removeClass('active');
-        this.$list.find('li').eq(index).addClass('active');
     }
 });
 

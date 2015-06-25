@@ -6,117 +6,77 @@ var $ = require('jquery');
 var _ = require('underscore');
 var plugin = require('../../plugin');
 var Widget = require('../../widget');
+var DropDownListMixin = require('../../mixins/dropdownlist');
+var mixin = require('../../utils/mixin');
 var template = require('./combobox.hbs');
-require('../list');
 
-function itemRendererHandler (data) {
+function itemRendererHandler(data) {
     return '<a href="javascript:;">' + data[this.options.dataTextField] + '</a>';
 }
 
 var ComboBox = Widget.extend({
     options: {
         placeholder: 'Please Select...',
-        dataSource: null,
-        dataTextField: 'text',
-        dataValueField: 'value',
         selectedIndex: -1,
         itemRenderer: itemRendererHandler
     },
 
     events: {
         'click button': '_onButtonClick',
-        'change.list ul': '_onListChange',
-        'click.list ul': '_onListClick'
+        'keydown': '_onKeyDown',
+        'mousedown li': '_onMouseDown'
     },
 
     _create: function () {
-        this.$element.append(template(this.options));
-        this._opened = false;
+        this.$element.append(template());
 
-        this.$text = this.$element.find('input');
-        this.$list = this.$element.find('.dropdown-menu').list(this.options);
+        this.$input = this.$element.find('input');
+        this.$list = this.$element.find('.dropdown-menu');
+
+        this.dataSource(this.options.dataSource);
+        this.selectedIndex(this.options.selectedIndex);
     },
 
     dataSource: function (value) {
         if (arguments.length === 0) {
-            return this.$list.list('dataSource');
+            return this._dataSource;
 
         } else if (this._dataSource != value) {
             if (_.isArray(value)) {
-                this.$list.list('dataSource', value);
+                this._dataSource = value;
+                this._selectedIndex = -1;
+
+                this.$list.html(_.reduce(this._dataSource, function (result, item) {
+                    return result + '<li>' + _.bind(this.options.itemRenderer, this, item)() + '</li>';
+                }, '', this));
             }
         }
-    },
-
-    selectedIndex: function (value) {
-        if (arguments.length === 0) {
-            return this.$list.list('selectedIndex');
-        } else if (this._selectedIndex != value) {
-            this.$list.list('selectedIndex', value);
-        }
-    },
-
-    selectedItem: function (value) {
-        if (arguments.length === 0) {
-            return this.$list.list('selectedItem');
-        } else {
-            // TODO
-        }
-    },
-
-    value: function (value) {
-        if (arguments.length === 0) {
-            return this.$list.list('value');
-        } else {
-            this.$list.list('value', value);
-        }
-    },
-
-    open: function () {
-        if (this.isOpen()) return;
-
-        this._opened = true;
-        this.$element.addClass('open');
-        this.trigger('open');
-    },
-
-    close: function () {
-        if (!this.isOpen()) return;
-
-        this._opened = false;
-        this.$element.removeClass('open');
-        this.trigger('close');
     },
 
     toggle: function () {
         this.isOpen() ? this.close() : this.open();
     },
 
-    isOpen: function () {
-        return this._opened;
-    },
-
-    _destroy: function () {
-        this.$list.destroy();
-    },
-
     _onButtonClick: function (e) {
         this.toggle();
     },
 
-    _onListChange: function (e) {
-        var item = this.selectedItem();
+    _onMouseDown: function (e) {
+        var $li = $(e.currentTarget),
+            index = this.$list.find('li').index($li);
 
-        this.$text.val(item[this.options.dataTextField]);
-        this.close();
-        this.trigger('change');
+        this.selectedIndex(index);
+        this._select();
     },
 
-    _onListClick: function (e) {
+    _select: function () {
+        this.selectedItem(this._dataSource[this._selectedIndex]);
+        this.$input.val(this.text());
         this.close();
     }
 });
 
+mixin(ComboBox, DropDownListMixin);
 plugin('combobox', ComboBox);
 
 module.exports = ComboBox;
