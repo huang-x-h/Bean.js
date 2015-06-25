@@ -1,14 +1,5 @@
 .typeahead {
-  .dropdown-menu {
-    width: 100%;
-
-    > li > a:hover {
-      color: $dropdown-link-active-color;
-      text-decoration: none;
-      outline: 0;
-      background-color: $dropdown-link-active-bg;
-    }
-  }
+  @extend .combobox;
 
   mark {
     background: hsl(65, 100%, 50%);
