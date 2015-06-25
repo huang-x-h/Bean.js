@@ -4,19 +4,30 @@
         <meta name="viewport"
               content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta charset="UTF-8">
-        <title>TimePicker</title>
+        <title>Typeahead</title>
         <link rel="stylesheet" href="../../main.css">
     </head>
     <body>
         <div class="container">
-            <div class="form-group has-feedback" data-toggle="typeahead">
+            <div class="form-group has-feedback typeahead" data-toggle="typeahead">
                 <input type="text" class="form-control">
                 <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
+                <ul class="dropdown-menu"></ul>
             </div>
         </div>
         <script src="../../bundle.js"></script>
         <script>
-            $('[data-toggle="typeahead"]').typeahead();
+            var $typeahead = $('[data-toggle="typeahead"]').typeahead({
+                dataSource: [
+                    {text: 'Action', value: 'Action'},
+                    {text: 'Another action', value: 'Another action'},
+                    {text: 'Something', value: 'Something'}
+                ]
+            });
+
+            $typeahead.on('change.typeahead', function () {
+                console.log('value=', $typeahead.typeahead('value'))
+            })
         </script>
     </body>
 </html>
