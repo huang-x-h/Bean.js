@@ -37,7 +37,7 @@ var Typeahead = Widget.extend({
 
         this.$input = this.$element.find('input');
         this.$close = this.$element.find('.glyphicon-remove');
-        this.$list = this.$element.find('.dropdown-menu');
+        this.$list = $('<ul class="dropdown-menu"></ul>').appendTo(this.$element);
     },
 
     _onInput: function (e) {
