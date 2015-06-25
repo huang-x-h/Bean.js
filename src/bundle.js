@@ -20,3 +20,4 @@ require('./components/slideout');
 require('./components/list');
 require('./components/combobox');
 require('./components/stepper');
+require('./components/typeahead');
