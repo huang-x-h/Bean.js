@@ -47,7 +47,7 @@ module.exports = {
         var item = this._selectedItem;
 
         if (arguments.length === 0) {
-            return item[this.options.dataValueField];
+            return item || item[this.options.dataValueField];
         } else {
             // TODO
         }
