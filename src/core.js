@@ -4,4 +4,4 @@
 
 $ = require('jquery');
 
-module.exports = window.ztesoft = {};
+module.exports = window.Bean = {};

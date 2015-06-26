@@ -3,14 +3,14 @@
  */
 
 var $ = require('jquery');
-var ztesoft = require('../core');
+var Bean = require('../core');
 
 require('../components/loading');
 
 var invokeCount = 0,
     startTimer;
 
-ztesoft.block = function () {
+Bean.block = function () {
     var $loading;
 
     if (invokeCount === 0) {
@@ -27,7 +27,7 @@ ztesoft.block = function () {
     invokeCount++;
 };
 
-ztesoft.unblock = function () {
+Bean.unblock = function () {
     invokeCount--;
 
     if (invokeCount === 0) {

@@ -35,7 +35,10 @@ var Typeahead = Widget.extend({
         this._inputHandler = _.debounce(this._evaluate, this.options.delay, true);
         this._dataSource = [];
 
-        this.$input = this.$element.find('input');
+        this.$input = this.$element.find('input').attr({
+            autocomplete: "off",
+            spellcheck: false
+        });
         this.$close = this.$element.find('.glyphicon-remove');
         this.$list = $('<ul class="dropdown-menu"></ul>').appendTo(this.$element);
     },
@@ -100,9 +103,12 @@ var Typeahead = Widget.extend({
         var that = this;
         $.ajax({
             url: this.options.remote,
-            type: 'POST'
+            type: 'GET'
         }).then(function (data) {
             that._dataSource = data;
+            _.map(that._dataSource, function (item) {
+                that.$list.append(that.options.itemRenderer(item[that.options.dataTextField], input));
+            });
         });
     }
 });

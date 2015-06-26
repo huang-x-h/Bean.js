@@ -3,13 +3,13 @@
  */
 
 var $ = require('jquery');
-var ztesoft = require('../core');
+var Bean = require('../core');
 var loadingBar = require('../components/loadingbar');
 
 var reqsTotal = 0,
     reqsComplete = 0;
 
-ztesoft.ajax = function (url, options) {
+Bean.ajax = function (url, options) {
     if (typeof url === "object") {
         options = url;
         url = undefined;

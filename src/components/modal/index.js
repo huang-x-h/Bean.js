@@ -3,7 +3,7 @@
  */
 
 var $ = require('jquery');
-var ztesoft = require('../../core');
+var Bean = require('../../core');
 var modalStack = require('./modalstack');
 var DEFAULTS ={
     content: '',
@@ -12,7 +12,7 @@ var DEFAULTS ={
     size: null
 };
 
-ztesoft.openModal = function (options) {
+Bean.openModal = function (options) {
     var modalResultDeferred = $.Deferred();
 
     var modalInstance = {

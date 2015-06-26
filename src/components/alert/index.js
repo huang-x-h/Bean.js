@@ -5,7 +5,7 @@
 var $ = require('jquery');
 var plugin = require('../../plugin');
 var Widget = require('../../widget');
-var ztesoft = require('../../core');
+var Bean = require('../../core');
 var $body = require('../../body');
 var template = require('./alert.hbs');
 
@@ -62,7 +62,7 @@ function appendToToast($el) {
     $toast.append($el);
 }
 
-ztesoft.success = function (message) {
+Bean.success = function (message) {
     appendToToast($(template({
         type: 'alert-success',
         message: message,
@@ -70,7 +70,7 @@ ztesoft.success = function (message) {
     })).alert());
 };
 
-ztesoft.warn = function (message) {
+Bean.warn = function (message) {
     appendToToast($(template({
         type: 'alert-warning',
         message: message,
@@ -78,7 +78,7 @@ ztesoft.warn = function (message) {
     })).alert());
 };
 
-ztesoft.info = function (message) {
+Bean.info = function (message) {
     appendToToast($(template({
         type: 'alert-info',
         message: message,
@@ -86,7 +86,7 @@ ztesoft.info = function (message) {
     })).alert());
 };
 
-ztesoft.error = function (message) {
+Bean.error = function (message) {
     appendToToast($(template({
         type: 'alert-danger',
         message: message,

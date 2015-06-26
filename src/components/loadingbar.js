@@ -4,7 +4,7 @@
 
 // copy from https://github.com/chieffancypants/angular-loading-bar
 var $ = require('jquery');
-var ztesoft = require('../core');
+var Bean = require('../core');
 
 var spinner = $('<div id="loading-bar-spinner"><div class="spinner-icon"></div></div>'),
     loadingBarContainer = $('<div id="loading-bar"><div class="bar"><div class="peg"></div></div></div>'),
