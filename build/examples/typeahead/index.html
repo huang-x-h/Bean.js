@@ -9,15 +9,26 @@
     </head>
     <body>
         <div class="container">
-            <div class="form-group has-feedback typeahead" data-toggle="typeahead">
-                <input type="text" class="form-control">
-                <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
-                <ul class="dropdown-menu"></ul>
-            </div>
+            <form>
+                <div class="form-group">
+                    <label>Local Query</label>
+                    <div id="localTypeahead" class="has-feedback typeahead">
+                        <input type="text" class="form-control">
+                        <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Remote Query</label>
+                    <div id="remoteTypeahead" class="has-feedback typeahead" data-toggle="typeahead">
+                        <input type="text" class="form-control">
+                        <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </form>
         </div>
         <script src="../../bundle.js"></script>
         <script>
-            var $typeahead = $('[data-toggle="typeahead"]').typeahead({
+            var $localTypeahead = $('#localTypeahead').typeahead({
                 dataSource: [
                     {text: 'Action', value: 'Action'},
                     {text: 'Another action', value: 'Another action'},
@@ -25,9 +36,16 @@
                 ]
             });
 
-            $typeahead.on('change.typeahead', function () {
-                console.log('value=', $typeahead.typeahead('value'))
-            })
+            var $remoteTypeahead = $('#remoteTypeahead').typeahead({
+                remote: 'typeahead/data.json'
+            });
+
+            $localTypeahead.on('typeahead:change', function () {
+                console.log('value=', $localTypeahead.typeahead('value'))
+            });
+            $remoteTypeahead.on('typeahead:change', function () {
+                console.log('value=', $remoteTypeahead.typeahead('value'))
+            });
         </script>
     </body>
 </html>
