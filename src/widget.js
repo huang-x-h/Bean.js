@@ -50,7 +50,7 @@ module.exports = Class.extend({
     },
 
     trigger: function (type, data) {
-        this.$element.trigger((type + '.' + this.widgetName).toLowerCase(), data);
+        this.$element.trigger((type + ':' + this.widgetName).toLowerCase(), data);
     },
 
     destroy: function () {
