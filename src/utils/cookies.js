@@ -2,11 +2,18 @@
  * Created by huangxinghui on 2015/6/29.
  */
 
+var $ = require('jquery');
 var _ = require('underscore');
 var log = require('./log');
 
 var lastCookies = {};
 var lastCookieString = '';
+var $base = $(document).find('base');
+
+function baseHref() {
+    var href = $base.attr('href');
+    return href ? href.replace(/^(https?\:)?\/\/[^\/]*/, '') : '';
+}
 
 function cookieReader() {
     var currentCookieString = document.cookie,
@@ -35,7 +42,9 @@ function cookieReader() {
 }
 
 function cookieWriter(name, value, options) {
-    var path, expires;
+    var cookiePath = baseHref(),
+        path, expires;
+
     options = options || {};
     expires = options.expires;
 
