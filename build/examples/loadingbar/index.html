@@ -10,10 +10,10 @@
     <body>
         <script src="../../bundle.js"></script>
         <script>
-            ztesoft.ajax('https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js', {
+            Bean.ajax('https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js', {
                 type: 'GET'
             }).fail(function (jqXHR, textStatus, errorThrown) {
-                ztesoft.error('loading error');
+                Bean.error('loading error');
             });
         </script>
     </body>

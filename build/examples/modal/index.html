@@ -71,16 +71,16 @@
         <script src="../../bundle.js"></script>
         <script>
             $('#btnModal').on('click', function (e) {
-                var modal = ztesoft.openModal({
+                var modal = Bean.openModal({
                     content: $('#modalTpl').html(),
                     backdrop: false
                 });
 
                 modal.result.then(function (result) {
-                    ztesoft.openModal({
+                    Bean.openModal({
                         content: $('#modalTpl').html()
                     });
-                    ztesoft.openModal({
+                    Bean.openModal({
                         content: $('#modalTpl2').html()
                     });
                 }, function (error) {
@@ -89,21 +89,21 @@
             });
 
             $('#btnSmallModal').on('click', function (e) {
-                ztesoft.openModal({
+                Bean.openModal({
                     content: $('#modalTpl').html(),
                     size: 'sm'
                 });
             });
 
             $('#btnLargeModal').on('click', function (e) {
-                ztesoft.openModal({
+                Bean.openModal({
                     content: $('#modalTpl').html(),
                     size: 'lg'
                 });
             });
 
             $('#btnModalBackdrop').on('click', function (e) {
-                var modal = ztesoft.openModal({
+                var modal = Bean.openModal({
                     content: $('#modalTpl').html()
                 });
 
