@@ -92,8 +92,16 @@ var modalStack = {
             }
         }
 
-        $modalElement = $(modalTpl({'z-index': 1050 + (openedWindows.length() - 1) * 10
-            , 'content': options.content, 'size': options.size}));
+        // if content is jquery element
+        if (options.content instanceof $) {
+            $modalElement = $(modalTpl({'z-index': 1050 + (openedWindows.length() - 1) * 10
+                , 'size': options.size}));
+            $modalElement.find('.modal-content').append(options.content);
+        } else {
+            $modalElement = $(modalTpl({'z-index': 1050 + (openedWindows.length() - 1) * 10
+                , 'content': options.content, 'size': options.size}));
+        }
+
         $modalElement
             .on('click.dismiss.data-api', '[data-dismiss]', function (e) {
                 modalStack.dismiss(modalInstance, 'dismiss click');
