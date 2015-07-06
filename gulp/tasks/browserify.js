@@ -8,6 +8,10 @@ var livereload = require('gulp-livereload');
 var source = require('vinyl-source-stream');
 var config = require('../config').browserify;
 
+function handleErrors(e) {
+    console.log(e.message);
+}
+
 gulp.task('browserify', function () {
     var bundler = browserify({
         // Required watchify args
@@ -22,6 +26,7 @@ gulp.task('browserify', function () {
 
     return bundler
         .bundle()
+        .on('error', handleErrors)
         .pipe(source(config.outputName))
         .pipe(gulp.dest(config.dest))
         .pipe(livereload());
