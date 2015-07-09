@@ -5,6 +5,7 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var log = require('./log');
+var Bean = require('../core');
 
 var lastCookies = {};
 var lastCookieString = '';
@@ -77,7 +78,7 @@ function cookieWriter(name, value, options) {
     return str;
 }
 
-module.exports = {
+module.exports = Bean.Cookie = {
     get: function (key) {
         return cookieReader()[key];
     },
