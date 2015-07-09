@@ -10,12 +10,12 @@ var toggle = '[data-toggle="dropdown"]';
 
 var DropDown = Widget.extend({
     options: {
-        triggerEvent: 'click',
+        trigger: 'click',
         target: null
     },
 
     _create: function () {
-        this.delegate(this.options.triggerEvent, null, _.bind(this.toggle, this));
+        this.delegate(this.options.trigger, null, _.bind(this.toggle, this));
 
         this.$parent = this.getParent();
     },
