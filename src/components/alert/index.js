@@ -28,13 +28,13 @@ var Alert = Widget.extend({
     close: function (e) {
         var $el = this.$element;
 
-        this.trigger('close');
+        if (e) e.preventDefault();
 
-        $el.trigger(e = $.Event('close.bs.alert'))
+        e = this.trigger('close');
 
-        if (e.isDefaultPrevented()) return
+        if (e.isDefaultPrevented()) return;
 
-        $el.removeClass('in')
+        $el.removeClass('in');
 
         function removeElement() {
             // detach from parent, fire event then clean up data
