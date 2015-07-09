@@ -50,7 +50,9 @@ module.exports = Class.extend({
     },
 
     trigger: function (type, data) {
-        this.$element.trigger((this.widgetName + ':' + type).toLowerCase(), data);
+        var e = $.Event((this.widgetName + ':' + type).toLowerCase());
+        this.$element.trigger(e, data);
+        return e;
     },
 
     destroy: function () {
