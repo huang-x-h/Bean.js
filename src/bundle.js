@@ -15,6 +15,7 @@ require('./components/modal');
 require('./components/alert');
 require('./components/dropdown');
 require('./components/pagination');
+require('./components/progressbar');
 require('./components/loading');
 require('./components/slideout');
 require('./components/list');
