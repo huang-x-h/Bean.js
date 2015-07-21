@@ -10,39 +10,32 @@ var toggle = '[data-toggle="dropdown"]';
 
 var DropDown = Widget.extend({
     options: {
-        trigger: 'click',
         target: null
     },
 
     _create: function () {
-        this.delegate(this.options.trigger, null, _.bind(this.toggle, this));
+        this.delegate('click', null, _.bind(this.toggle, this));
 
         this.$parent = this.getParent();
     },
 
     open: function () {
-        if (this.isOpen()) return;
-
-        this._opened = true;
         this.$parent.addClass('open');
         this.trigger('open');
     },
 
     close: function () {
-        if (!this.isOpen()) return;
-
-        this._opened = false;
         this.$parent.removeClass('open');
         this.trigger('close');
     },
 
     toggle: function (e) {
-        this.isOpen() ? this.close() : this.open();
-        return false;
-    },
+        var isActive = this.$parent.hasClass('open');
 
-    isOpen: function () {
-        return this._opened;
+        clearMenus(e);
+
+        if (!isActive) this.open();
+        return false;
     },
 
     getParent: function () {
@@ -67,5 +60,5 @@ function clearMenus(e) {
 $(document)
     .on('click.dropdown.data-api', clearMenus)
     .on('click.dropdown.data-api', '[data-toggle="dropdown"]', function (e) {
-        $(this).dropdown('toggle');
+        return $(this).dropdown('toggle');
     });
