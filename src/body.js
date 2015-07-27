@@ -3,5 +3,6 @@
  */
 
 var $ = require('jquery');
+var $document = require('./document');
 
-module.exports = $(document.body);
+module.exports = $document.find('body');

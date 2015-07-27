@@ -6,6 +6,7 @@ var $ = require('jquery');
 var _ = require('underscore');
 var plugin = require('../plugin');
 var Widget = require('../widget');
+var $document = require('../document');
 var toggle = '[data-toggle="dropdown"]';
 
 var DropDown = Widget.extend({
@@ -57,7 +58,7 @@ function clearMenus(e) {
     $(toggle).dropdown('close');
 }
 
-$(document)
+$document
     .on('click.dropdown.data-api', clearMenus)
     .on('click.dropdown.data-api', '[data-toggle="dropdown"]', function (e) {
         return $(this).dropdown('toggle');

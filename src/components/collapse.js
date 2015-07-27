@@ -4,6 +4,7 @@
 var $ = require('jquery');
 var plugin = require('../plugin');
 var Widget = require('../widget');
+var $document = require('../document');
 var TRANSITION_DURATION = 350;
 
 var Collapse = Widget.extend({
@@ -151,7 +152,7 @@ function getTargetFromTrigger($trigger) {
     return $(target)
 }
 
-$(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+$document.on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
     var $this = $(this);
 
     if (!$this.attr('data-target')) e.preventDefault();

@@ -3,6 +3,7 @@
  */
 
 var $ = require('jquery');
+var $body = require('../body');
 var Bean = require('../core');
 
 require('../components/loading');
@@ -14,11 +15,11 @@ Bean.block = function () {
     var $loading;
 
     if (invokeCount === 0) {
-        $(document.body).loading({
+        $body.loading({
             customClass: 'pg-blocking'
         });
 
-        $loading = $(document.body).data('loading').$loading;
+        $loading = $body.data('loading').$loading;
         startTimer = setTimeout(function () {
             $loading.removeClass('pg-blocking');
         }, 2000);
@@ -33,6 +34,6 @@ Bean.unblock = function () {
     if (invokeCount === 0) {
         clearTimeout(startTimer);
 
-        $(document.body).loading('finish');
+        $body.loading('finish');
     }
 };

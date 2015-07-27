@@ -5,6 +5,7 @@
 var $ = require('jquery');
 var plugin = require('../plugin');
 var Widget = require('../widget');
+var $document = require('../document');
 var TRANSITION_DURATION = 150;
 
 var Tab = Widget.extend({
@@ -106,6 +107,6 @@ var clickHandler = function (e) {
     $(this).tab('show');
 };
 
-$(document)
+$document
     .on('click.bs.tab.data-api', '[data-toggle="tab"]', clickHandler)
     .on('click.bs.tab.data-api', '[data-toggle="pill"]', clickHandler);
