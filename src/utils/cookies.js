@@ -50,7 +50,7 @@ function cookieReader() {
     return lastCookies;
 }
 
-function cookieWriter(name, value, options) {
+function cookieWriter() {
     var cookiePath = baseHref(),
         rawDocument = $document[0];
 
@@ -104,7 +104,7 @@ module.exports = Bean.Cookie = {
     },
 
     put: function (key, value, options) {
-        cookieWriter(key, value, calcOptions(options));
+        cookieWriter()(key, value, calcOptions(options));
     },
 
     putObject: function (key, value, options) {
@@ -112,6 +112,6 @@ module.exports = Bean.Cookie = {
     },
 
     remove: function(key, options) {
-        cookieWriter(key, undefined, calcOptions(options));
+        this.put(key, undefined, options);
     }
 };
