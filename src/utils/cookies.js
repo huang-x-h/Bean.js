@@ -11,6 +11,12 @@ var lastCookies = {};
 var lastCookieString = '';
 var $base = $(document).find('base');
 
+var defaults = this.defaults = {};
+
+function calcOptions(options) {
+    return options ? _.extend({}, defaults, options) : defaults;
+}
+
 function baseHref() {
     var href = $base.attr('href');
     return href ? href.replace(/^(https?\:)?\/\/[^\/]*/, '') : '';
@@ -89,10 +95,14 @@ module.exports = Bean.Cookie = {
     },
 
     put: function (key, value, options) {
-        cookieWriter(key, value, options);
+        cookieWriter(key, value, calcOptions(options));
     },
 
     putObject: function (key, value, options) {
         this.put(key, JSON.stringify(value), options);
+    },
+
+    remove: function(key, options) {
+        cookieWriter(key, undefined, calcOptions(options));
     }
 };
