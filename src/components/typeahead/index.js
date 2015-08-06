@@ -27,6 +27,7 @@ var Typeahead = Widget.extend({
 
     events: {
         'input': '_onInput',
+        'blur input': '_onBlur',
         'keydown': '_onKeyDown',
         'mousedown li': '_onMouseDown',
         'click .glyphicon-remove': '_onClickRemove'
@@ -47,6 +48,10 @@ var Typeahead = Widget.extend({
     _onInput: function (e) {
         this.$close.removeClass('hide');
         this._inputHandler(e);
+    },
+
+    _onBlur: function (e) {
+        this.close();
     },
 
     _onClickRemove: function (e) {
