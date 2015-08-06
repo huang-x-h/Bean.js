@@ -28,7 +28,8 @@ var Typeahead = Widget.extend({
     events: {
         'input': '_onInput',
         'keydown': '_onKeyDown',
-        'mousedown li': '_onMouseDown'
+        'mousedown li': '_onMouseDown',
+        'click .glyphicon-remove': '_onClickRemove'
     },
 
     _create: function () {
@@ -48,19 +49,9 @@ var Typeahead = Widget.extend({
         this._inputHandler(e);
     },
 
-    _onMouseDown: function (e) {
-        var $li = $(e.currentTarget),
-            index = this.$list.find('li').index($li);
-
-        this._selectedIndex = index;
-        this._select();
-    },
-
-    _select: function () {
-        this.selectedItem(this._dataSource[this._selectedIndex]);
-        this._selectedIndex = -1; // reset _selectedIndex
-        this.$input.val(this.text());
-        this.close();
+    _onClickRemove: function (e) {
+        this._select(-1);
+        this.$close.addClass('hide');
     },
 
     _evaluate: function () {
@@ -77,6 +68,9 @@ var Typeahead = Widget.extend({
             }
         }
 
+    },
+
+    _toggleDropdown: function () {
         if (this.$list.children().length > 0) {
             this.open();
         } else {
@@ -97,6 +91,8 @@ var Typeahead = Widget.extend({
                 that.$list.append(that.options.itemRenderer(item[that.options.dataTextField], input));
                 return index < that.options.maxItems - 1;
             });
+
+        this._toggleDropdown();
     },
 
     _remoteQuery: function (input) {
@@ -109,6 +105,8 @@ var Typeahead = Widget.extend({
             _.map(that._dataSource, function (item) {
                 that.$list.append(that.options.itemRenderer(item[that.options.dataTextField], input));
             });
+
+            that._toggleDropdown();
         });
     }
 });

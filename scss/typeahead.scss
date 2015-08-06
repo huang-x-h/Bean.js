@@ -1,7 +1,21 @@
 .typeahead {
   @extend .combobox;
+  @extend .has-feedback;
 
   mark {
     background: hsl(65, 100%, 50%);
+  }
+
+  .glyphicon-remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2; // Ensure icon is above input groups
+    display: block;
+    width: $input-height-base;
+    height: $input-height-base;
+    line-height: $input-height-base;
+    text-align: center;
+    cursor: pointer;
   }
 }

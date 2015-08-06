@@ -59,20 +59,6 @@ var ComboBox = Widget.extend({
 
     _onButtonClick: function (e) {
         this.toggle();
-    },
-
-    _onMouseDown: function (e) {
-        var $li = $(e.currentTarget),
-            index = this.$list.find('li').index($li);
-
-        this.selectedIndex(index);
-        this._select();
-    },
-
-    _select: function () {
-        this.selectedItem(this._dataSource[this._selectedIndex]);
-        this.$input.val(this.text());
-        this.close();
     }
 });
 

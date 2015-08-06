@@ -37,7 +37,7 @@ module.exports = {
         var item = this._selectedItem;
 
         if (arguments.length === 0) {
-            return item[this.options.dataTextField];
+            return item ? item[this.options.dataTextField] : '';
         } else {
             // TODO
         }
@@ -47,7 +47,7 @@ module.exports = {
         var item = this._selectedItem;
 
         if (arguments.length === 0) {
-            return item || item[this.options.dataValueField];
+            return item ? item[this.options.dataValueField] : null;
         } else {
             // TODO
         }
@@ -105,11 +105,24 @@ module.exports = {
         }
     },
 
+    _onMouseDown: function (e) {
+        var $li = $(e.currentTarget),
+            index = this.$list.find('li').index($li);
+
+        this._select(index);
+    },
+
     _onEnter: function () {
         var index = this.$list.find('.active').index();
 
-        this._selectedIndex = index;
-        this._select();
+        this._select(index);
+    },
+
+    _select: function (index) {
+        this.selectedIndex(index);
+        this.selectedItem(this._dataSource[index]);
+        this.$input.val(this.text());
+        this.close();
     },
 
     _checkIndex: function (index) {
