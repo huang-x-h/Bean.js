@@ -5,7 +5,7 @@
 var Bean = require('./core');
 var callbacks = [];
 
-Bean.locale = {
+var locale = Bean.locale = {
     value: {
         validator: {
             requiredError: 'Please input the {0}.',
@@ -19,6 +19,14 @@ Bean.locale = {
             tooLongError: 'The length of {0} is greater than the maximum length of {2} character(s). Please input again.',
             tooShortError: 'The length of {0} is less than the minimum length of {1} character(s). Please input again.',
             notBetweenError: 'The length of {0} should be between {1} character(s) and {2} character(s). Please input again.'
+        },
+        datepicker: {
+            days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+            months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            today: "Today"
         }
     },
 
@@ -32,3 +40,5 @@ Bean.locale = {
         callbacks.push(fn);
     }
 };
+
+module.exports = locale;

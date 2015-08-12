@@ -2,6 +2,8 @@
  * Created by huangxinghui on 2015/5/20.
  */
 
+require('./locale');
+require('./utils/validator');
 require('./utils/ajax');
 require('./utils/block');
 
@@ -22,3 +24,5 @@ require('./components/list');
 require('./components/combobox');
 require('./components/stepper');
 require('./components/typeahead');
+require('./components/datepicker/datepicker');
+require('./components/datepicker/monthpicker');
