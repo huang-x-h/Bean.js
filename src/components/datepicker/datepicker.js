@@ -9,8 +9,11 @@ var plugin = require('../../plugin');
 var Widget = require('../../widget');
 var locale = require('../../locale');
 var util = require('../../utils/date');
+var $document = require('../../document');
+var timeTemplate = require('./time.hbs');
 var dayTemplate = require('./day.hbs');
 var monthTemplate = require('./month.hbs');
+var yearTemplate = require('./year.hbs');
 var wrapper = require('./datepicker.hbs');
 var dates = locale.value.datepicker;
 var modes = [
@@ -60,8 +63,9 @@ var DatePicker = Widget.extend({
         keyboardNavigation: true,
         zIndexOffset: 10,
         format: '',
+        showTime: false,
         todayBtn: true,
-        todayHighlight: false,
+        todayHighlight: true,
         weekStart: 0,
         container: 'body'
     },
@@ -77,6 +81,10 @@ var DatePicker = Widget.extend({
         else {
             this.options.orientation.x = plc[0] || 'auto';
             this.options.orientation.y = plc[0] || 'auto';
+        }
+
+        if (!this.options.format) {
+            this.options.format = this.options.showTime ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD';
         }
 
         this.isInline = this.options.inline;
@@ -112,12 +120,14 @@ var DatePicker = Widget.extend({
         this.setDatesDisabled(this.options.datesDisabled);
 
         this.picker.append(dayTemplate());
-        this.picker.append(monthTemplate());
+        this.picker.append(monthTemplate({
+            monthsShort: dates.monthsShort
+        }));
+        this.picker.append(yearTemplate());
 
         this._bindEvent();
 
         this.fillDow();
-        this.fillMonths();
 
         this._allow_update = true;
         this.viewMode = 0;
@@ -177,25 +187,62 @@ var DatePicker = Widget.extend({
             //}]);
         }
 
-        //this._secondaryEvents = [
-        //    [this.picker, {
-        //        click: $.proxy(this.click, this)
-        //    }],
-        //    [$(document), {
-        //        mousedown: $.proxy(function (e) {
-        //            // Clicked outside the datepicker, hide it
-        //            if (!(
-        //                this.$element.is(e.target) ||
-        //                this.$element.find(e.target).length ||
-        //                this.picker.is(e.target) ||
-        //                this.picker.find(e.target).length ||
-        //                this.picker.hasClass('datepicker-inline')
-        //                )) {
-        //                this.hide();
-        //            }
-        //        }, this)
-        //    }]
-        //];
+        this._secondaryEvents = [
+            [this.picker, {
+                click: _.bind(this.click, this)
+            }],
+            [$document, {
+                mousedown: _.bind(function (e) {
+                    // Clicked outside the datepicker, hide it
+                    if (!(
+                        this.$element.is(e.target) ||
+                        this.$element.find(e.target).length ||
+                        this.picker.is(e.target) ||
+                        this.picker.find(e.target).length ||
+                        this.picker.hasClass('datepicker-inline')
+                        )) {
+                        this.hide();
+                    }
+                }, this)
+            }]
+        ];
+    },
+
+    _applyEvents: function (evs) {
+        for (var i = 0, el, ch, ev; i < evs.length; i++) {
+            el = evs[i][0];
+            if (evs[i].length === 2) {
+                ch = undefined;
+                ev = evs[i][1];
+            }
+            else if (evs[i].length === 3) {
+                ch = evs[i][1];
+                ev = evs[i][2];
+            }
+            el.on(ev, ch);
+        }
+    },
+    _unapplyEvents: function (evs) {
+        for (var i = 0, el, ev, ch; i < evs.length; i++) {
+            el = evs[i][0];
+            if (evs[i].length === 2) {
+                ch = undefined;
+                ev = evs[i][1];
+            }
+            else if (evs[i].length === 3) {
+                ch = evs[i][1];
+                ev = evs[i][2];
+            }
+            el.off(ev, ch);
+        }
+    },
+
+    _attachSecondaryEvents: function () {
+        this._detachSecondaryEvents();
+        this._applyEvents(this._secondaryEvents);
+    },
+    _detachSecondaryEvents: function () {
+        this._unapplyEvents(this._secondaryEvents);
     },
 
     update: function (date) {
@@ -234,17 +281,30 @@ var DatePicker = Widget.extend({
         if (!this.date && oldDates)
             this.trigger('clear');
 
-        this.fill();
+        this.showMode();
         //this.$element.change();
         return this;
     },
 
     showMode: function (dir) {
         if (dir) {
-            this.viewMode = this.viewMode + dir;
+            this.viewMode = Math.max(0, Math.min(2, this.viewMode + dir));
         }
 
         this.picker.children('div').hide().filter('.datepicker-' + modes[this.viewMode].clsName).show();
+
+        switch (this.viewMode) {
+            case 0:
+                this.updateDays();
+                break;
+            case 1:
+                this.updateMonths();
+                break;
+            case 2:
+                this.updateYears();
+                break;
+        }
+
         this.updateNavArrows();
     },
 
@@ -263,15 +323,12 @@ var DatePicker = Widget.extend({
         }
         html += '</tr>';
         this.picker.find('.datepicker-days thead').append(html);
-    },
 
-    fillMonths: function () {
-        var html = '',
-            i = 0;
-        while (i < 12) {
-            html += '<span class="month">' + dates.monthsShort[i++] + '</span>';
+        if (this.options.showTime) {
+            this.picker.find('.datepicker-days tfoot').append('<tr><th colspan="7"><span class="label label-hours"></span> : <span class="label label-minutes"></span> : <span class="label label-seconds"></span><span><a class="btn">Now</a></span></th></tr>');
+        } else {
+            this.picker.find('.datepicker-days tfoot').append('<tr><th colspan="7" class="today" style="display: none;">Today</th></tr>');
         }
-        this.picker.find('.datepicker-months td').html(html);
     },
 
     getClassNames: function (date) {
@@ -279,6 +336,7 @@ var DatePicker = Widget.extend({
             year = this.viewDate.getFullYear(),
             month = this.viewDate.getMonth(),
             today = new Date();
+
         if (date.getFullYear() < year || (date.getFullYear() === year && date.getMonth() < month)) {
             cls.push('old');
         }
@@ -322,16 +380,76 @@ var DatePicker = Widget.extend({
         return cls;
     },
 
-    fill: function () {
+    updateYears: function () {
         var d = new Date(this.viewDate),
             year = d.getFullYear(),
-            month = d.getMonth(),
+            startYear = this.options.startDate !== -Infinity ? this.options.startDate.getFullYear() : -Infinity,
+            endYear = this.options.endDate !== Infinity ? this.options.endDate.getFullYear() : Infinity,
+            html = '';
+
+        year = parseInt(year / 10, 10) * 10;
+        var yearCont = this.picker.find('.datepicker-years')
+            .find('.datepicker-switch')
+            .text(year + '-' + (year + 9))
+            .end()
+            .find('td');
+        year -= 1;
+        var dateY = this.date && this.date.getFullYear(),
+            classes;
+        for (var i = -1; i < 11; i++) {
+            classes = ['year'];
+
+            if (i === -1)
+                classes.push('old');
+            else if (i === 10)
+                classes.push('new');
+            if (year === dateY)
+                classes.push('active');
+            if (year < startYear || year > endYear)
+                classes.push('disabled');
+
+            html += '<span class="' + classes.join(' ') + '">' + year + '</span>';
+            year += 1;
+        }
+        yearCont.html(html);
+    },
+
+    updateMonths: function () {
+        var d = new Date(this.viewDate),
+            year = d.getFullYear(),
             startYear = this.options.startDate !== -Infinity ? this.options.startDate.getFullYear() : -Infinity,
             startMonth = this.options.startDate !== -Infinity ? this.options.startDate.getMonth() : -Infinity,
             endYear = this.options.endDate !== Infinity ? this.options.endDate.getFullYear() : Infinity,
-            endMonth = this.options.endDate !== Infinity ? this.options.endDate.getMonth() : Infinity,
+            endMonth = this.options.endDate !== Infinity ? this.options.endDate.getMonth() : Infinity;
+
+        var months = this.picker.find('.datepicker-months')
+            .find('.datepicker-switch')
+            .text(year)
+            .end()
+            .find('span').removeClass('active');
+
+        if (this.date) {
+            if (this.date.getFullYear() === year)
+                months.eq(this.date.getMonth()).addClass('active');
+        }
+
+        if (year < startYear || year > endYear) {
+            months.addClass('disabled');
+        }
+        if (year === startYear) {
+            months.slice(0, startMonth).addClass('disabled');
+        }
+        if (year === endYear) {
+            months.slice(endMonth + 1).addClass('disabled');
+        }
+    },
+
+    updateDays: function () {
+        var d = new Date(this.viewDate),
+            year = d.getFullYear(),
+            month = d.getMonth(),
             todaytxt = dates.today,
-            tooltip;
+            hour, minute, second;
 
         if (isNaN(year) || isNaN(month))
             return;
@@ -341,9 +459,6 @@ var DatePicker = Widget.extend({
         this.picker.find('tfoot .today')
             .text(todaytxt)
             .toggle(this.options.todayBtn !== false);
-
-        this.updateNavArrows();
-        this.fillMonths();
 
         var prevMonth = new Date(year, month - 1, 28),
             day = util.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
@@ -378,8 +493,7 @@ var DatePicker = Widget.extend({
             clsName.push('day');
 
             clsName = _.unique(clsName);
-            html.push('<td class="' + clsName.join(' ') + '"' + (tooltip ? ' title="' + tooltip + '"' : '') + '>' + prevMonth.getDate() + '</td>');
-            tooltip = null;
+            html.push('<td class="' + clsName.join(' ') + '">' + prevMonth.getDate() + '</td>');
             if (prevMonth.getDay() === this.options.weekEnd) {
                 html.push('</tr>');
             }
@@ -387,54 +501,99 @@ var DatePicker = Widget.extend({
         }
         this.picker.find('.datepicker-days tbody').empty().append(html.join(''));
 
-        var months = this.picker.find('.datepicker-months')
-            .find('.datepicker-switch')
-            .text(year)
-            .end()
-            .find('span').removeClass('active');
+        if (this.options.showTime) {
+            hour = d.getHours();
+            if (hour < 10) hour = '0' + hour;
 
-        if (this.date) {
-            if (this.date.getFullYear() === year)
-                months.eq(this.date.getMonth()).addClass('active');
-        }
+            minute = d.getMinutes();
+            if (minute < 10) minute = '0' + minute;
 
-        if (year < startYear || year > endYear) {
-            months.addClass('disabled');
-        }
-        if (year === startYear) {
-            months.slice(0, startMonth).addClass('disabled');
-        }
-        if (year === endYear) {
-            months.slice(endMonth + 1).addClass('disabled');
-        }
+            second = d.getSeconds();
+            if (second < 10) second = '0' + second;
 
-        html = '';
-        year = parseInt(year / 10, 10) * 10;
-        var yearCont = this.picker.find('.datepicker-years')
-            .find('.datepicker-switch')
-            .text(year + '-' + (year + 9))
-            .end()
-            .find('td');
-        year -= 1;
-        var dateY = this.date && this.date.getFullYear(),
-            classes;
-        for (var i = -1; i < 11; i++) {
-            classes = ['year'];
-            tooltip = null;
-
-            if (i === -1)
-                classes.push('old');
-            else if (i === 10)
-                classes.push('new');
-            if (year === dateY)
-                classes.push('active');
-            if (year < startYear || year > endYear)
-                classes.push('disabled');
-
-            html += '<span class="' + classes.join(' ') + '"' + (tooltip ? ' title="' + tooltip + '"' : '') + '>' + year + '</span>';
-            year += 1;
+            this.picker.find('.datepicker-days .label-hours').text(hour);
+            this.picker.find('.datepicker-days .label-minutes').text(minute);
+            this.picker.find('.datepicker-days .label-seconds').text(second);
         }
-        yearCont.html(html);
+    },
+
+    updateHours: function () {
+        var d = new Date(this.viewDate),
+            hour = d.getHours(),
+            html = '',
+            i = 0,
+            clsName,
+            $template;
+
+        $template = $(timeTemplate({
+            title: 'Choose Hour'
+        }));
+
+        for (; i < 24; i++) {
+            clsName = ['hour'];
+            if (i === hour) {
+                clsName.push('active');
+            }
+            html += '<span class="' + clsName.join(' ') + '">' + i + '</span>';
+        }
+        $template.find('td').append(html);
+
+        this.picker.append($template);
+        this.picker.children('div').hide().filter('.datepicker-times').show();
+    },
+
+    updateMinutes: function () {
+        var d = new Date(this.viewDate),
+            minute = d.getMinutes(),
+            html = '',
+            i = 0,
+            j, v, clsName, $template;
+
+        $template = $(timeTemplate({
+            title: 'Choose Minute'
+        }));
+
+        for (; i < 6; i++) {
+            for (j = 0; j < 10; j++) {
+                clsName = ['minute'];
+                v = j + i * 10;
+                if (v === minute) {
+                    clsName.push('active');
+                }
+                html += '<span class="' + clsName.join(' ') + '">' + v + '</span>';
+            }
+        }
+        $template.find('td').append(html);
+
+        this.picker.append($template);
+        this.picker.children('div').hide().filter('.datepicker-times').show();
+    },
+
+    updateSeconds: function () {
+        var d = new Date(this.viewDate),
+            second = d.getSeconds(),
+            html = '',
+            i = 0,
+            j, v, clsName, $template;
+
+        $template = $(timeTemplate({
+            title: 'Choose Second'
+        }));
+
+        for (; i < 6; i++) {
+            for (j = 0; j < 10; j++) {
+                clsName = ['second'];
+                v = j + i * 10;
+                if (v === second) {
+                    clsName.push('active');
+                }
+                html += '<span class="' + clsName.join(' ') + '">' + v + '</span>';
+            }
+        }
+        $template.find('td').append(html);
+
+        this.picker.append($template);
+        this.picker.children('div').hide().filter('.datepicker-times').show();
     },
 
     show: function () {
@@ -442,7 +601,7 @@ var DatePicker = Widget.extend({
             this.picker.appendTo(this.options.container);
         this.place();
         this.picker.show();
-        //this._attachSecondaryEvents();
+        this._attachSecondaryEvents();
         this.trigger('show');
         return this;
     },
@@ -454,8 +613,8 @@ var DatePicker = Widget.extend({
             return this;
         this.focusDate = null;
         this.picker.hide().detach();
-        //this._detachSecondaryEvents();
-        this.viewMode = this.options.startView;
+        this._detachSecondaryEvents();
+        this.viewMode = 0;
         this.showMode();
 
         if (this.isInput && this.$element.val() || this.hasInput && this.$element.find('input').val())
@@ -482,7 +641,6 @@ var DatePicker = Widget.extend({
         if (format === undefined)
             format = this.options.format;
 
-        var lang = this.o.language;
         return util.format(this.date, format);
     },
 
@@ -699,7 +857,7 @@ var DatePicker = Widget.extend({
         e.preventDefault();
         e.stopPropagation();
         var target = $(e.target).closest('span, td, th'),
-            year, month, day;
+            year, month, day, hour, minute, second;
         if (target.length === 1) {
             switch (target[0].nodeName.toLowerCase()) {
                 case 'th':
@@ -713,16 +871,17 @@ var DatePicker = Widget.extend({
                             switch (this.viewMode) {
                                 case 0:
                                     this.viewDate = util.addMonths(this.viewDate, dir);
+                                    this.showMode();
                                     this.trigger('changeMonth', this.viewDate);
                                     break;
                                 case 1:
                                 case 2:
                                     this.viewDate = util.addYears(this.viewDate, dir);
+                                    this.showMode();
                                     if (this.viewMode === 1)
                                         this.trigger('changeYear', this.viewDate);
                                     break;
                             }
-                            this.fill();
                             break;
                         case 'today':
                             var date = new Date();
@@ -745,18 +904,48 @@ var DatePicker = Widget.extend({
                             month = target.parent().find('span').index(target);
                             year = this.viewDate.getFullYear();
                             this.viewDate.setMonth(month);
-                            this.trigger('changeMonth', this.viewDate);
                             this.showMode(-1);
-                        }
-                        else {
+                            this.trigger('changeMonth', this.viewDate);
+                        } else if (target.hasClass('year')) {
                             day = 1;
                             month = 0;
                             year = parseInt(target.text(), 10) || 0;
                             this.viewDate.setFullYear(year);
-                            this.trigger('changeYear', this.viewDate);
                             this.showMode(-1);
+                            this.trigger('changeYear', this.viewDate);
+                        } else if (target.hasClass('label')) {
+                            if (target.hasClass('label-hours')) {
+                                this.updateHours();
+                            } else if (target.hasClass('label-minutes')) {
+                                this.updateMinutes();
+                            } else {
+                                this.updateSeconds();
+                            }
+                        } else {
+                            if (target.hasClass('hour')) {
+                                hour = parseInt(target.text(), 10) || 0;
+                                this.viewDate.setHours(hour);
+                                this.trigger('changeHour', this.viewDate);
+                                this.picker.find('.datepicker-times').remove();
+                                this.viewMode = 0;
+                            } else if (target.hasClass('minute')) {
+                                minute = parseInt(target.text(), 10) || 0;
+                                this.viewDate.setMinutes(minute);
+                                this.trigger('changeMinute', this.viewDate);
+                                this.picker.find('.datepicker-times').remove();
+                                this.viewMode = 0;
+                            } else if (target.hasClass('second')) {
+                                second = parseInt(target.text(), 10) || 0;
+                                this.viewDate.setSeconds(second);
+                                this.trigger('changeSecond', this.viewDate);
+                                this.picker.find('.datepicker-times').remove();
+                                this.viewMode = 0;
+                            } else {
+                                this.viewDate = new Date();
+                            }
+
+                            this.showMode();
                         }
-                        this.fill();
                     }
                     break;
                 case 'td':
@@ -764,6 +953,7 @@ var DatePicker = Widget.extend({
                         day = parseInt(target.text(), 10) || 1;
                         year = this.viewDate.getFullYear();
                         month = this.viewDate.getMonth();
+
                         if (target.hasClass('old')) {
                             if (month === 0) {
                                 month = 11;
@@ -782,7 +972,16 @@ var DatePicker = Widget.extend({
                                 month += 1;
                             }
                         }
-                        this._setDate(new Date(year, month, day));
+
+                        if (this.options.showTime) {
+                            hour = parseInt(this.picker.find('.datepicker-days .label-hours').text(), 10);
+                            minute = parseInt(this.picker.find('.datepicker-days .label-minutes').text(), 10);
+                            second = parseInt(this.picker.find('.datepicker-days .label-seconds').text(), 10);
+
+                            this._setDate(new Date(year, month, day, hour, minute, second));
+                        }
+                        else
+                            this._setDate(new Date(year, month, day));
                     }
                     break;
             }
@@ -799,7 +998,7 @@ var DatePicker = Widget.extend({
         if (!which || which === 'view')
             this.viewDate = date && new Date(date);
 
-        this.fill();
+        this.showMode();
         this.setValue();
         if (!which || which !== 'view') {
             this.trigger('changeDate');

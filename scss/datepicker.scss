@@ -1,8 +1,6 @@
 .datepicker {
+  width: 253px;
   border-radius: $border-radius-base;
-  &-inline {
-    width: 220px;
-  }
   direction: ltr;
   &-rtl {
     direction: rtl;
@@ -71,6 +69,7 @@
     display: block;
   }
   table {
+    width: 100%;
     margin: 0;
     -webkit-touch-callout: none;
     @include user-select(none);
@@ -157,11 +156,7 @@
     }
     span {
       display: block;
-      width: 23%;
-      height: 54px;
-      line-height: 54px;
       float: left;
-      margin: 1%;
       cursor: pointer;
       border-radius: 4px;
       &:hover {
@@ -184,6 +179,26 @@
       &.new {
         color: $btn-link-disabled-color;
       }
+      &.year,
+      &.month {
+        width: 23%;
+        height: 54px;
+        line-height: 54px;
+        margin: 1%;
+      }
+      &.hour {
+        width: 23%;
+        height: 40px;
+        line-height: 40px;
+        margin: 1%;
+      }
+      &.minute,
+      &.second {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        margin: 8px 0;
+      }
     }
   }
 
@@ -192,7 +207,7 @@
   }
 
   thead tr:first-child th,
-  tfoot tr th {
+  &.days tfoot tr th {
     cursor: pointer;
     &:hover {
       background: $gray-lighter;
@@ -242,4 +257,11 @@
     margin-left: -5px;
     margin-right: -5px;
   }
+}
+
+.label-hours,
+.label-minutes,
+.label-seconds {
+  @extend .label-default;
+  cursor: pointer;
 }
