@@ -16,7 +16,6 @@ var monthTemplate = require('./month.hbs');
 var yearTemplate = require('./year.hbs');
 var wrapper = require('./datepicker.hbs');
 var dates = locale.value.datepicker;
-var parseFormat = 'YYYY-MM-DD';
 var modes = [
     {
         clsName: 'days',
@@ -50,6 +49,8 @@ function isDateEquals(date1, date2) {
 var DatePicker = Widget.extend({
     options: {
         inline: false,
+        startView: 0,
+        endView: 2,
         calendarWeeks: false,
         defaultViewDate: new Date(),
         datesDisabled: [],
@@ -89,6 +90,7 @@ var DatePicker = Widget.extend({
             this.options.format = this.options.showTime ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD';
         }
 
+        this.viewMode = this.options.startView;
         this.isInline = this.options.inline;
         this.isInput = this.$element.is('input');
         this.component = this.$element.hasClass('date') ? this.$element.find('.add-on, .input-group-addon, .btn') : false;
@@ -117,31 +119,42 @@ var DatePicker = Widget.extend({
 
         this._allow_update = false;
 
+        this._buildView();
+        this._bindEvent();
+
+        this._allow_update = true;
+
+        this.update();
+
+        if (this.isInline) {
+            this.show();
+        }
+    },
+
+    _buildView: function () {
+        this.parseFormat = this.options.showTime ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD';
+
         this.setStartDate(this.options.startDate);
         this.setEndDate(this.options.endDate);
         this.setDaysOfWeekDisabled(this.options.daysOfWeekDisabled);
         this.setDaysOfWeekHighlighted(this.options.daysOfWeekHighlighted);
         this.setDatesDisabled(this.options.datesDisabled);
 
-        this.picker.append(dayTemplate());
+        this._buildMonthAndYearView();
+        this._buildDayView();
+    },
+
+    _buildMonthAndYearView: function () {
+        this.picker.append(yearTemplate());
         this.picker.append(monthTemplate({
             monthsShort: dates.monthsShort
         }));
-        this.picker.append(yearTemplate());
+    },
 
-        this._bindEvent();
+    _buildDayView: function () {
+        this.picker.append(dayTemplate());
 
         this.fillDow();
-
-        this._allow_update = true;
-        this.viewMode = 0;
-
-        this.update();
-        this.showMode();
-
-        if (this.isInline) {
-            this.show();
-        }
     },
 
     _bindEvent: function () {
@@ -270,7 +283,7 @@ var DatePicker = Widget.extend({
             date = this.isInput ? this.$element.val() : this.$element.data('date') || this.$element.find('input').val();
         }
 
-        this.date = util.parse(date, parseFormat);
+        this.date = util.parse(date, this.parseFormat);
 
         if (this.date)
             this.viewDate = new Date(this.date);
@@ -294,13 +307,13 @@ var DatePicker = Widget.extend({
             this.trigger('clear');
 
         this.showMode();
-        //this.$element.change();
+        this.$element.change();
         return this;
     },
 
     showMode: function (dir) {
         if (dir) {
-            this.viewMode = Math.max(0, Math.min(2, this.viewMode + dir));
+            this.viewMode = Math.max(this.options.startView, Math.min(this.options.endView, this.viewMode + dir));
         }
 
         this.picker.children('div').hide().filter('.datepicker-' + modes[this.viewMode].clsName).show();
@@ -625,7 +638,7 @@ var DatePicker = Widget.extend({
         this.focusDate = null;
         this.picker.hide().detach();
         this._detachSecondaryEvents();
-        this.viewMode = 0;
+        this.viewMode = this.options.startView;
         this.showMode();
 
         if (this.isInput && this.$element.val() || this.hasInput && this.$element.find('input').val())
@@ -683,7 +696,7 @@ var DatePicker = Widget.extend({
     },
 
     setStartDate: function (startDate) {
-        this.options.startDate = util.parse(startDate, parseFormat);
+        this.options.startDate = util.parse(startDate, this.parseFormat);
         this.options.startDate = this.options.startDate || -Infinity;
         this.update();
         this.updateNavArrows();
@@ -691,7 +704,7 @@ var DatePicker = Widget.extend({
     },
 
     setEndDate: function (endDate) {
-        this.options.endDate = util.parse(endDate, parseFormat);
+        this.options.endDate = util.parse(endDate, this.parseFormat);
         this.options.endDate = this.options.endDate || Infinity;
         this.update();
         this.updateNavArrows();
@@ -726,10 +739,10 @@ var DatePicker = Widget.extend({
     setDatesDisabled: function (datesDisabled) {
         if (_.isArray(datesDisabled)) {
             this.options.datesDisabled = _.map(datesDisabled, function (d) {
-                return util.parse(d, parseFormat);
+                return util.parse(d, this.parseFormat);
             });
         } else {
-            this.options.datesDisabled.push(util.parse(datesDisabled, parseFormat));
+            this.options.datesDisabled.push(util.parse(datesDisabled, this.parseFormat));
         }
 
         this.update();
@@ -872,128 +885,13 @@ var DatePicker = Widget.extend({
         if (target.length === 1) {
             switch (target[0].nodeName.toLowerCase()) {
                 case 'th':
-                    switch (target[0].className) {
-                        case 'datepicker-switch':
-                            this.showMode(1);
-                            break;
-                        case 'prev':
-                        case 'next':
-                            var dir = modes[this.viewMode].navStep * (target[0].className === 'prev' ? -1 : 1);
-                            switch (this.viewMode) {
-                                case 0:
-                                    this.viewDate = util.addMonths(this.viewDate, dir);
-                                    this.showMode();
-                                    this.trigger('changeMonth', this.viewDate);
-                                    break;
-                                case 1:
-                                case 2:
-                                    this.viewDate = util.addYears(this.viewDate, dir);
-                                    this.showMode();
-                                    if (this.viewMode === 1)
-                                        this.trigger('changeYear', this.viewDate);
-                                    break;
-                            }
-                            break;
-                        case 'today':
-                            var date = new Date();
-                            date = util.startOfDay(date.getFullYear(), date.getMonth(), date.getDate());
-
-                            this.showMode(-2);
-                            var which = this.options.todayBtn === 'linked' ? null : 'view';
-                            this._setDate(date, which);
-                            break;
-                        case 'clear':
-                            this.clearDate();
-                            break;
-                    }
+                    this._thClick(target);
                     break;
                 case 'span':
-                    if (!target.hasClass('disabled')) {
-                        this.viewDate.setDate(1);
-                        if (target.hasClass('month')) {
-                            day = 1;
-                            month = target.parent().find('span').index(target);
-                            year = this.viewDate.getFullYear();
-                            this.viewDate.setMonth(month);
-                            this.showMode(-1);
-                            this.trigger('changeMonth', this.viewDate);
-                        } else if (target.hasClass('year')) {
-                            day = 1;
-                            month = 0;
-                            year = parseInt(target.text(), 10) || 0;
-                            this.viewDate.setFullYear(year);
-                            this.showMode(-1);
-                            this.trigger('changeYear', this.viewDate);
-                        } else if (target.hasClass('label')) {
-                            if (target.hasClass('label-hours')) {
-                                this.updateHours();
-                            } else if (target.hasClass('label-minutes')) {
-                                this.updateMinutes();
-                            } else {
-                                this.updateSeconds();
-                            }
-                        } else {
-                            if (target.hasClass('hour')) {
-                                hour = parseInt(target.text(), 10) || 0;
-                                this.viewDate.setHours(hour);
-                                this.trigger('changeHour', this.viewDate);
-                                this.picker.find('.datepicker-times').remove();
-                                this.viewMode = 0;
-                            } else if (target.hasClass('minute')) {
-                                minute = parseInt(target.text(), 10) || 0;
-                                this.viewDate.setMinutes(minute);
-                                this.trigger('changeMinute', this.viewDate);
-                                this.picker.find('.datepicker-times').remove();
-                                this.viewMode = 0;
-                            } else if (target.hasClass('second')) {
-                                second = parseInt(target.text(), 10) || 0;
-                                this.viewDate.setSeconds(second);
-                                this.trigger('changeSecond', this.viewDate);
-                                this.picker.find('.datepicker-times').remove();
-                                this.viewMode = 0;
-                            } else {
-                                this.viewDate = new Date();
-                            }
-
-                            this.showMode();
-                        }
-                    }
+                    this._spanClick(target);
                     break;
                 case 'td':
-                    if (target.hasClass('day') && !target.hasClass('disabled')) {
-                        day = parseInt(target.text(), 10) || 1;
-                        year = this.viewDate.getFullYear();
-                        month = this.viewDate.getMonth();
-
-                        if (target.hasClass('old')) {
-                            if (month === 0) {
-                                month = 11;
-                                year -= 1;
-                            }
-                            else {
-                                month -= 1;
-                            }
-                        }
-                        else if (target.hasClass('new')) {
-                            if (month === 11) {
-                                month = 0;
-                                year += 1;
-                            }
-                            else {
-                                month += 1;
-                            }
-                        }
-
-                        if (this.options.showTime) {
-                            hour = parseInt(this.picker.find('.datepicker-days .label-hours').text(), 10);
-                            minute = parseInt(this.picker.find('.datepicker-days .label-minutes').text(), 10);
-                            second = parseInt(this.picker.find('.datepicker-days .label-seconds').text(), 10);
-
-                            this._setDate(new Date(year, month, day, hour, minute, second));
-                        }
-                        else
-                            this._setDate(new Date(year, month, day));
-                    }
+                    this._tdClick(target);
                     break;
             }
         }
@@ -1001,6 +899,137 @@ var DatePicker = Widget.extend({
             $(this._focused_from).focus();
         }
         delete this._focused_from;
+    },
+
+    _thClick: function (target) {
+        switch (target[0].className) {
+            case 'datepicker-switch':
+                this.showMode(1);
+                break;
+            case 'prev':
+            case 'next':
+                var dir = modes[this.viewMode].navStep * (target[0].className === 'prev' ? -1 : 1);
+                switch (this.viewMode) {
+                    case 0:
+                        this.viewDate = util.addMonths(this.viewDate, dir);
+                        this.showMode();
+                        this.trigger('changeMonth', this.viewDate);
+                        break;
+                    case 1:
+                    case 2:
+                        this.viewDate = util.addYears(this.viewDate, dir);
+                        this.showMode();
+                        if (this.viewMode === 1)
+                            this.trigger('changeYear', this.viewDate);
+                        break;
+                }
+                break;
+            case 'today':
+                var date = new Date();
+                date = util.startOfDay(date.getFullYear(), date.getMonth(), date.getDate());
+
+                this.showMode(-2);
+                var which = this.options.todayBtn === 'linked' ? null : 'view';
+                this._setDate(date, which);
+                break;
+            case 'clear':
+                this.clearDate();
+                break;
+        }
+    },
+
+    _spanClick: function (target) {
+        var year, month, day, hour, minute, second;
+
+        if (!target.hasClass('disabled')) {
+            this.viewDate.setDate(1);
+            if (target.hasClass('month')) {
+                day = 1;
+                month = target.parent().find('span').index(target);
+                year = this.viewDate.getFullYear();
+                this.viewDate.setMonth(month);
+                this.showMode(-1);
+                this.trigger('changeMonth', this.viewDate);
+            } else if (target.hasClass('year')) {
+                day = 1;
+                month = 0;
+                year = parseInt(target.text(), 10) || 0;
+                this.viewDate.setFullYear(year);
+                this.showMode(-1);
+                this.trigger('changeYear', this.viewDate);
+            } else if (target.hasClass('label')) {
+                if (target.hasClass('label-hours')) {
+                    this.updateHours();
+                } else if (target.hasClass('label-minutes')) {
+                    this.updateMinutes();
+                } else {
+                    this.updateSeconds();
+                }
+            } else {
+                if (target.hasClass('hour')) {
+                    hour = parseInt(target.text(), 10) || 0;
+                    this.viewDate.setHours(hour);
+                    this.trigger('changeHour', this.viewDate);
+                    this.picker.find('.datepicker-times').remove();
+                    this.viewMode = 0;
+                } else if (target.hasClass('minute')) {
+                    minute = parseInt(target.text(), 10) || 0;
+                    this.viewDate.setMinutes(minute);
+                    this.trigger('changeMinute', this.viewDate);
+                    this.picker.find('.datepicker-times').remove();
+                    this.viewMode = 0;
+                } else if (target.hasClass('second')) {
+                    second = parseInt(target.text(), 10) || 0;
+                    this.viewDate.setSeconds(second);
+                    this.trigger('changeSecond', this.viewDate);
+                    this.picker.find('.datepicker-times').remove();
+                    this.viewMode = 0;
+                } else {
+                    this.viewDate = new Date();
+                }
+
+                this.showMode();
+            }
+        }
+    },
+
+    _tdClick: function (target) {
+        var year, month, day, hour, minute, second;
+
+        if (target.hasClass('day') && !target.hasClass('disabled')) {
+            day = parseInt(target.text(), 10) || 1;
+            year = this.viewDate.getFullYear();
+            month = this.viewDate.getMonth();
+
+            if (target.hasClass('old')) {
+                if (month === 0) {
+                    month = 11;
+                    year -= 1;
+                }
+                else {
+                    month -= 1;
+                }
+            }
+            else if (target.hasClass('new')) {
+                if (month === 11) {
+                    month = 0;
+                    year += 1;
+                }
+                else {
+                    month += 1;
+                }
+            }
+
+            if (this.options.showTime) {
+                hour = parseInt(this.picker.find('.datepicker-days .label-hours').text(), 10);
+                minute = parseInt(this.picker.find('.datepicker-days .label-minutes').text(), 10);
+                second = parseInt(this.picker.find('.datepicker-days .label-seconds').text(), 10);
+
+                this._setDate(new Date(year, month, day, hour, minute, second));
+            }
+            else
+                this._setDate(new Date(year, month, day));
+        }
     },
 
     _setDate: function (date, which) {
