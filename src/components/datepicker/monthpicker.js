@@ -1,19 +1,10 @@
 /**
  * Created by huangxinghui on 2015/8/6.
  */
-/**
- * Created by huangxinghui on 2015/6/8.
- */
 
-var $ = require('jquery');
 var plugin = require('../../plugin');
 var Widget = require('../../widget');
-var locale = require('../../locale');
-var util = require('../../utils/date');
-var monthTemplate = require('./month.hbs');
-var yearTemplate = require('./year.hbs');
 var DatePicker = require('./datepicker');
-var dates = locale.value.datepicker;
 
 var MonthPicker = DatePicker.extend({
     options: {
