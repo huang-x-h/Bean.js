@@ -61,6 +61,7 @@ var DatePicker = Widget.extend({
         rtl: false,
         immediateUpdates: false,
         autoclose: true,
+        showOnFocus: true,
         keyboardNavigation: true,
         zIndexOffset: 10,
         format: '',
@@ -100,6 +101,8 @@ var DatePicker = Widget.extend({
 
         if (this.isInline) {
             this.picker.addClass('datepicker-inline').appendTo(this.$element);
+        } else {
+            this.picker.addClass('datepicker-dropdown dropdown-menu');
         }
 
         if (this.options.rtl) {
@@ -142,8 +145,10 @@ var DatePicker = Widget.extend({
     },
 
     _bindEvent: function () {
+        var events;
+
         if (this.isInput) { // single input
-            this.delegateEvents({
+            events = {
                 'keyup': _.bind(function (e) {
                     if (_.indexOf([27, 37, 39, 38, 40, 32, 13, 9], e.keyCode) === -1)
                         this.update();
@@ -152,10 +157,11 @@ var DatePicker = Widget.extend({
                 'blur': _.bind(function (e) {
                     this._focused_from = e.target;
                 }, this)
-            });
+            };
+
         }
         else if (this.component && this.hasInput) { // component: input + button
-            this.delegateEvents({
+            events = {
                 'keyup input': _.bind(function (e) {
                     if (_.indexOf([27, 37, 39, 38, 40, 32, 13, 9], e.keyCode) === -1)
                         this.update();
@@ -163,16 +169,22 @@ var DatePicker = Widget.extend({
                 'keydown input': 'keydown',
                 'blur *': _.bind(function (e) {
                     this._focused_from = e.target;
-                }, this)
-            });
-            this.delegate('click', '.input-group-addon', _.bind(this.show, this));
+                }, this),
+                'click .input-group-addon': 'show'
+            };
         }
         else {
-            this.delegate('click', null, _.bind(this.show, this));
+            events = {
+                'click': 'show'
+            };
+        }
+
+        if (this.options.showOnFocus === true) {
+            events.focus = 'show';
         }
 
         if (this.options.immediateUpdates) {
-            this.delegateEvents({
+            _.extend(events, {
                 'changeYear': '_changeDate',
                 'changeMonth': '_changeDate',
                 'changeHour': '_changeDate',
@@ -180,6 +192,8 @@ var DatePicker = Widget.extend({
                 'changeSecond': '_changeDate'
             });
         }
+
+        this.delegateEvents(events);
 
         this._secondaryEvents = [
             [this.picker, {
@@ -1022,18 +1036,11 @@ var DatePicker = Widget.extend({
             return;
         }
         var dateChanged = false,
-            dir, newDate, newViewDate,
-            focusDate = this.focusDate || this.viewDate;
+            dir, newDate = this.viewDate;
 
         switch (e.keyCode) {
             case 27: // escape
-                if (this.focusDate) {
-                    this.focusDate = null;
-                    this.viewDate = this.dates.get(-1) || this.viewDate;
-                    this.fill();
-                }
-                else
-                    this.hide();
+                this.hide();
                 e.preventDefault();
                 break;
             case 37: // left
@@ -1042,48 +1049,38 @@ var DatePicker = Widget.extend({
                     break;
                 dir = e.keyCode === 37 ? -1 : 1;
                 if (e.ctrlKey) {
-                    newDate = util.addYears(this.date || new Date(), dir);
-                    newViewDate = util.addYears(focusDate, dir);
-                    this.trigger('changeYear', this.viewDate);
+                    newDate = util.addYears(newDate, dir);
+                    this.trigger('changeYear', newDate);
                 }
                 else if (e.shiftKey) {
-                    newDate = this.moveMonth(this.dates.get(-1) || UTCToday(), dir);
-                    newViewDate = this.moveMonth(focusDate, dir);
-                    this._trigger('changeMonth', this.viewDate);
+                    newDate = util.addMonths(newDate, dir);
+                    this.trigger('changeMonth', newDate);
                 }
                 else {
-                    newDate = new Date(this.date || UTCToday());
-                    newDate.setUTCDate(newDate.getUTCDate() + dir);
-                    newViewDate = new Date(focusDate);
-                    newViewDate.setUTCDate(focusDate.getUTCDate() + dir);
+                    newDate.setDate(newDate.getDate() + dir);
                 }
                 if (this.dateWithinRange(newViewDate)) {
-                    this.focusDate = this.viewDate = newViewDate;
-                    this.setValue();
+                    this.viewDate = newViewDate;
                     this.fill();
+                    this.setValue();
                     e.preventDefault();
                 }
                 break;
             case 38: // up
             case 40: // down
-                if (!this.o.keyboardNavigation)
+                if (!this.options.keyboardNavigation)
                     break;
                 dir = e.keyCode === 38 ? -1 : 1;
                 if (e.ctrlKey) {
-                    newDate = this.moveYear(this.dates.get(-1) || UTCToday(), dir);
-                    newViewDate = this.moveYear(focusDate, dir);
-                    this._trigger('changeYear', this.viewDate);
+                    newDate = util.addYears(newDate, dir);
+                    this.trigger('changeYear', newDate);
                 }
                 else if (e.shiftKey) {
-                    newDate = this.moveMonth(this.dates.get(-1) || UTCToday(), dir);
-                    newViewDate = this.moveMonth(focusDate, dir);
-                    this._trigger('changeMonth', this.viewDate);
+                    newDate = util.addMonths(newDate, dir);
+                    this.trigger('changeMonth', newDate);
                 }
                 else {
-                    newDate = new Date(this.dates.get(-1) || UTCToday());
-                    newDate.setUTCDate(newDate.getUTCDate() + dir * 7);
-                    newViewDate = new Date(focusDate);
-                    newViewDate.setUTCDate(focusDate.getUTCDate() + dir * 7);
+                    newDate.setDate(newDate.getDate() + dir * 7);
                 }
                 if (this.dateWithinRange(newViewDate)) {
                     this.focusDate = this.viewDate = newViewDate;
@@ -1097,12 +1094,9 @@ var DatePicker = Widget.extend({
                 // As such, its behavior should not be hijacked.
                 break;
             case 13: // enter
-                focusDate = this.focusDate || this.dates.get(-1) || this.viewDate;
-                if (this.o.keyboardNavigation) {
-                    this._toggle_multidate(focusDate);
+                if (this.options.keyboardNavigation) {
                     dateChanged = true;
                 }
-                this.focusDate = null;
                 this.viewDate = this.dates.get(-1) || this.viewDate;
                 this.setValue();
                 this.fill();
@@ -1113,19 +1107,18 @@ var DatePicker = Widget.extend({
                     } else {
                         e.cancelBubble = true; // IE6,7,8 ignore "stopPropagation"
                     }
-                    if (this.o.autoclose)
+                    if (this.options.autoclose)
                         this.hide();
                 }
                 break;
             case 9: // tab
-                this.focusDate = null;
                 this.viewDate = this.dates.get(-1) || this.viewDate;
                 this.fill();
                 this.hide();
                 break;
         }
         if (dateChanged) {
-            if (this.dates.length)
+            if (this.date)
                 this.trigger('changeDate');
             else
                 this.trigger('clearDate');

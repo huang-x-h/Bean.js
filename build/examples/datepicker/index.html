@@ -1,34 +1,96 @@
 <!DOCTYPE html>
-<html style="height: 100%;">
+<html>
     <head lang="en">
         <meta name="viewport"
               content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta charset="UTF-8">
         <title>DatePicker</title>
         <link rel="stylesheet" href="../../main.css">
+        <link rel="stylesheet" href="../doc.css">
     </head>
-    <body style="height: 100%;">
+    <body>
         <div class="container">
-            <div class="row">
-                <div class='col-sm-6'>
-                    <div class="form-group">
-                        <div class='input-group date' id='datepicker'>
-                            <input type='text' class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
+            <h2>MonthPicker</h2>
+            <div class="bs-example">
+                <div class="form-group">
+                    <div class='input-group date' id='monthpicker'>
+                        <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
                     </div>
                 </div>
             </div>
-            <div>
-
+            <h2>DatePicker</h2>
+            <div class="bs-example">
+                <div class="form-group">
+                    <div class='input-group date' id='datepicker'>
+                        <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <h2>DatePicker input</h2>
+            <div class="bs-example">
+                <input type='text' class="form-control" id="datepicker-input" />
+            </div>
+            <h2>DatePicker inline</h2>
+            <div class="bs-example">
+                <div class="form-group" id='datepicker-inline'>
+                </div>
+            </div>
+            <h2>DatePicker with format</h2>
+            <div class="bs-example">
+                <div class="form-group">
+                    <div class='input-group date' id='datepicker2'>
+                        <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <h2>DatePicker with range</h2>
+            <div class="bs-example">
+                <div class="form-group">
+                    <div class='input-group date' id='datepicker3'>
+                        <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <h2>DatePicker with time</h2>
+            <div class="bs-example">
+                <div class="form-group">
+                    <div class='input-group date' id='datepicker4'>
+                        <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    </div>
+                </div>
             </div>
         </div>
         <script src="../../bundle.js"></script>
         <script>
             $(function () {
-                $('#datepicker').datepicker({
+                $('#datepicker').datepicker();
+                $('#datepicker-input').datepicker();
+                $('#datepicker-inline').datepicker({
+                    inline: true
+                });
+                $('#datepicker2').datepicker({
+                    format: 'YYYY/MM/DD'
+                });
+                $('#datepicker3').datepicker({
+                    startDate: '2015-08-13',
+                    endDate: '2015-09-13'
+                });
+                $('#datepicker4').datepicker({
                     showTime: true
                 });
             });
