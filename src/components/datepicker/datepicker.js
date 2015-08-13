@@ -16,6 +16,7 @@ var monthTemplate = require('./month.hbs');
 var yearTemplate = require('./year.hbs');
 var wrapper = require('./datepicker.hbs');
 var dates = locale.value.datepicker;
+var parseFormat = 'YYYY-MM-DD';
 var modes = [
     {
         clsName: 'days',
@@ -143,11 +144,14 @@ var DatePicker = Widget.extend({
     _bindEvent: function () {
         if (this.isInput) { // single input
             this.delegateEvents({
-                keyup: _.bind(function (e) {
+                'keyup': _.bind(function (e) {
                     if (_.indexOf([27, 37, 39, 38, 40, 32, 13, 9], e.keyCode) === -1)
                         this.update();
                 }, this),
-                keydown: 'keydown'
+                'keydown': 'keydown',
+                'blur': _.bind(function (e) {
+                    this._focused_from = e.target;
+                }, this)
             });
         }
         else if (this.component && this.hasInput) { // component: input + button
@@ -156,35 +160,25 @@ var DatePicker = Widget.extend({
                     if (_.indexOf([27, 37, 39, 38, 40, 32, 13, 9], e.keyCode) === -1)
                         this.update();
                 }, this),
-                'keydown input': 'keydown'
+                'keydown input': 'keydown',
+                'blur *': _.bind(function (e) {
+                    this._focused_from = e.target;
+                }, this)
             });
             this.delegate('click', '.input-group-addon', _.bind(this.show, this));
         }
         else {
             this.delegate('click', null, _.bind(this.show, this));
         }
-        //this._events.push(
-        //    // Component: listen for blur on element descendants
-        //    [this.$element, '*', {
-        //        blur: $.proxy(function (e) {
-        //            this._focused_from = e.target;
-        //        }, this)
-        //    }],
-        //    // Input: listen for blur on element
-        //    [this.$element, {
-        //        blur: $.proxy(function (e) {
-        //            this._focused_from = e.target;
-        //        }, this)
-        //    }]
-        //);
 
         if (this.options.immediateUpdates) {
-            // Trigger input updates immediately on changed year/month
-            //this._events.push([this.$element, {
-            //    'changeYear changeMonth': $.proxy(function(e){
-            //        this.update(e.date);
-            //    }, this)
-            //}]);
+            this.delegateEvents({
+                'changeYear': '_changeDate',
+                'changeMonth': '_changeDate',
+                'changeHour': '_changeDate',
+                'changeMinute': '_changeDate',
+                'changeSecond': '_changeDate'
+            });
         }
 
         this._secondaryEvents = [
@@ -194,13 +188,12 @@ var DatePicker = Widget.extend({
             [$document, {
                 mousedown: _.bind(function (e) {
                     // Clicked outside the datepicker, hide it
-                    if (!(
-                        this.$element.is(e.target) ||
-                        this.$element.find(e.target).length ||
-                        this.picker.is(e.target) ||
-                        this.picker.find(e.target).length ||
-                        this.picker.hasClass('datepicker-inline')
-                        )) {
+                    if (!(this.$element.is(e.target)
+                        || this.$element.find(e.target).length
+                        || this.picker.is(e.target)
+                        || this.picker.find(e.target).length
+                        || this.picker.hasClass('datepicker-inline'))) {
+                        this.viewDate = this.date || this.options.defaultViewDate;
                         this.hide();
                     }
                 }, this)
@@ -241,8 +234,13 @@ var DatePicker = Widget.extend({
         this._detachSecondaryEvents();
         this._applyEvents(this._secondaryEvents);
     },
+
     _detachSecondaryEvents: function () {
         this._unapplyEvents(this._secondaryEvents);
+    },
+
+    _changeDate: function (e, date) {
+        this.update(date);
     },
 
     update: function (date) {
@@ -258,7 +256,7 @@ var DatePicker = Widget.extend({
             date = this.isInput ? this.$element.val() : this.$element.data('date') || this.$element.find('input').val();
         }
 
-        this.date = util.parse(date);
+        this.date = util.parse(date, parseFormat);
 
         if (this.date)
             this.viewDate = new Date(this.date);
@@ -355,11 +353,10 @@ var DatePicker = Widget.extend({
         if (this.date && isDateEquals(this.date, date))
             cls.push('active');
         if (date.valueOf() < this.options.startDate || date.valueOf() > this.options.endDate ||
-            $.inArray(date.getDay(), this.options.daysOfWeekDisabled) !== -1) {
+            _.indexOf(this.options.daysOfWeekDisabled, date.getDay()) !== -1) {
             cls.push('disabled');
         }
-        if (date.valueOf() < this.options.startDate || date.valueOf() > this.options.endDate ||
-            $.inArray(date.getDay(), this.options.daysOfWeekHighlighted) !== -1) {
+        if (_.indexOf(this.options.daysOfWeekHighlighted, date.getDay()) !== -1) {
             cls.push('highlighted');
         }
         if (this.options.datesDisabled.length > 0 &&
@@ -672,7 +669,7 @@ var DatePicker = Widget.extend({
     },
 
     setStartDate: function (startDate) {
-        this.options.startDate = util.parse(startDate);
+        this.options.startDate = util.parse(startDate, parseFormat);
         this.options.startDate = this.options.startDate || -Infinity;
         this.update();
         this.updateNavArrows();
@@ -680,7 +677,7 @@ var DatePicker = Widget.extend({
     },
 
     setEndDate: function (endDate) {
-        this.options.endDate = util.parse(endDate);
+        this.options.endDate = util.parse(endDate, parseFormat);
         this.options.endDate = this.options.endDate || Infinity;
         this.update();
         this.updateNavArrows();
@@ -715,10 +712,10 @@ var DatePicker = Widget.extend({
     setDatesDisabled: function (datesDisabled) {
         if (_.isArray(datesDisabled)) {
             this.options.datesDisabled = _.map(datesDisabled, function (d) {
-                return util.parse(d);
+                return util.parse(d, parseFormat);
             });
         } else {
-            this.options.datesDisabled.push(util.parse(datesDisabled));
+            this.options.datesDisabled.push(util.parse(datesDisabled, parseFormat));
         }
 
         this.update();

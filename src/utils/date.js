@@ -88,7 +88,7 @@ module.exports = {
             format = parseFormat(format);
 
         var parts = date && date.match(nonpunctuation) || [],
-            part, dir, i;
+            part, i;
 
         date = new Date();
         var parsed = {},
@@ -124,9 +124,9 @@ module.exports = {
                     return d.setSeconds(v);
                 }
             },
-            val, filtered;
+            val;
 
-        setters_map['M'] = setters_map['MM'];
+        setters_map['MM'] = setters_map['M'];
         setters_map['DD'] = setters_map['D'];
         setters_map['HH'] = setters_map['H'];
         setters_map['mm'] = setters_map['m'];
@@ -134,7 +134,13 @@ module.exports = {
 
         var fparts = format.parts.slice();
         if (parts.length === fparts.length) {
-            var _date, s;
+            var cnt, _date, s;
+            for (i=0, cnt = fparts.length; i < cnt; i++) {
+                val = parseInt(parts[i], 10);
+                part = fparts[i];
+                parsed[part] = val;
+            }
+
             for (i = 0; i < setters_order.length; i++) {
                 s = setters_order[i];
                 if (s in parsed && !isNaN(parsed[s])) {
