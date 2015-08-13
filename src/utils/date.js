@@ -164,14 +164,14 @@ module.exports = {
 
     startOfDay: function (date, utc) {
         if (utc)
-            return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
         return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     },
 
     endOfDay: function (date, utc) {
         if (utc)
-            return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 23, 59, 59, 999);
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
 
         return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
     },
