@@ -265,3 +265,7 @@
   @extend .label-default;
   cursor: pointer;
 }
+
+.datepicker-now {
+  margin-left: $padding-base-horizontal;
+}

@@ -350,7 +350,7 @@ var DatePicker = Widget.extend({
         this.picker.find('.datepicker-days thead').append(html);
 
         if (this.options.showTime) {
-            this.picker.find('.datepicker-days tfoot').append('<tr><th colspan="7"><span class="label label-hours"></span> : <span class="label label-minutes"></span> : <span class="label label-seconds"></span><span><a class="btn">Now</a></span></th></tr>');
+            this.picker.find('.datepicker-days tfoot').append('<tr><th colspan="7"><span class="label label-hours"></span> : <span class="label label-minutes"></span> : <span class="label label-seconds"></span><a class="btn datepicker-now">Now</a><a class="btn">OK</a></th></tr>');
         } else {
             this.picker.find('.datepicker-days tfoot').append('<tr><th colspan="7" class="today" style="display: none;">Today</th></tr>');
         }
@@ -880,7 +880,7 @@ var DatePicker = Widget.extend({
     click: function (e) {
         e.preventDefault();
         e.stopPropagation();
-        var target = $(e.target).closest('span, td, th'),
+        var target = $(e.target).closest('span, td, th, a'),
             year, month, day, hour, minute, second;
         if (target.length === 1) {
             switch (target[0].nodeName.toLowerCase()) {
@@ -893,6 +893,13 @@ var DatePicker = Widget.extend({
                 case 'td':
                     this._tdClick(target);
                     break;
+                case 'a':
+                    if (target.hasClass('datepicker-now')) {
+                        this.viewDate = new Date();
+                        this.showMode();
+                    } else {
+                        this._setDate(this.viewDate);
+                    }
             }
         }
         if (this.picker.is(':visible') && this._focused_from) {
@@ -981,8 +988,6 @@ var DatePicker = Widget.extend({
                     this.trigger('changeSecond', this.viewDate);
                     this.picker.find('.datepicker-times').remove();
                     this.viewMode = 0;
-                } else {
-                    this.viewDate = new Date();
                 }
 
                 this.showMode();

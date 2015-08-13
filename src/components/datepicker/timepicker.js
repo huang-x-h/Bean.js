@@ -28,7 +28,6 @@ var TimePicker = DatePicker.extend({
         this.parseFormat = 'HH:mm:ss';
 
         this.picker.append(template());
-        this.picker.find('tfoot').append('<tr><th colspan="7"><span class="label label-hours"></span> : <span class="label label-minutes"></span> : <span class="label label-seconds"></span><span><a class="btn">Now</a></span></th></tr>');
     },
 
     showMode: function () {
