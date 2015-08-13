@@ -925,11 +925,8 @@ var DatePicker = Widget.extend({
                 }
                 break;
             case 'today':
-                var date = new Date();
-                date = util.startOfDay(date.getFullYear(), date.getMonth(), date.getDate());
-
-                this.showMode(-2);
-                var which = this.options.todayBtn === 'linked' ? null : 'view';
+                var date = util.startOfDay(new Date());
+                var which = this.options.todayBtn ? null : 'view';
                 this._setDate(date, which);
                 break;
             case 'clear':
