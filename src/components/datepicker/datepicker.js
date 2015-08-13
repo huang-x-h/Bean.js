@@ -14,7 +14,7 @@ var timeTemplate = require('./time.hbs');
 var dayTemplate = require('./day.hbs');
 var monthTemplate = require('./month.hbs');
 var yearTemplate = require('./year.hbs');
-var wrapper = require('./datepicker.hbs');
+var wrapperTemplate = require('./wrapper.hbs');
 var dates = locale.value.datepicker;
 var modes = [
     {
@@ -74,7 +74,7 @@ var DatePicker = Widget.extend({
     },
 
     _create: function () {
-        this.picker = $(wrapper());
+        this.picker = $(wrapperTemplate());
 
         var plc = String(this.options.orientation).toLowerCase().split(/\s+/g),
             _plc = this.options.orientation.toLowerCase();

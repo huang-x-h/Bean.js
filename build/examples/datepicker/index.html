@@ -10,6 +10,17 @@
     </head>
     <body>
         <div class="container">
+            <h2>TimePicker</h2>
+            <div class="bs-example">
+                <div class="form-group">
+                    <div class='input-group date' id='timepicker'>
+                        <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    </div>
+                </div>
+            </div>
             <h2>MonthPicker</h2>
             <div class="bs-example">
                 <div class="form-group">
@@ -78,11 +89,13 @@
         <script src="../../bundle.js"></script>
         <script>
             $(function () {
+                $('#timepicker').timepicker();
                 $('#monthpicker').monthpicker();
                 $('#datepicker').datepicker();
                 $('#datepicker-input').datepicker();
                 $('#datepicker-inline').datepicker({
-                    inline: true
+                    inline: true,
+                    showTime: true
                 });
                 $('#datepicker2').datepicker({
                     format: 'YYYY/MM/DD'
