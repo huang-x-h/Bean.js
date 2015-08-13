@@ -207,7 +207,7 @@
   }
 
   thead tr:first-child th,
-  &.days tfoot tr th {
+  & tfoot .today {
     cursor: pointer;
     &:hover {
       background: $gray-lighter;
