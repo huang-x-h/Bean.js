@@ -56,8 +56,8 @@ var DatePicker = Widget.extend({
         datesDisabled: [],
         daysOfWeekDisabled: [],
         daysOfWeekHighlighted: [],
-        endDate: null,
-        startDate: null,
+        endDate: '',
+        startDate: '',
         orientation: "auto",
         rtl: false,
         immediateUpdates: false,
@@ -75,6 +75,9 @@ var DatePicker = Widget.extend({
 
     _create: function () {
         this.picker = $(wrapperTemplate());
+
+        this.viewDate = this.options.defaultViewDate;
+        this.focusDate = null;
 
         var plc = String(this.options.orientation).toLowerCase().split(/\s+/g),
             _plc = this.options.orientation.toLowerCase();
@@ -171,7 +174,6 @@ var DatePicker = Widget.extend({
                     this._focused_from = e.target;
                 }, this)
             };
-
         }
         else if (this.component && this.hasInput) { // component: input + button
             events = {
@@ -368,7 +370,7 @@ var DatePicker = Widget.extend({
         else if (date.getFullYear() > year || (date.getFullYear() === year && date.getMonth() > month)) {
             cls.push('new');
         }
-        if (this.focusDate && date.valueOf() === this.focusDate.valueOf())
+        if (this.focusDate && isDateEquals(date, this.focusDate))
             cls.push('focused');
         // Compare internal  date with local today, not  today
         if (this.options.todayHighlight &&
@@ -635,7 +637,6 @@ var DatePicker = Widget.extend({
             return this;
         if (!this.picker.is(':visible'))
             return this;
-        this.focusDate = null;
         this.picker.hide().detach();
         this._detachSecondaryEvents();
         this.viewMode = this.options.startView;
@@ -686,6 +687,16 @@ var DatePicker = Widget.extend({
         if (this.options.autoclose) {
             this.hide();
         }
+    },
+
+    setRange: function(range){
+        if (!range || !range.length)
+            delete this.range;
+        else
+            this.range = _.map(range, function(d){
+                return d.valueOf();
+            });
+        this.showMode();
     },
 
     setDate: function (date) {
@@ -948,15 +959,11 @@ var DatePicker = Widget.extend({
         if (!target.hasClass('disabled')) {
             this.viewDate.setDate(1);
             if (target.hasClass('month')) {
-                day = 1;
                 month = target.parent().find('span').index(target);
-                year = this.viewDate.getFullYear();
                 this.viewDate.setMonth(month);
                 this.showMode(-1);
                 this.trigger('changeMonth', this.viewDate);
             } else if (target.hasClass('year')) {
-                day = 1;
-                month = 0;
                 year = parseInt(target.text(), 10) || 0;
                 this.viewDate.setFullYear(year);
                 this.showMode(-1);
@@ -1060,6 +1067,10 @@ var DatePicker = Widget.extend({
         }
     },
 
+    dateWithinRange: function (date) {
+        return date >= this.options.startDate && date <= this.options.endDate;
+    },
+
     keydown: function (e) {
         if (!this.picker.is(':visible')) {
             if (e.keyCode === 40 || e.keyCode === 27) // allow down to re-show picker
@@ -1067,11 +1078,18 @@ var DatePicker = Widget.extend({
             return;
         }
         var dateChanged = false,
-            dir, newDate = this.viewDate;
+            dir, newViewDate,
+            focusDate = this.focusDate || this.viewDate;
 
         switch (e.keyCode) {
             case 27: // escape
-                this.hide();
+                if (this.focusDate) {
+                    this.focusDate = null;
+                    this.viewDate = this.date || this.viewDate;
+                    this.showMode();
+                }
+                else
+                    this.hide();
                 e.preventDefault();
                 break;
             case 37: // left
@@ -1080,19 +1098,19 @@ var DatePicker = Widget.extend({
                     break;
                 dir = e.keyCode === 37 ? -1 : 1;
                 if (e.ctrlKey) {
-                    newDate = util.addYears(newDate, dir);
-                    this.trigger('changeYear', newDate);
+                    newViewDate = util.addYears(focusDate, dir);
+                    this.trigger('changeYear', newViewDate);
                 }
                 else if (e.shiftKey) {
-                    newDate = util.addMonths(newDate, dir);
-                    this.trigger('changeMonth', newDate);
+                    newViewDate = util.addMonths(focusDate, dir);
+                    this.trigger('changeMonth', newViewDate);
                 }
                 else {
-                    newDate.setDate(newDate.getDate() + dir);
+                    newViewDate = util.addDays(focusDate, dir);
                 }
                 if (this.dateWithinRange(newViewDate)) {
-                    this.viewDate = newViewDate;
-                    this.fill();
+                    this.focusDate = this.viewDate = newViewDate;
+                    this.showMode();
                     this.setValue();
                     e.preventDefault();
                 }
@@ -1103,20 +1121,20 @@ var DatePicker = Widget.extend({
                     break;
                 dir = e.keyCode === 38 ? -1 : 1;
                 if (e.ctrlKey) {
-                    newDate = util.addYears(newDate, dir);
-                    this.trigger('changeYear', newDate);
+                    newViewDate = util.addYears(focusDate, dir);
+                    this.trigger('changeYear', newViewDate);
                 }
                 else if (e.shiftKey) {
-                    newDate = util.addMonths(newDate, dir);
-                    this.trigger('changeMonth', newDate);
+                    newViewDate = util.addMonths(focusDate, dir);
+                    this.trigger('changeMonth', newViewDate);
                 }
                 else {
-                    newDate.setDate(newDate.getDate() + dir * 7);
+                    newViewDate = util.addDays(focusDate, dir * 7);
                 }
                 if (this.dateWithinRange(newViewDate)) {
                     this.focusDate = this.viewDate = newViewDate;
+                    this.showMode();
                     this.setValue();
-                    this.fill();
                     e.preventDefault();
                 }
                 break;
@@ -1128,23 +1146,14 @@ var DatePicker = Widget.extend({
                 if (this.options.keyboardNavigation) {
                     dateChanged = true;
                 }
-                this.viewDate = this.dates.get(-1) || this.viewDate;
-                this.setValue();
-                this.fill();
-                if (this.picker.is(':visible')) {
-                    e.preventDefault();
-                    if (typeof e.stopPropagation === 'function') {
-                        e.stopPropagation(); // All modern browsers, IE9+
-                    } else {
-                        e.cancelBubble = true; // IE6,7,8 ignore "stopPropagation"
-                    }
-                    if (this.options.autoclose)
-                        this.hide();
-                }
+                this._setDate(this.focusDate, 'date');
+                this.focusDate = null;
+                e.preventDefault();
                 break;
             case 9: // tab
-                this.viewDate = this.dates.get(-1) || this.viewDate;
-                this.fill();
+                this.focusDate = null;
+                this.viewDate = this.date || this.viewDate;
+                this.showMode();
                 this.hide();
                 break;
         }
@@ -1153,6 +1162,7 @@ var DatePicker = Widget.extend({
                 this.trigger('changeDate');
             else
                 this.trigger('clearDate');
+
             var element;
             if (this.isInput) {
                 element = this.$element;

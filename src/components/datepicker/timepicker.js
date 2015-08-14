@@ -48,6 +48,14 @@ var TimePicker = DatePicker.extend({
         this.picker.find('.label-seconds').text(second);
 
         this.picker.children('div').show();
+    },
+
+    keydown: function () {
+        if (!this.picker.is(':visible')) {
+            if (e.keyCode === 40 || e.keyCode === 27) // allow down to re-show picker
+                this.show();
+            return;
+        }
     }
 });
 
