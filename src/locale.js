@@ -2,10 +2,11 @@
  * Created by huangxinghui on 2015/8/10.
  */
 
+var $ = require('jquery');
 var Bean = require('./core');
-var callbacks = [];
+var deferred = $.Deferred();
 
-var locale = Bean.locale = {
+Bean.locale = {
     value: {
         validator: {
             requiredError: 'Please input the {0}.',
@@ -33,14 +34,12 @@ var locale = Bean.locale = {
     },
 
     publish: function () {
-        callbacks.forEach(function (callback) {
-            callback(this.value);
-        });
-    },
-
-    subscribe: function (fn) {
-        callbacks.push(fn);
+        deferred.resolve(this.value);
     }
 };
 
-module.exports = locale;
+function getLocale(fn) {
+    return deferred.promise().done(fn);
+}
+
+module.exports = getLocale;

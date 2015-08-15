@@ -3,7 +3,11 @@
  */
 
 var locale = require('../locale');
-var dates = locale.value.datepicker;
+var dates;
+locale(function (value) {
+    dates = value.datepicker;
+});
+
 var validParts = /ss?|mm?|HH?|dd{1,3}|DD?|MM{0,3}|YY(?:YY)?/g;
 var nonpunctuation = /[^ -\/:-@\[\u3400-\u9fff-`{-~\t\n\r]+/g;
 

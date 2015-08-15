@@ -17,7 +17,11 @@ var yearTemplate = require('./year.hbs');
 var wrapperTemplate = require('./wrapper.hbs');
 var todayTemplate = require('./today.hbs');
 var nowTemplate = require('./now.hbs');
-var dates = locale.value.datepicker;
+var dates;
+locale(function (value) {
+    dates = value.datepicker;
+});
+
 var modes = [
     {
         clsName: 'days',
@@ -35,16 +39,10 @@ var modes = [
         navStep: 10
     }];
 
-locale.subscribe(function (locale) {
-    dates = locale.datepicker;
-});
-
 function isDateEquals(date1, date2) {
-    return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
-    );
+    return date1.getFullYear() === date2.getFullYear()
+        && date1.getMonth() === date2.getMonth()
+        && date1.getDate() === date2.getDate();
 }
 
 var DatePicker = Widget.extend({
@@ -690,11 +688,11 @@ var DatePicker = Widget.extend({
         }
     },
 
-    setRange: function(range){
+    setRange: function (range) {
         if (!range || !range.length)
             delete this.range;
         else
-            this.range = _.map(range, function(d){
+            this.range = _.map(range, function (d) {
                 return d.valueOf();
             });
         this.showMode();

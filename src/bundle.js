@@ -27,3 +27,5 @@ require('./components/typeahead');
 require('./components/datepicker/datepicker');
 require('./components/datepicker/monthpicker');
 require('./components/datepicker/timepicker');
+
+require('./bootstrap');
