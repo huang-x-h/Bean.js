@@ -15,6 +15,8 @@ var dayTemplate = require('./day.hbs');
 var monthTemplate = require('./month.hbs');
 var yearTemplate = require('./year.hbs');
 var wrapperTemplate = require('./wrapper.hbs');
+var todayTemplate = require('./today.hbs');
+var nowTemplate = require('./now.hbs');
 var dates = locale.value.datepicker;
 var modes = [
     {
@@ -32,7 +34,6 @@ var modes = [
         navFnc: 'FullYear',
         navStep: 10
     }];
-
 
 locale.subscribe(function (locale) {
     dates = locale.datepicker;
@@ -149,9 +150,7 @@ var DatePicker = Widget.extend({
 
     _buildMonthAndYearView: function () {
         this.picker.append(yearTemplate());
-        this.picker.append(monthTemplate({
-            monthsShort: dates.monthsShort
-        }));
+        this.picker.append(monthTemplate(dates));
     },
 
     _buildDayView: function () {
@@ -352,10 +351,14 @@ var DatePicker = Widget.extend({
         this.picker.find('.datepicker-days thead').append(html);
 
         if (this.options.showTime) {
-            this.picker.find('.datepicker-days tfoot').append('<tr><th colspan="7"><span class="label label-hours"></span> : <span class="label label-minutes"></span> : <span class="label label-seconds"></span><a class="btn datepicker-now">Now</a><a class="btn">OK</a></th></tr>');
+            this.picker.find('.datepicker-days tfoot').append(this.getNowTemplate());
         } else {
-            this.picker.find('.datepicker-days tfoot').append('<tr><th colspan="7" class="today" style="display: none;">Today</th></tr>');
+            this.picker.find('.datepicker-days tfoot').append(todayTemplate(dates));
         }
+    },
+
+    getNowTemplate: function () {
+        return nowTemplate(dates);
     },
 
     getClassNames: function (date) {
@@ -474,7 +477,6 @@ var DatePicker = Widget.extend({
         var d = new Date(this.viewDate),
             year = d.getFullYear(),
             month = d.getMonth(),
-            todaytxt = dates.today,
             hour, minute, second;
 
         if (isNaN(year) || isNaN(month))
@@ -483,7 +485,6 @@ var DatePicker = Widget.extend({
         this.picker.find('.datepicker-days thead .datepicker-switch')
             .text(util.format(new Date(year, month), 'YYYY-MM'));
         this.picker.find('tfoot .today')
-            .text(todaytxt)
             .toggle(this.options.todayBtn !== false);
 
         var prevMonth = new Date(year, month - 1, 28),

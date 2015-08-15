@@ -5,7 +5,6 @@
 var plugin = require('../../plugin');
 var Widget = require('../../widget');
 var DatePicker = require('./datepicker');
-var template = require('./timepicker.hbs');
 
 var TimePicker = DatePicker.extend({
     options: {
@@ -27,7 +26,7 @@ var TimePicker = DatePicker.extend({
     _buildView: function () {
         this.parseFormat = 'HH:mm:ss';
 
-        this.picker.append(template());
+        this.picker.append('<div><table><tfoot>' + this.getNowTemplate() + '</tfoot></table></div>');
     },
 
     showMode: function () {
