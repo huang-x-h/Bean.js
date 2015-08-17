@@ -2,6 +2,7 @@
  * Created by huangxinghui on 2015/8/10.
  */
 
+var Bean = require('../core');
 var locale = require('../locale');
 var dates;
 locale(function (value) {
@@ -47,7 +48,7 @@ function isLeapYear(year) {
     return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
 }
 
-module.exports = {
+module.exports = Bean.date = {
     format: function (date, format) {
         if (!date)
             return '';
