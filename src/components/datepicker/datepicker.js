@@ -18,7 +18,7 @@ var wrapperTemplate = require('./wrapper.hbs');
 var todayTemplate = require('./today.hbs');
 var nowTemplate = require('./now.hbs');
 var dates;
-locale(function (value) {
+locale.get(function (value) {
     dates = value.datepicker;
 });
 

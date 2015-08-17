@@ -2,8 +2,9 @@
  * Created by huangxinghui on 2015/8/15.
  */
 
-var $ = require('jquery');
+var $document = require('./document');
+var locale = require('./locale');
 
-$(document).ready(function init() {
-    Bean.locale.publish();
+$document.ready(function init() {
+    locale.publish();
 });

@@ -2,7 +2,7 @@
  * Created by huangxinghui on 2015/8/10.
  */
 
-Bean.locale.value = {
+Bean.locale = {
     language: 'zh',
     validator: {},
     datepicker: {
@@ -16,5 +16,3 @@ Bean.locale.value = {
         ok: '确定'
     }
 };
-
-Bean.locale.publish();

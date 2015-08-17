@@ -5,7 +5,7 @@
 var Bean = require('../core');
 var locale = require('../locale');
 var dates;
-locale(function (value) {
+locale.get(function (value) {
     dates = value.datepicker;
 });
 
