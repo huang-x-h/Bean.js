@@ -908,7 +908,7 @@ var DatePicker = Widget.extend({
                         this.viewDate = new Date();
                         this.showMode();
                     } else {
-                        this._setDate(this.viewDate);
+                        this._setDate(this.viewDate, 'date');
                     }
             }
         }
