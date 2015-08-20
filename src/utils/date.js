@@ -219,6 +219,9 @@ module.exports = Bean.date = {
     },
 
     diffDays: function (date1, date2) {
+        date1 = this.startOfDay(date1);
+        date2 = this.startOfDay(date2);
+
         var diff = date1.valueOf() - date2.valueOf();
         return diff / MILLIS_PER_DAY;
     }
