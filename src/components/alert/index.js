@@ -20,7 +20,7 @@ var Alert = Widget.extend({
 
     _create: function () {
         if (this.options.dismissible)
-            this.$element.on('click', dismiss, $.proxy(this.close, this));
+            this.delegate('click', dismiss, $.proxy(this.close, this));
         else
             setTimeout($.proxy(this.close, this), this.options.duration);
     },
@@ -30,7 +30,7 @@ var Alert = Widget.extend({
 
         if (e) e.preventDefault();
 
-        e = this.trigger('close');
+        e = this.trigger('beforeClose');
 
         if (e.isDefaultPrevented()) return;
 
@@ -39,7 +39,6 @@ var Alert = Widget.extend({
         function removeElement() {
             // detach from parent, fire event then clean up data
             this.destroy();
-            this.trigger('closed');
             $el.remove();
         }
 
