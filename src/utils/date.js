@@ -140,7 +140,7 @@ module.exports = Bean.date = {
         var fparts = format.parts.slice();
         if (parts.length === fparts.length) {
             var cnt, _date, s;
-            for (i=0, cnt = fparts.length; i < cnt; i++) {
+            for (i = 0, cnt = fparts.length; i < cnt; i++) {
                 val = parseInt(parts[i], 10);
                 part = fparts[i];
                 parsed[part] = val;
@@ -206,5 +206,20 @@ module.exports = Bean.date = {
 
     getDaysInMonth: function (year, month) {
         return [31, (isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+    },
+
+    diffYears: function (date1, date2) {
+        return date1.getFullYear() - date2.getFullYear();
+    },
+
+    diffMonths: function (date1, date2) {
+        var diff = this.diffYears(date1, date2) * 12;
+        diff += date1.getMonth() - date2.getMonth();
+        return diff;
+    },
+
+    diffDays: function (date1, date2) {
+        var diff = date1.valueOf() - date2.valueOf();
+        return diff / MILLIS_PER_DAY;
     }
 };
