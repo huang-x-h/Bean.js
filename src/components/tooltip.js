@@ -77,7 +77,7 @@ var ToolTip = Widget.extend({
         if (this.showState || this.hoverState == 'out') return;
 
         if (this.hasContent() && this.enabled) {
-            this.trigger('show');
+            this.trigger('beforeShow');
 
             var that = this;
 
@@ -131,7 +131,7 @@ var ToolTip = Widget.extend({
             this.applyPlacement(calculatedOffset, placement);
 
             var complete = function () {
-                that.trigger('shown');
+                that.trigger('show');
                 that.hoverState = null;
                 that.showState = true;
             };
