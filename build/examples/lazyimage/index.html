@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta charset="UTF-8">
+        <title>LazyImage</title>
+        <link rel="stylesheet" href="../../main.css">
+    </head>
+    <body>
+        <div class="container">
+            <img data-lazy="lazyimage/images/037.jpg" style="width: 100px;">
+        </div>
+
+        <script src="../../bundle.js"></script>
+        <script>
+            Bean.image.lazyLoad($('img'));
+        </script>
+    </body>
+</html>

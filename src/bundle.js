@@ -6,6 +6,7 @@ require('./locale');
 require('./utils/validator');
 require('./utils/ajax');
 require('./utils/block');
+require('./utils/image');
 
 require('./transition');
 require('./components/button');
