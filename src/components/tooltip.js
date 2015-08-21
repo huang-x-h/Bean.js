@@ -24,7 +24,6 @@ var ToolTip = Widget.extend({
         this.enabled = true;
         this.timeout = null;
         this.hoverState = null;
-        this.showState = false;
 
         var triggers = this.options.trigger.split(' ');
 
@@ -49,7 +48,7 @@ var ToolTip = Widget.extend({
     },
 
     enter: function (e) {
-        if (this.hoverState == 'in') {
+        if (this.hoverState === 'in') {
             return;
         }
 
@@ -62,9 +61,7 @@ var ToolTip = Widget.extend({
     },
 
     leave: function (e) {
-        if (this.hoverState == 'out') {
-            return;
-        }
+        if (this.hoverState === 'out') return;
 
         var that = this;
         this.hoverState = 'out';
@@ -75,7 +72,7 @@ var ToolTip = Widget.extend({
     },
 
     show: function () {
-        if (this.showState || this.hoverState == 'out') return;
+        if (this.hoverState === 'out') return;
 
         if (this.hasContent() && this.enabled) {
             this.trigger('beforeShow');
@@ -192,7 +189,7 @@ var ToolTip = Widget.extend({
     },
 
     hide: function () {
-        if (!this.showState || this.hoverState == 'in') return;
+        if (this.hoverState === 'in') return;
 
         var that = this;
         var $tip = this.tip();
