@@ -6,6 +6,7 @@ var $ = require('jquery');
 var _ = require('underscore');
 var Widget = require('../widget');
 var plugin = require('../plugin');
+var transition = require('../transition');
 var TRANSITION_DURATION = 150;
 
 var ToolTip = Widget.extend({
@@ -138,7 +139,7 @@ var ToolTip = Widget.extend({
 
             $.support.transition && this.$tip.hasClass('fade') ?
                 $tip
-                    .one('bsTransitionEnd', complete)
+                    .one(transition, complete)
                     .emulateTransitionEnd(TRANSITION_DURATION) :
                 complete();
         }
@@ -211,7 +212,7 @@ var ToolTip = Widget.extend({
 
         $.support.transition && this.$tip.hasClass('fade') ?
             $tip
-                .one('bsTransitionEnd', complete)
+                .one(transition.eventType, complete)
                 .emulateTransitionEnd(TRANSITION_DURATION) :
             complete();
 

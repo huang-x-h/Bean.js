@@ -4,6 +4,7 @@
 
 var $ = require('jquery');
 var plugin = require('../plugin');
+var transition = require('../transition');
 var Widget = require('../widget');
 var $body = require('../body');
 var TRANSITION_DURATION = 500;
@@ -41,7 +42,7 @@ var SlideOut = Widget.extend({
             that.panel.removeClass('animate');
             $body.on('click.slideout', $.proxy(that._bodyClick, that));
         }
-        this.$element.one('bsTransitionEnd', complete)
+        this.$element.one(transition.eventType, complete)
             .emulateTransitionEnd(TRANSITION_DURATION);
 
         return this;
@@ -63,7 +64,7 @@ var SlideOut = Widget.extend({
             that.panel[0].style['-webkit-transform'] = that.panel[0].style.transform = '';
         }
 
-        this.$element.one('bsTransitionEnd', complete)
+        this.$element.one(transition.eventType, complete)
             .emulateTransitionEnd(TRANSITION_DURATION);
         return this;
     },

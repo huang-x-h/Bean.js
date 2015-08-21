@@ -4,6 +4,7 @@
 
 var $ = require('jquery');
 var $body = require('../../body');
+var transition = require('../../transition');
 var StackedMap = require('./stackedmap');
 var modalTpl = require('./modal.hbs');
 var backdropTpl = require('./backdrop.hbs');
@@ -66,7 +67,7 @@ function removeAfterAnimate($element, duration, callback) {
 
     $.support.transition && $element.hasClass('fade') ?
         $element
-            .one('bsTransitionEnd', callbackRemove)
+            .one(transition.eventType, callbackRemove)
             .emulateTransitionEnd(duration) :
         callbackRemove()
 }

@@ -4,6 +4,7 @@
 
 var $ = require('jquery');
 var _ = require('underscore');
+var transition = require('../transition');
 
 function lazyLoad(element) {
     var $element = $(element),
@@ -13,7 +14,7 @@ function lazyLoad(element) {
     imageLoader.onload = function () {
         $element.addClass('fade');
         $element.attr('src', imageSource);
-        $element.addClass('in').one('bsTransitionEnd', function () {
+        $element.addClass('in').one(transition.eventType, function () {
             $element.removeAttr('data-lazy');
             $element.removeClass('fade in');
         }).emulateTransitionEnd();

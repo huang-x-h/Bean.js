@@ -4,6 +4,7 @@
 
 var $ = require('jquery');
 var plugin = require('../../plugin');
+var transition = require('../../transition');
 var Widget = require('../../widget');
 var Bean = require('../../core');
 var $body = require('../../body');
@@ -43,7 +44,7 @@ var Alert = Widget.extend({
         }
 
         $.support.transition && $el.hasClass('fade') ?
-            $el.one('bsTransitionEnd', $.proxy(removeElement, this))
+            $el.one(transition.eventType, $.proxy(removeElement, this))
                 .emulateTransitionEnd(TRANSITION_DURATION) :
             removeElement()
     }

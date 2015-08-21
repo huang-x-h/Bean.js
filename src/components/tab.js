@@ -4,6 +4,7 @@
 
 var $ = require('jquery');
 var plugin = require('../plugin');
+var transition = require('../transition');
 var Widget = require('../widget');
 var $document = require('../document');
 var TRANSITION_DURATION = 150;
@@ -90,9 +91,9 @@ var Tab = Widget.extend({
 
         $active.length && transition ?
             $active
-                .one('bsTransitionEnd', next)
+                .one(transition.eventType, next)
                 .emulateTransitionEnd(TRANSITION_DURATION) :
-            next()
+            next();
 
         $active.removeClass('in')
     }

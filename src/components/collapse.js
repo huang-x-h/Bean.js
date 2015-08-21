@@ -3,6 +3,7 @@
  */
 var $ = require('jquery');
 var plugin = require('../plugin');
+var transition = require('../transition');
 var Widget = require('../widget');
 var $document = require('../document');
 var TRANSITION_DURATION = 350;
@@ -75,7 +76,7 @@ var Collapse = Widget.extend({
         var scrollSize = $.camelCase(['scroll', dimension].join('-'));
 
         this.$element
-            .one('bsTransitionEnd', $.proxy(complete, this))
+            .one(transition.eventType, $.proxy(complete, this))
             .emulateTransitionEnd(TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
     },
 
@@ -112,7 +113,7 @@ var Collapse = Widget.extend({
 
         this.$element
             [dimension](0)
-            .one('bsTransitionEnd', $.proxy(complete, this))
+            .one(transition.eventType, $.proxy(complete, this))
             .emulateTransitionEnd(TRANSITION_DURATION);
     },
 
