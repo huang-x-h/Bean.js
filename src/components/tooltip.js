@@ -329,13 +329,6 @@ var ToolTip = Widget.extend({
 
     isOpened: function () {
         return this.tip().hasClass('in');
-    },
-
-    destroy: function () {
-        var that = this;
-        this.hide(function () {
-            that._super.destroy();
-        })
     }
 });
 
