@@ -22,57 +22,53 @@ var ToolTip = Widget.extend({
 
     _create: function () {
         this.enabled = true;
-        this.timeout = null;
-        this.hoverState = null;
 
         var triggers = this.options.trigger.split(' ');
 
-        for (var i = triggers.length; i--;) {
-            var trigger = triggers[i];
+        if (triggers.indexOf('click') >= 0) {
+            this.delegateEvents({
+                'click': 'toggle'
+            });
+        }
 
-            if (trigger == 'click') {
-                this.delegateEvents({
-                    'click': 'toggle'
-                });
-            } else if (trigger != 'manual') {
-                var eventIn = trigger == 'hover' ? 'mouseenter' : 'focusin';
-                var eventOut = trigger == 'hover' ? 'mouseleave' : 'focusout';
-                var events = {};
-                events[eventIn] = 'enter';
-                events[eventOut] = 'leave';
-                this.delegateEvents(events);
-            }
+        if (triggers.indexOf('hover') >= 0) {
+            this.onUs = false;
+            this.outTimeout = null;
+
+            this.delegateEvents({
+                'mouseenter': 'enter',
+                'mouseleave': 'leave'
+            });
+
+            this.tip().on('mouseenter', $.proxy(this.enter, this));
+            this.tip().on('mouseleave', $.proxy(this.leave, this));
         }
 
         this.fixTitle();
     },
 
     enter: function (e) {
-        if (this.hoverState === 'in') {
-            return;
-        }
-
-        var that = this;
-        this.hoverState = 'in';
-
-        setTimeout(function() {
-            that.show();
-        }, 100);
+        this.onUs = true;
+        this.show();
     },
 
     leave: function (e) {
-        if (this.hoverState === 'out') return;
-
         var that = this;
-        this.hoverState = 'out';
+        this.onUs = false;
 
-        setTimeout(function() {
-            that.hide();
-        }, 100);
+        if (typeof this.outTimeout !== 'undefined') {
+            clearTimeout(this.outTimeout);
+        }
+
+        this.outTimeout = setTimeout(function () {
+            if (!that.onUs)
+                that.hide();
+            that.outTimeout = null;
+        }, 50);
     },
 
     show: function () {
-        if (this.hoverState === 'out') return;
+        if (this.isOpened()) return;
 
         if (this.hasContent() && this.enabled) {
             this.trigger('beforeShow');
@@ -130,8 +126,6 @@ var ToolTip = Widget.extend({
 
             var complete = function () {
                 that.trigger('show');
-                that.hoverState = null;
-                that.showState = true;
             };
 
             $.support.transition && this.$tip.hasClass('fade') ?
@@ -189,14 +183,12 @@ var ToolTip = Widget.extend({
     },
 
     hide: function () {
-        if (this.hoverState === 'in') return;
+        if (!this.isOpened()) return;
 
         var that = this;
         var $tip = this.tip();
 
         function complete() {
-            that.hoverState = null;
-            that.showState = false;
             $tip.detach();
             that.$element
                 .removeAttr('aria-describedby');
@@ -261,7 +253,7 @@ var ToolTip = Widget.extend({
                 };
                 break;
             case 'left':
-                offset =  {
+                offset = {
                     top: pos.top + pos.height / 2 - actualHeight / 2,
                     left: pos.left - actualWidth
                 };
@@ -315,13 +307,6 @@ var ToolTip = Widget.extend({
     tip: function () {
         if (!this.$tip) {
             this.$tip = $(this.options.template);
-
-            //if (this.options.trigger.indexOf('hover') >= 0) {
-            //    this._on(this.$tip, {
-            //        'mouseenter': 'enter',
-            //        'mouseleave': 'leave'
-            //    })
-            //}
         }
         return this.$tip;
     },
@@ -339,12 +324,15 @@ var ToolTip = Widget.extend({
     },
 
     toggle: function (e) {
-        this.tip().hasClass('in') ? this.leave(e) : this.enter(e);
+        this.isOpened() ? this.leave(e) : this.enter(e);
+    },
+
+    isOpened: function () {
+        return this.tip().hasClass('in');
     },
 
     destroy: function () {
         var that = this;
-        clearTimeout(this.timeout);
         this.hide(function () {
             that._super.destroy();
         })
