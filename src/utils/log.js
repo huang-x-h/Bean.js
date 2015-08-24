@@ -52,7 +52,7 @@ function consoleLog(type) {
     };
 }
 
-module.exports = {
+module.exports = Bean.logger = {
     log: consoleLog('log'),
     info: consoleLog('info'),
     warn: consoleLog('warn'),
