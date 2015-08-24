@@ -192,10 +192,10 @@ var ToolTip = Widget.extend({
             $tip.detach();
             that.$element
                 .removeAttr('aria-describedby');
-            that.trigger('hidden');
+            that.trigger('hide');
         }
 
-        this.trigger('hide');
+        this.trigger('beforeHide');
 
         $tip.removeClass('in');
 
