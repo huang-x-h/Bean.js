@@ -2,6 +2,7 @@
  * Created by huangxinghui on 2015/6/29.
  */
 
+var _ = require('underscore');
 var Bean = require('../core');
 var debug = true;
 
@@ -37,7 +38,7 @@ function consoleLog(type) {
     if (hasApply) {
         return function () {
             var args = [];
-            forEach(arguments, function (arg) {
+            _.forEach(arguments, function (arg) {
                 args.push(formatError(arg));
             });
             return logFn.apply(console, args);
