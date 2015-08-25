@@ -76,7 +76,7 @@ var ToolTip = Widget.extend({
             return;
         }
 
-        this.hide(event);
+        this.hide();
     },
 
     enter: function (e) {
@@ -356,7 +356,7 @@ var ToolTip = Widget.extend({
     },
 
     toggle: function (e) {
-        this.isOpened() ? this.leave(e) : this.enter(e);
+        this.isOpened() ? this.hide() : this.show();
     },
 
     isOpened: function () {
