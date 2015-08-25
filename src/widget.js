@@ -14,39 +14,40 @@ module.exports = Class.extend({
     init: function (element, options) {
         this.$element = $(element);
         this.options = $.extend({}, this.options, this.$element.data(), options);
+        this.bindings = $();
 
         this._create();
-        this.delegateEvents();
+        this._on(this.events);
     },
 
     _create: $.noop,
 
     _destroy: $.noop,
 
-    delegateEvents: function (events) {
-        if (!(events || (events = this.events))) return;
+    _on: function (element, events) {
+        if (!events) {
+            events = element;
+            element = this.$element;
+        }
 
-        this.undelegateEvents();
-        for (var key in events) {
-            var method = events[key];
+        if (element !== this.$element)
+            this.bindings.add(element);
+
+        var key, method, match;
+        for (key in events) {
+            method = events[key];
             if (!_.isFunction(method)) method = this[events[key]];
             if (!method) continue;
-            var match = key.match(delegateEventSplitter);
-            this.delegate(match[1], match[2], _.bind(method, this));
+            match = key.match(delegateEventSplitter);
+            element.on(match[1] + '.' + this.widgetName, match[2], _.bind(method, this));
         }
     },
 
-    delegate: function (eventName, selector, listener) {
-        this.$element.on(eventName + '.' + this.widgetName, selector, listener);
-    },
+    _off: function (element, eventName) {
+        eventName = (eventName || "").split(" ").join(this.widgetName + " ") + this.widgetName;
+        element.off(eventName);
 
-    undelegateEvents: function () {
-        if (this.$element)
-            this.$element.off('.' + this.widgetName);
-    },
-
-    undelegate: function (eventName, selector, listener) {
-        this.$element.off(eventName + '.' + this.widgetName, selector, listener);
+        this.bindings = $(this.bindings.not(element).get());
     },
 
     trigger: function (type, data) {
@@ -58,7 +59,9 @@ module.exports = Class.extend({
     destroy: function () {
         this._destroy();
 
-        this.undelegateEvents();
-        this.$element.removeData(this.widgetName);
+        this.$element.off('.' + this.widgetName)
+            .removeData(this.widgetName);
+        this.bindings.off('.' + this.widgetName);
+        this.bindings = $();
     }
 });
