@@ -14,9 +14,11 @@ var DropDown = Widget.extend({
         target: null
     },
 
-    _create: function () {
-        this.delegate('click', null, _.bind(this.toggle, this));
+    events: {
+        'click': 'toggle'
+    },
 
+    _create: function () {
         this.$parent = this.getParent();
     },
 

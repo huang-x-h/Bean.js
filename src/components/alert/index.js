@@ -20,8 +20,12 @@ var Alert = Widget.extend({
     },
 
     _create: function () {
-        if (this.options.dismissible)
-            this.delegate('click', dismiss, $.proxy(this.close, this));
+        if (this.options.dismissible) {
+            var events = {};
+            events['click ' + dismiss] = 'close';
+
+            this._on(events);
+        }
         else
             setTimeout($.proxy(this.close, this), this.options.duration);
     },

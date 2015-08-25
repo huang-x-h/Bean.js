@@ -205,7 +205,7 @@ var DatePicker = Widget.extend({
             });
         }
 
-        this.delegateEvents(events);
+        this._on(events);
 
         this._secondaryEvents = [
             [this.picker, {
