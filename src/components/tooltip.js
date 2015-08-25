@@ -7,6 +7,7 @@ var _ = require('underscore');
 var Widget = require('../widget');
 var plugin = require('../plugin');
 var transition = require('../transition');
+var $document = require('../document');
 var TRANSITION_DURATION = 150;
 
 var ToolTip = Widget.extend({
@@ -26,8 +27,12 @@ var ToolTip = Widget.extend({
         var triggers = this.options.trigger.split(' ');
 
         if (triggers.indexOf('click') >= 0) {
-            this.delegateEvents({
-                'click': 'toggle'
+            this._on({
+                'click': 'openHandler'
+            });
+
+            this._on($document, {
+                'click': 'closeHandler'
             });
         }
 
@@ -35,16 +40,43 @@ var ToolTip = Widget.extend({
             this.onUs = false;
             this.outTimeout = null;
 
-            this.delegateEvents({
+            this._on({
                 'mouseenter': 'enter',
                 'mouseleave': 'leave'
             });
 
-            this.tip().on('mouseenter', $.proxy(this.enter, this));
-            this.tip().on('mouseleave', $.proxy(this.leave, this));
+            this._on(this.tip(), {
+                'mouseenter': 'enter',
+                'mouseleave': 'leave'
+            });
         }
 
         this.fixTitle();
+    },
+
+    openHandler: function (e) {
+        this.toggle(e);
+        event.preventDefault();
+    },
+
+    closeHandler: function () {
+        if (!this.isOpened()) {
+            return;
+        }
+
+        // Clicking inside tips
+        var tips = this.tip()[0];
+        if (event.target === tips || tips.contains(event.target)) {
+            return;
+        }
+
+        var element = this.$element[0];
+        // Clicking target
+        if (event.target === element || element.contains(event.target)) {
+            return;
+        }
+
+        this.hide(event);
     },
 
     enter: function (e) {
