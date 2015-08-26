@@ -56,23 +56,23 @@ var ToolTip = Widget.extend({
 
     openHandler: function (e) {
         this.toggle(e);
-        event.preventDefault();
+        e.preventDefault();
     },
 
-    closeHandler: function () {
+    closeHandler: function (e) {
         if (!this.isOpened()) {
             return;
         }
 
         // Clicking inside tips
         var tips = this.tip()[0];
-        if (event.target === tips || tips.contains(event.target)) {
+        if (e.target === tips || tips.contains(e.target)) {
             return;
         }
 
         var element = this.$element[0];
         // Clicking target
-        if (event.target === element || element.contains(event.target)) {
+        if (e.target === element || element.contains(e.target)) {
             return;
         }
 
