@@ -2,12 +2,14 @@
  * Created by huangxinghui on 2015/8/10.
  */
 
+// copy from https://github.com/chriso/validator.js
 var Bean = require('../core');
 
 var ipv4Maybe = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
     , ipv6Block = /^[0-9A-F]{1,4}$/i;
 
 var numeric = /^[-+]?[0-9]+$/
+    , decimal = /^[-+]?([0-9]+|\.[0-9]+|[0-9]+\.[0-9]+)$/
     , int = /^(?:[-+]?(?:0|[1-9][0-9]*))$/
     , float = /^(?:[-+]?(?:[0-9]+))?(?:\.[0-9]*)?(?:[eE][\+\-]?(?:[0-9]+))?$/;
 
@@ -38,6 +40,25 @@ validator.toDate = function (date) {
     }
     date = Date.parse(date);
     return !isNaN(date) ? new Date(date) : null;
+};
+
+validator.equals = function (str, comparison) {
+    return str === validator.toString(comparison);
+};
+
+validator.contains = function (str, elem) {
+    return str.indexOf(validator.toString(elem)) >= 0;
+};
+
+validator.matches = function (str, pattern, modifiers) {
+    if (Object.prototype.toString.call(pattern) !== '[object RegExp]') {
+        pattern = new RegExp(pattern, modifiers);
+    }
+    return pattern.test(str);
+};
+
+validator.isBlank = function (str) {
+    return '' !== str.replace(/^\s+/g, '').replace(/\s+$/g, '');
 };
 
 validator.isIP = function (str, version) {
@@ -82,7 +103,7 @@ validator.isIP = function (str, version) {
         for (var i = 0; i < blocks.length; ++i) {
             // test for a :: which can not be at the string start/end
             // since those cases have been handled above
-            if (blocks[i] === '' && i > 0 && i < blocks.length -1) {
+            if (blocks[i] === '' && i > 0 && i < blocks.length - 1) {
                 if (foundOmissionBlock)
                     return false; // multiple :: in address
                 foundOmissionBlock = true;
@@ -103,11 +124,12 @@ validator.isIP = function (str, version) {
     return false;
 };
 
-validator.isNumeric = function (str, options) {
-    options = options || {};
-    return numeric.test(str)
-        && (!options.hasOwnProperty('min') || str >= options.min)
-        && (!options.hasOwnProperty('max') || str <= options.max);
+validator.isNumeric = function (str) {
+    return numeric.test(str);
+};
+
+validator.isDecimal = function (str) {
+    return str !== '' && decimal.test(str);
 };
 
 validator.isInt = function (str, options) {
