@@ -4,6 +4,7 @@
 
 require('./locale');
 require('./utils/validator');
+require('./utils/formatter');
 require('./utils/ajax');
 require('./utils/block');
 require('./utils/image');
