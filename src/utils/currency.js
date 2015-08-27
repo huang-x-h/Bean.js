@@ -3,7 +3,6 @@
  */
 
 var Bean = require('../core');
-var util = require('./date');
 
 function addExtraZero(value, num) {
     for (var i = 0; i < num; i++) {
@@ -41,12 +40,17 @@ function formatThousands(value, thousandsSeparator) {
     return numArr.join(".");
 }
 
-var Formatter = {
-    dateFormat: function (date, format) {
-        util.format(date, format);
+module.exports = Bean.currency = {
+    parse: function (value, precision, thousandsSeparator) {
+        precision = precision || '2';
+        thousandsSeparator = thousandsSeparator || ',';
+
+        value = +value.replace(new RegExp(thousandsSeparator, 'g'), '');
+
+        return Math.round(value * Math.pow(10, precision));
     },
 
-    numberFormat: function (value, precision, thousandsSeparator) {
+    format: function (value, precision, thousandsSeparator) {
         precision = precision || '2';
         thousandsSeparator = thousandsSeparator || ',';
 
@@ -90,5 +94,3 @@ var Formatter = {
         return isNegative ? ("-" + result) : result;
     }
 };
-
-module.exports = Bean.formatter = Formatter;
