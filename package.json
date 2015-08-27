@@ -2,6 +2,10 @@
   "name": "Bean.js",
   "version": "0.0.1",
   "description": "A JQuery UI framework",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:huang-x-h/Bean.js.git"
+  },
   "main": "index.js",
   "scripts": {
     "build": "browserify ./src/bundle.js | uglifyjs -mc > static/bundle.js",
@@ -17,6 +21,7 @@
     "gulp-sass": "^2.0.1",
     "gulp-util": "^3.0.6",
     "hbsfy": "^2.2.1",
+    "lodash": "^3.10.1",
     "require-dir": "^0.3.0",
     "st": "^0.5.4",
     "uglify-js": "^2.4.22",
