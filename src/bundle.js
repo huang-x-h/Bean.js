@@ -4,7 +4,6 @@
 
 require('./locale');
 require('./utils/validator');
-require('./utils/formatter');
 require('./utils/ajax');
 require('./utils/block');
 require('./utils/image');
@@ -14,6 +13,7 @@ require('./components/tab');
 require('./components/tooltip');
 require('./components/popover');
 require('./components/collapse');
+require('./components/currency');
 require('./components/modal');
 require('./components/alert');
 require('./components/dropdown');
