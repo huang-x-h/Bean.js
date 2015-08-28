@@ -6,12 +6,12 @@
 var Bean = require('../core');
 
 var ipv4Maybe = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
-    , ipv6Block = /^[0-9A-F]{1,4}$/i;
-
-var numeric = /^[-+]?[0-9]+$/
+    , ipv6Block = /^[0-9A-F]{1,4}$/i
+    , numeric = /^[-+]?[0-9]+$/
     , decimal = /^[-+]?([0-9]+|\.[0-9]+|[0-9]+\.[0-9]+)$/
     , int = /^(?:[-+]?(?:0|[1-9][0-9]*))$/
-    , float = /^(?:[-+]?(?:[0-9]+))?(?:\.[0-9]*)?(?:[eE][\+\-]?(?:[0-9]+))?$/;
+    , float = /^(?:[-+]?(?:[0-9]+))?(?:\.[0-9]*)?(?:[eE][\+\-]?(?:[0-9]+))?$/
+    , email = /^([a-zA-Z0-9_.\-+])+@(([a-zA-Z0-9\-])+\.)+[a-zA-Z0-9]{2,4}$/;
 
 var validator = Bean.validator = {};
 
@@ -130,6 +130,10 @@ validator.isNumeric = function (str) {
 
 validator.isDecimal = function (str) {
     return str !== '' && decimal.test(str);
+};
+
+validator.isEmail = function (str) {
+    return email.test(str);
 };
 
 validator.isInt = function (str, options) {
