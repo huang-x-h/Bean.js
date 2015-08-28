@@ -21,7 +21,6 @@
     "gulp-sass": "^2.0.1",
     "gulp-util": "^3.0.6",
     "hbsfy": "^2.2.1",
-    "lodash": "^3.10.1",
     "require-dir": "^0.3.0",
     "st": "^0.5.4",
     "uglify-js": "^2.4.22",
