@@ -5,7 +5,7 @@
 var $ = require('jquery');
 var plugin = require('../../plugin');
 var Widget = require('../../widget');
-var headerTemplate = require('./header.hbs');
+var template = require('./table.hbs');
 
 function defaultItemRenderer(data, column) {
     return data[column.dataField];
@@ -22,13 +22,21 @@ var Table = Widget.extend({
     },
 
     _create: function () {
-        this.dataSource = this.options.dataSource;
+        this._setDataSource(this.options.dataSource);
         this._setColumns(this.options.columns);
 
-        this._renderHeader();
-        this._renderBody();
-
+        this._renderTable();
         this.$tbody = this.$element.children('tbody');
+        this._renderBody();
+    },
+
+    dataSource: function (value) {
+        if (arguments.length === 0) {
+            return this._dataSource;
+        } else {
+            this._setDataSource(value);
+            this._renderBody();
+        }
     },
 
     addItem: function (data, index) {
@@ -49,7 +57,7 @@ var Table = Widget.extend({
         this.$tbody.children('.active').removeClass('active');
         $tr.addClass('active');
 
-        this.selectedItem = this.dataSource[this.$tbody.children().index($tr)];
+        this.selectedItem = this._dataSource[this.$tbody.children().index($tr)];
     },
 
     _setColumns: function (columns) {
@@ -62,21 +70,23 @@ var Table = Widget.extend({
         });
     },
 
-    _renderHeader: function () {
-        this.$element.append(headerTemplate({columns: this.columns}));
+    _setDataSource: function (dataSource) {
+        this._dataSource = dataSource;
+    },
+
+    _renderTable: function () {
+        this.$element.append(template({columns: this.columns}));
     },
 
     _renderBody: function () {
-        var html = '<tbody>',
+        var html = '',
             that = this;
 
-        this.dataSource.forEach(function (data) {
+        this._dataSource.forEach(function (data) {
             html += that._makeRow(data);
         });
 
-        html += '</tbody>';
-
-        this.$element.append(html);
+        this.$tbody.html(html);
     },
 
     _makeRow: function (data) {
