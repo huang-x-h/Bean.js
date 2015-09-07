@@ -25,6 +25,7 @@ require('./components/list');
 require('./components/combobox');
 require('./components/stepper');
 require('./components/typeahead');
+require('./components/table');
 require('./components/datepicker/datepicker');
 require('./components/datepicker/monthpicker');
 require('./components/datepicker/timepicker');
