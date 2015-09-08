@@ -73,6 +73,7 @@ var Table = Widget.extend({
         _.forEach(data, function (value, key) {
             that._updateCell(item, index, key);
         });
+        this.trigger('update', data, index);
     },
 
     _onClick: function (e) {
