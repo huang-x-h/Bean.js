@@ -14,6 +14,10 @@
             <div class="bs-example">
                 <table class="table table-bordered table-hover"></table>
                 <button type="button" class="btn btn-default js-reload">Reload</button>
+                <button type="button" class="btn btn-default js-selection">GetSelection</button>
+                <button type="button" class="btn btn-default js-add">AddItem</button>
+                <button type="button" class="btn btn-default js-remove">RemoveItem</button>
+                <button type="button" class="btn btn-default js-update">UpdateItem</button>
             </div>
         </div>
         <script src="../../bundle.js"></script>
@@ -35,7 +39,7 @@
                 username: '@twitter'
             }];
 
-            var $table = $('table').table({
+            var instance = $('table').table({
                 columns: [{
                     headerText: '#',
                     dataField: 'id'
@@ -50,10 +54,31 @@
                     dataField: 'username'
                 }],
                 dataSource: dataSource
-            });
+            }).data('table');
 
             $('.js-reload').click(function (e) {
-                $table.table('dataSource', dataSource);
+                instance.dataSource(dataSource);
+            });
+
+            $('.js-selection').click(function (e) {
+                Bean.info('selectedIndex: ' + instance.selectedIndex() + ' selectedItem: ' + JSON.stringify(instance.selectedItem()));
+            });
+
+            $('.js-add').click(function (e) {
+                instance.addItem({
+                    id: '#',
+                    firstName: 'huang',
+                    lastName: 'xinghui',
+                    username: '@huangxinghui'
+                });
+            });
+
+            $('.js-remove').click(function (e) {
+                instance.removeItem(instance.selectedItem());
+            });
+
+            $('.js-update').click(function (e) {
+                instance.updateItem({firstName: 'updateName'}, instance.selectedIndex());
             });
         </script>
     </body>

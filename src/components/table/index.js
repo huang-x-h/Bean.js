@@ -3,8 +3,12 @@
  */
 
 var $ = require('jquery');
+var _ = require('underscore');
+var Immutable = require('immutable');
 var plugin = require('../../plugin');
+var mixin = require('../../utils/mixin');
 var Widget = require('../../widget');
+var ListMixin = require('../../mixins/list');
 var template = require('./table.hbs');
 
 function defaultItemRenderer(data, column) {
@@ -13,8 +17,7 @@ function defaultItemRenderer(data, column) {
 
 var Table = Widget.extend({
     options: {
-        columns: [],
-        dataSource: []
+        columns: []
     },
 
     events: {
@@ -22,46 +25,63 @@ var Table = Widget.extend({
     },
 
     _create: function () {
-        this._setDataSource(this.options.dataSource);
+        this._selectedIndex = -1;
+        this._selectedItem = null;
         this._setColumns(this.options.columns);
 
         this._renderTable();
         this.$tbody = this.$element.children('tbody');
-        this._renderBody();
-    },
-
-    dataSource: function (value) {
-        if (arguments.length === 0) {
-            return this._dataSource;
-        } else {
-            this._setDataSource(value);
-            this._renderBody();
-        }
+        this._setDataSource(this.options.dataSource);
+        this._setSelectedIndex(this.options.selectedIndex);
     },
 
     addItem: function (data, index) {
+        var $tr = this._makeRow(data);
 
+        if (_.isUndefined(index) || index > this._dataSource.size) {
+            index = this._dataSource.size;
+        }
+
+        if (index === 0) {
+            this.$tbody.prepend($tr);
+        } else if (index === this._dataSource.size) {
+            this.$tbody.append($tr);
+        } else {
+            this.$tbody.children().eq(index).before($tr);
+        }
+        this._dataSource = this._dataSource.splice(index, 0, data);
+        this.trigger('add', data, index);
     },
 
     removeItem: function (data) {
+        var index = this._dataSource.indexOf(data);
 
+        if (index !== -1) {
+            this._dataSource = this._dataSource.delete(index);
+            this.$tbody.children().eq(index).remove();
+            this.trigger('remove', data);
+        }
     },
 
-    updateItem: function (data) {
+    updateItem: function (data, index) {
+        var that = this;
+        this._dataSource = this._dataSource.update(index, function (value) {
+            return _.extend(value, data);
+        });
 
+        var item = this._dataSource.get(index);
+        _.forEach(data, function (value, key) {
+            that._updateCell(item, index, key);
+        });
     },
 
     _onClick: function (e) {
         var $tr = $(e.currentTarget);
-
-        this.$tbody.children('.active').removeClass('active');
-        $tr.addClass('active');
-
-        this.selectedItem = this._dataSource[this.$tbody.children().index($tr)];
+        this._setSelectedIndex(this.$tbody.children().index($tr));
     },
 
     _setColumns: function (columns) {
-        this.columns = columns.map(function (column) {
+        this._columns = columns.map(function (column) {
             var data = {};
             data.headerText = column.headerText || column.dataField;
             data.dataField = column.dataField;
@@ -71,11 +91,38 @@ var Table = Widget.extend({
     },
 
     _setDataSource: function (dataSource) {
-        this._dataSource = dataSource;
+        this._dataSource = new Immutable.List(dataSource);
+        this._renderBody();
+    },
+
+    _setSelectedIndex: function (index) {
+        if (index > -1 && index < this._dataSource.size) {
+            this._selectedItem = this._dataSource.get(index);
+            this._selectedIndex = index;
+            this._setSelection();
+            this.trigger('change');
+        }
+    },
+
+    _setSelectedItem: function (item) {
+        var index = this._dataSource.indexOf(item);
+
+        if (index !== -1) {
+            this._selectedItem = item;
+            this._selectedIndex = index;
+            this._setSelection();
+            this.trigger('change');
+        }
+    },
+
+    _setSelection: function () {
+        var $tr = this.$tbody.children().eq(this._selectedIndex);
+        this.$tbody.children('.active').removeClass('active');
+        $tr.addClass('active');
     },
 
     _renderTable: function () {
-        this.$element.append(template({columns: this.columns}));
+        this.$element.append(template({columns: this._columns}));
     },
 
     _renderBody: function () {
@@ -93,7 +140,7 @@ var Table = Widget.extend({
         var html = '<tr>',
             that = this;
 
-        this.columns.forEach(function (column) {
+        this._columns.forEach(function (column) {
             html += that._makeColumn(data, column);
         });
         html += '</tr>';
@@ -102,10 +149,19 @@ var Table = Widget.extend({
     },
 
     _makeColumn: function (data, column) {
-        return '<td>' + column.itemRenderer(data, column) + '</td>';
+        return '<td data-column-field="' + column.dataField + '">' + column.itemRenderer(data, column) + '</td>';
+    },
+
+    _updateCell: function (data, rowIndex, dataField) {
+        var $tr = this.$tbody.children().eq(rowIndex);
+        var $td = $tr.children('[data-column-field="' + dataField + '"]');
+        var columnIndex = $tr.children().index($td);
+        var column = this._columns[columnIndex];
+        $td.html(column.itemRenderer(data, column));
     }
 });
 
+mixin(Table, ListMixin);
 plugin('table', Table);
 
 module.exports = Table;
