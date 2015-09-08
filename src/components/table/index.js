@@ -82,7 +82,7 @@ var Table = Widget.extend({
     },
 
     _setColumns: function (columns) {
-        this._columns = columns.map(function (column) {
+        this._columns = new Immutable.List(columns).map(function (column) {
             var data = {};
             data.headerText = column.headerText || column.dataField;
             data.dataField = column.dataField;
@@ -123,7 +123,7 @@ var Table = Widget.extend({
     },
 
     _renderTable: function () {
-        this.$element.append(template({columns: this._columns}));
+        this.$element.append(template({columns: this._columns.toArray()}));
     },
 
     _renderBody: function () {
@@ -150,14 +150,17 @@ var Table = Widget.extend({
     },
 
     _makeColumn: function (data, column) {
-        return '<td data-column-field="' + column.dataField + '">' + column.itemRenderer(data, column) + '</td>';
+        return '<td>' + column.itemRenderer(data, column) + '</td>';
     },
 
     _updateCell: function (data, rowIndex, dataField) {
+        var columnIndex = this._columns.findIndex(function (value) {
+            return value.dataField === dataField;
+        });
+        var column = this._columns.get(columnIndex);
         var $tr = this.$tbody.children().eq(rowIndex);
-        var $td = $tr.children('[data-column-field="' + dataField + '"]');
-        var columnIndex = $tr.children().index($td);
-        var column = this._columns[columnIndex];
+        var $td = $tr.children().eq(columnIndex);
+
         $td.html(column.itemRenderer(data, column));
     }
 });
