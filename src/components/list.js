@@ -36,8 +36,8 @@ var List = Widget.extend({
         this._selectedIndex = -1;
         this._selectedItem = null;
 
-        this.$element.html(this._dataSource.reduce(function (result, item) {
-            return result + '<li>' + _.bind(this.options.itemRenderer, this, item, this.options.highlight)() + '</li>';
+        this.$element.html(this._dataSource.reduce(function (previous, current) {
+            return previous + '<li>' + _.bind(this.options.itemRenderer, this, current)() + '</li>';
         }, '', this));
     },
 
