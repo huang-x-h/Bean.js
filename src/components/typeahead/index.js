@@ -13,15 +13,17 @@ function filter_contains(text, input) {
     return RegExp(input, "i").test(text);
 }
 
+function defaultItemRenderer (text, input) {
+    return '<li><a href="javascript:;">' + text.replace(RegExp(input, "gi"), "<mark>$&</mark>") + '</a></li>';
+}
+
 var Typeahead = Widget.extend({
     options: {
         maxChars: 2,
         maxItems: 10,
         delay: 300,
         filter: filter_contains,
-        itemRenderer: function (text, input) {
-            return '<li><a href="javascript:;">' + text.replace(RegExp(input, "gi"), "<mark>$&</mark>") + '</a></li>';
-        },
+        itemRenderer: defaultItemRenderer,
         remote: null
     },
 
@@ -104,7 +106,10 @@ var Typeahead = Widget.extend({
         var that = this;
         $.ajax({
             url: this.options.remote,
-            type: 'GET'
+            type: 'POST',
+            data: {
+                qs: input
+            }
         }).then(function (data) {
             that._dataSource = data;
             _.map(that._dataSource, function (item) {
