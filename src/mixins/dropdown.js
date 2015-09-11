@@ -3,7 +3,6 @@
  */
 
 var _ = require('underscore');
-var HighlightList = require('../components/highlightlist');
 
 module.exports = {
     _create: function () {
@@ -15,13 +14,7 @@ module.exports = {
         });
     },
 
-    dropdown: function () {
-        if (!this.$dropdown) {
-            this.$dropdown = new HighlightList($('<ul class="dropdown-menu"></ul>'), this.options);
-        }
-
-        return this.$dropdown;
-    },
+    dropdown: $.noop,
 
     isOpen: function () {
         return this._opened;

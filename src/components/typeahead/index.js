@@ -8,6 +8,7 @@ var plugin = require('../../plugin');
 var mixin = require('../../utils/mixin');
 var Widget = require('../../widget');
 var DropDownMixin = require('../../mixins/dropdown');
+var HighlightList = require('./highlightlist');
 
 function filter_contains(data, input) {
     return RegExp(input, "i").test(this.itemToLabel(data));
@@ -86,8 +87,7 @@ var Typeahead = Widget.extend({
                 return index < that.options.maxItems - 1;
             });
 
-        dropDownInstance.highlight(input);
-        dropDownInstance._setDataSource(dataSource);
+        dropDownInstance._setDataSource(dataSource, input);
         this._toggleDropdown();
     },
 
@@ -101,8 +101,7 @@ var Typeahead = Widget.extend({
             }
         }).then(function (data) {
             var dropDownInstance = this.dropdown();
-            dropDownInstance.highlight(input);
-            dropDownInstance._setDataSource(data);
+            dropDownInstance._setDataSource(data, input);
             that._toggleDropdown();
         });
     },
@@ -116,6 +115,14 @@ var Typeahead = Widget.extend({
         }
 
         return label;
+    },
+
+    dropdown: function () {
+        if (!this.$dropdown) {
+            this.$dropdown = new HighlightList($('<ul class="dropdown-menu"></ul>'), this.options);
+        }
+
+        return this.$dropdown;
     }
 });
 
