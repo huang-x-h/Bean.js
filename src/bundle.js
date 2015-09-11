@@ -8,6 +8,7 @@ require('./utils/ajax');
 require('./utils/block');
 require('./utils/image');
 
+require('./components/autocomplete/email');
 require('./components/button');
 require('./components/tab');
 require('./components/tooltip');

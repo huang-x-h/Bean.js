@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta charset="UTF-8">
+        <title>AutoComplete</title>
+        <link rel="stylesheet" href="../../main.css">
+        <link rel="stylesheet" href="/examples/doc.css">
+    </head>
+    <body>
+        <div class="container">
+            <h2>Email AutoComplete</h2>
+            <div class="bs-example">
+                <div id="email" class="typeahead">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <script src="../../bundle.js"></script>
+        <script>
+            $('#email').emailautocomplete();
+        </script>
+    </body>
+</html>
