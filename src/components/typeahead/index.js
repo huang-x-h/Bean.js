@@ -8,14 +8,9 @@ var plugin = require('../../plugin');
 var mixin = require('../../utils/mixin');
 var Widget = require('../../widget');
 var DropDownMixin = require('../../mixins/dropdown');
-var ListMixin = require('../../mixins/list');
 
-function filter_contains(text, input) {
-    return RegExp(input, "i").test(text);
-}
-
-function defaultItemRenderer (text, input) {
-    return '<li><a href="javascript:;">' + text.replace(RegExp(input, "gi"), "<mark>$&</mark>") + '</a></li>';
+function filter_contains(data, input) {
+    return RegExp(input, "i").test(this.itemToLabel(data));
 }
 
 var Typeahead = Widget.extend({
@@ -23,22 +18,23 @@ var Typeahead = Widget.extend({
         maxChars: 2,
         maxItems: 10,
         delay: 300,
+        dataTextField: 'text',
+        dataValueField: 'value',
+        dataSource: [],
         filter: filter_contains,
-        itemRenderer: defaultItemRenderer,
         remote: null
     },
 
     events: {
         'input': '_onInput',
         'blur input': '_onBlur',
-        'keydown': '_onKeyDown',
+        'keydown input': '_onKeyDown',
         'mousedown li': '_onMouseDown',
         'click .glyphicon-remove': '_onClickRemove'
     },
 
     _create: function () {
         this._inputHandler = _.debounce(this._evaluate, this.options.delay, true);
-        this._dataSource = [];
         this.$close = this.$element.find('.glyphicon-remove');
     },
 
@@ -52,15 +48,12 @@ var Typeahead = Widget.extend({
     },
 
     _onClickRemove: function (e) {
-        this._select(-1);
+        this.$input.val('');
         this.$close.addClass('hide');
     },
 
     _evaluate: function () {
         var value = this.$input.val();
-
-        // empty dropdown list
-        this.dropdown().empty();
 
         if (value.length >= this.options.maxChars) {
             if (this.options.remote) {
@@ -69,39 +62,32 @@ var Typeahead = Widget.extend({
                 this._localQuery(value);
             }
         }
-
     },
 
     _toggleDropdown: function () {
-        if (this.dropdown().children().length > 0) {
+        if (this.dropdown().$element.children().length > 0) {
             this.open();
         } else {
             this.close();
         }
     },
 
-    _setSelectedIndex: function (index) {
-        if (index > -1 && index < this._dataSource.length) {
-            this._selectedItem = this._dataSource[index];
-            this._selectedIndex = index;
-            this.trigger('change');
-        }
-    },
-
     _localQuery: function (input) {
-        var that = this;
+        var that = this,
+            dataSource = [],
+            dropDownInstance = this.dropdown();
 
-        this._dataSource.length = 0;
         _.chain(this.options.dataSource)
             .filter(function (item) {
-                return that.options.filter(item[that.options.dataTextField], input);
+                return _.bind(that.options.filter, that, item, input)();
             })
             .every(function (item, index) {
-                that._dataSource.push(item);
-                that.dropdown().append(that.options.itemRenderer(item[that.options.dataTextField], input));
+                dataSource.push(item);
                 return index < that.options.maxItems - 1;
             });
 
+        dropDownInstance.highlight(input);
+        dropDownInstance._setDataSource(dataSource);
         this._toggleDropdown();
     },
 
@@ -109,22 +95,30 @@ var Typeahead = Widget.extend({
         var that = this;
         $.ajax({
             url: this.options.remote,
-            type: 'GET',
+            type: 'POST',
             data: {
                 qs: input
             }
         }).then(function (data) {
-            that._dataSource = data;
-            _.map(that._dataSource, function (item) {
-                that.dropdown().append(that.options.itemRenderer(item[that.options.dataTextField], input));
-            });
-
+            var dropDownInstance = this.dropdown();
+            dropDownInstance.highlight(input);
+            dropDownInstance._setDataSource(data);
             that._toggleDropdown();
         });
+    },
+
+    itemToLabel: function (data) {
+        var label = '';
+        if (_.isString(data)) {
+            label = data;
+        } else if (_.isObject(data)) {
+            label = data[this.options.dataTextField];
+        }
+
+        return label;
     }
 });
 
-mixin(Typeahead, ListMixin);
 mixin(Typeahead, DropDownMixin);
 
 plugin('typeahead', Typeahead);
