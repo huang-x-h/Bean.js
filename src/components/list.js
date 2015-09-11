@@ -4,19 +4,27 @@
 
 var $ = require('jquery');
 var _ = require('underscore');
+var Immutable = require('immutable');
 var plugin = require('../plugin');
+var mixin = require('../utils/mixin');
+var ListMixin = require('../mixins/list');
 var Widget = require('../widget');
 
 function itemRendererHandler (data) {
-    return '<a href="javascript:;">' + data[this.options.dataTextField] + '</a>';
+    var content = '';
+    if (_.isString(data)) {
+        content = data;
+    } else {
+        content = data[this.options.dataTextField];
+    }
+
+    return '<a href="javascript:;">' + content + '</a>';
 }
 
 var List = Widget.extend({
     options: {
-        dataSource: null,
         dataTextField: 'text',
         dataValueField: 'value',
-        selectedIndex: -1,
         itemRenderer: itemRendererHandler
     },
 
@@ -25,79 +33,48 @@ var List = Widget.extend({
     },
 
     _create: function () {
-        this.dataSource(this.options.dataSource);
-        this.selectedIndex(this.options.selectedIndex);
+        this._setDataSource(this.options.dataSource);
+        this._setSelectedIndex(this.options.selectedIndex);
     },
 
-    dataSource: function (value) {
-        if (arguments.length === 0) {
-            return this._dataSource;
+    _setDataSource: function (value) {
+        this._dataSource = new Immutable.List(value);
+        this._selectedIndex = -1;
+        this._selectedItem = null;
 
-        } else if (this._dataSource != value) {
-            if (_.isArray(value)) {
-                this._dataSource = value;
-                this._selectedIndex = -1;
-
-                this.$element.html(_.reduce(this._dataSource, function (result, item) {
-                    return result + '<li>' + _.bind(this.options.itemRenderer, this, item)() + '</li>';
-                }, '', this));
-            }
-        }
+        this.$element.html(this._dataSource.reduce(function (result, item) {
+            return result + '<li>' + _.bind(this.options.itemRenderer, this, item)() + '</li>';
+        }, '', this));
     },
 
-    selectedIndex: function (value) {
-        if (arguments.length === 0) {
-            return this._selectedIndex;
-        } else if (this._selectedIndex != value) {
-            this._selectedIndex = this._checkIndex(value);
-            this._setSelectedIndex(this._selectedIndex);
-        }
-    },
-
-    selectedItem: function (value) {
-        if (arguments.length === 0) {
-            return this._dataSource && this._dataSource[this._selectedIndex];
-        } else {
-            // TODO
-        }
-    },
-
-    value: function (value) {
-        var item = this.selectedItem();
-
-        if (arguments.length === 0) {
-            return item[this.options.dataValueField];
-        } else {
-            // TODO
+    _setSelectedIndex: function (index) {
+        if (index > -1 && index < this._dataSource.size) {
+            this._selectedItem = this._dataSource.get(index);
+            this._selectedIndex = index;
+            this._setSelection();
+            this.trigger('change');
         }
     },
 
     _onClick: function (e) {
-        e.stopPropagation();
+        e.preventDefault();
 
         var $li = $(e.currentTarget);
 
         if (!$li.hasClass('active')) {
-            this.selectedIndex(this.$element.find('li').index($li));
+            this._setSelectedIndex(this.$element.find('li').index($li));
         }
 
         this.trigger('click');
     },
 
-    _setSelectedIndex: function (index) {
+    _setSelection: function () {
         this.$element.find('li.active').removeClass('active');
-        this.$element.find('li').eq(index).addClass('active');
-        this.trigger('change', this.selectedItem());
-    },
-
-    _checkIndex: function (index) {
-        if (index < 0) return 0;
-        if (this._dataSource && (index >= this._dataSource.length)) return this._dataSource.length - 1;
-
-        return index;
+        this.$element.find('li').eq(this._selectedIndex).addClass('active');
     }
 });
 
+mixin(List, ListMixin);
 plugin('list', List);
 
 module.exports = List;

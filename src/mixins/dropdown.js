@@ -4,33 +4,16 @@
 
 module.exports = {
     options: {
-        dataSource: null,
         dataTextField: 'text',
         dataValueField: 'value'
     },
 
     _create: function () {
         this._opened = false;
-        this._selectedIndex = -1;
-        this._selectedItem = null;
-    },
-
-    selectedIndex: function (value) {
-        if (arguments.length === 0) {
-            return this._selectedIndex;
-        } else if (this._selectedIndex != value) {
-            this._selectedIndex = this._checkIndex(value);
-            this._activeSelectedIndex(this._selectedIndex);
-        }
-    },
-
-    selectedItem: function (value) {
-        if (arguments.length === 0) {
-            return this._selectedItem;
-        } else if (this._selectedItem != value) {
-            this._selectedItem = value;
-            this.trigger('change');
-        }
+        this.$input = this.$element.find('input').attr({
+            autocomplete: "off",
+            spellcheck: false
+        });
     },
 
     text: function () {
@@ -53,6 +36,14 @@ module.exports = {
         }
     },
 
+    dropdown: function () {
+        if (!this.$dropdown) {
+            this.$dropdown = $('<ul class="dropdown-menu"></ul>');
+        }
+
+        return this.$dropdown;
+    },
+
     isOpen: function () {
         return this._opened;
     },
@@ -60,6 +51,7 @@ module.exports = {
     open: function () {
         if (this.isOpen()) return;
 
+        this.$element.append(this.dropdown());
         this.$element.addClass('open');
         this._opened = true;
         this.trigger('open');
@@ -68,6 +60,7 @@ module.exports = {
     close: function () {
         if (!this.isOpen()) return;
 
+        this.dropdown().detach();
         this.$element.removeClass('open');
         this._opened = false;
         this.trigger('close');
@@ -82,7 +75,7 @@ module.exports = {
     },
 
     goto: function (index) {
-        this.selectedIndex(index);
+        this._setSelectedIndex(index);
     },
 
     _onKeyDown: function (e) {
@@ -107,33 +100,20 @@ module.exports = {
 
     _onMouseDown: function (e) {
         var $li = $(e.currentTarget),
-            index = this.$list.find('li').index($li);
+            index = this.dropdown().find('li').index($li);
 
         this._select(index);
     },
 
     _onEnter: function () {
-        var index = this.$list.find('.active').index();
+        var index = this.dropdown().find('.active').index();
 
         this._select(index);
     },
 
     _select: function (index) {
-        this.selectedIndex(index);
-        this.selectedItem(this._dataSource[index]);
+        this._setSelectedIndex(index);
         this.$input.val(this.text());
         this.close();
-    },
-
-    _checkIndex: function (index) {
-        if (index < 0) return this._dataSource.length - 1;
-        if ((index >= this._dataSource.length)) return 0;
-
-        return index;
-    },
-
-    _activeSelectedIndex: function (index) {
-        this.$list.find('li.active').removeClass('active');
-        this.$list.find('li').eq(index).addClass('active');
     }
 };

@@ -4,10 +4,12 @@
 
 var $ = require('jquery');
 var _ = require('underscore');
+var Immutable = require('immutable');
 var plugin = require('../../plugin');
-var Widget = require('../../widget');
-var DropDownListMixin = require('../../mixins/dropdownlist');
 var mixin = require('../../utils/mixin');
+var Widget = require('../../widget');
+var DropDownMixin = require('../../mixins/dropdown');
+var ListMixin = require('../../mixins/list');
 var template = require('./combobox.hbs');
 
 function itemRendererHandler(data) {
@@ -30,26 +32,25 @@ var ComboBox = Widget.extend({
     _create: function () {
         this.$element.append(template());
 
-        this.$input = this.$element.find('input');
-        this.$list = this.$element.find('.dropdown-menu');
-
-        this.dataSource(this.options.dataSource);
-        this.selectedIndex(this.options.selectedIndex);
+        this._setDataSource(this.options.dataSource);
+        this._setSelectedIndex(this.options.selectedIndex);
     },
 
-    dataSource: function (value) {
-        if (arguments.length === 0) {
-            return this._dataSource;
+    _setDataSource: function (value) {
+        this._dataSource = new Immutable.List(value);
+        this._selectedIndex = -1;
+        this._selectedItem = null;
 
-        } else if (this._dataSource != value) {
-            if (_.isArray(value)) {
-                this._dataSource = value;
-                this._selectedIndex = -1;
+        this.$element.html(this._dataSource.reduce(function (result, item) {
+            return result + '<li>' + _.bind(this.options.itemRenderer, this, item)() + '</li>';
+        }, '', this));
+    },
 
-                this.$list.html(_.reduce(this._dataSource, function (result, item) {
-                    return result + '<li>' + _.bind(this.options.itemRenderer, this, item)() + '</li>';
-                }, '', this));
-            }
+    _setSelectedIndex: function (index) {
+        if (index > -1 && index < this._dataSource.size) {
+            this._selectedItem = this._dataSource.get(index);
+            this._selectedIndex = index;
+            this.trigger('change');
         }
     },
 
@@ -62,7 +63,8 @@ var ComboBox = Widget.extend({
     }
 });
 
-mixin(ComboBox, DropDownListMixin);
+mixin(ComboBox, ListMixin);
+mixin(ComboBox, DropDownMixin);
 plugin('combobox', ComboBox);
 
 module.exports = ComboBox;

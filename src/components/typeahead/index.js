@@ -5,9 +5,10 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var plugin = require('../../plugin');
-var Widget = require('../../widget');
-var DropDownListMixin = require('../../mixins/dropdownlist');
 var mixin = require('../../utils/mixin');
+var Widget = require('../../widget');
+var DropDownMixin = require('../../mixins/dropdown');
+var ListMixin = require('../../mixins/list');
 
 function filter_contains(text, input) {
     return RegExp(input, "i").test(text);
@@ -38,13 +39,7 @@ var Typeahead = Widget.extend({
     _create: function () {
         this._inputHandler = _.debounce(this._evaluate, this.options.delay, true);
         this._dataSource = [];
-
-        this.$input = this.$element.find('input').attr({
-            autocomplete: "off",
-            spellcheck: false
-        });
         this.$close = this.$element.find('.glyphicon-remove');
-        this.$list = $('<ul class="dropdown-menu"></ul>').appendTo(this.$element);
     },
 
     _onInput: function (e) {
@@ -65,7 +60,7 @@ var Typeahead = Widget.extend({
         var value = this.$input.val();
 
         // empty dropdown list
-        this.$list.empty();
+        this.dropdown().empty();
 
         if (value.length >= this.options.maxChars) {
             if (this.options.remote) {
@@ -78,10 +73,18 @@ var Typeahead = Widget.extend({
     },
 
     _toggleDropdown: function () {
-        if (this.$list.children().length > 0) {
+        if (this.dropdown().children().length > 0) {
             this.open();
         } else {
             this.close();
+        }
+    },
+
+    _setSelectedIndex: function (index) {
+        if (index > -1 && index < this._dataSource.length) {
+            this._selectedItem = this._dataSource[index];
+            this._selectedIndex = index;
+            this.trigger('change');
         }
     },
 
@@ -95,7 +98,7 @@ var Typeahead = Widget.extend({
             })
             .every(function (item, index) {
                 that._dataSource.push(item);
-                that.$list.append(that.options.itemRenderer(item[that.options.dataTextField], input));
+                that.dropdown().append(that.options.itemRenderer(item[that.options.dataTextField], input));
                 return index < that.options.maxItems - 1;
             });
 
@@ -106,14 +109,14 @@ var Typeahead = Widget.extend({
         var that = this;
         $.ajax({
             url: this.options.remote,
-            type: 'POST',
+            type: 'GET',
             data: {
                 qs: input
             }
         }).then(function (data) {
             that._dataSource = data;
             _.map(that._dataSource, function (item) {
-                that.$list.append(that.options.itemRenderer(item[that.options.dataTextField], input));
+                that.dropdown().append(that.options.itemRenderer(item[that.options.dataTextField], input));
             });
 
             that._toggleDropdown();
@@ -121,6 +124,7 @@ var Typeahead = Widget.extend({
     }
 });
 
-mixin(Typeahead, DropDownListMixin);
+mixin(Typeahead, ListMixin);
+mixin(Typeahead, DropDownMixin);
 
 plugin('typeahead', Typeahead);
