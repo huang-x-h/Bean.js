@@ -19,9 +19,9 @@ module.exports = {
         else
             args = rest;
 
-        for (i = 0; i < len; i++){
-            str = str.replace(new RegExp("\\{"+i+"\\}", "g"), args[i]);
-        }
+        str = str.replace(/\{(\d+)\}/g, function (m, i) {
+            return args[i]
+        });
 
         return str;
     }
