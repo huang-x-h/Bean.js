@@ -71,12 +71,12 @@ var Collapse = Widget.extend({
             this.trigger('show');
         };
 
-        if (!$.support.transition) return complete.call(this);
+        if (!transition.supportsTransitionEnd) return complete.call(this);
 
         var scrollSize = $.camelCase(['scroll', dimension].join('-'));
 
         this.$element
-            .one(transition.eventType, $.proxy(complete, this))
+            .one(transition.TRANSITION_END, $.proxy(complete, this))
             .emulateTransitionEnd(TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
     },
 
@@ -109,11 +109,11 @@ var Collapse = Widget.extend({
             this.trigger('hide');
         };
 
-        if (!$.support.transition) return complete.call(this);
+        if (!transition.supportsTransitionEnd) return complete.call(this);
 
         this.$element
             [dimension](0)
-            .one(transition.eventType, $.proxy(complete, this))
+            .one(transition.TRANSITION_END, $.proxy(complete, this))
             .emulateTransitionEnd(TRANSITION_DURATION);
     },
 

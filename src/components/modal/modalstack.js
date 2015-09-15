@@ -65,9 +65,9 @@ function removeAfterAnimate($element, duration, callback) {
         callback();
     };
 
-    $.support.transition && $element.hasClass('fade') ?
+    transition.supportsTransitionEnd && $element.hasClass('fade') ?
         $element
-            .one(transition.eventType, callbackRemove)
+            .one(transition.TRANSITION_END, callbackRemove)
             .emulateTransitionEnd(duration) :
         callbackRemove()
 }

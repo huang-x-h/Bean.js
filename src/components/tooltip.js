@@ -160,9 +160,9 @@ var ToolTip = Widget.extend({
                 that.trigger('show');
             };
 
-            $.support.transition && this.$tip.hasClass('fade') ?
+            transition.supportsTransitionEnd && this.$tip.hasClass('fade') ?
                 $tip
-                    .one(transition, complete)
+                    .one(transition.TRANSITION_END, complete)
                     .emulateTransitionEnd(TRANSITION_DURATION) :
                 complete();
         }
@@ -231,9 +231,9 @@ var ToolTip = Widget.extend({
 
         $tip.removeClass('in');
 
-        $.support.transition && this.$tip.hasClass('fade') ?
+        transition.supportsTransitionEnd && this.$tip.hasClass('fade') ?
             $tip
-                .one(transition.eventType, complete)
+                .one(transition.TRANSITION_END, complete)
                 .emulateTransitionEnd(TRANSITION_DURATION) :
             complete();
 

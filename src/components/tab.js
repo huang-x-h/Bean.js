@@ -52,8 +52,8 @@ var Tab = Widget.extend({
 
     activate: function (element, container, callback) {
         var $active = container.find('> .active')
-        var transition = callback
-            && $.support.transition
+        var isTransitioning = callback
+            && transition.supportsTransitionEnd
             && (($active.length && $active.hasClass('fade')) || !!container.find('> .fade').length)
 
         function next() {
@@ -70,7 +70,7 @@ var Tab = Widget.extend({
                 .find('[data-toggle="tab"]')
                 .attr('aria-expanded', true)
 
-            if (transition) {
+            if (isTransitioning) {
                 element[0].offsetWidth // reflow for transition
                 element.addClass('in')
             } else {
@@ -89,9 +89,9 @@ var Tab = Widget.extend({
             callback && callback()
         }
 
-        $active.length && transition ?
+        $active.length && isTransitioning ?
             $active
-                .one(transition.eventType, next)
+                .one(transition.TRANSITION_END, next)
                 .emulateTransitionEnd(TRANSITION_DURATION) :
             next();
 

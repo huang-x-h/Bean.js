@@ -3,21 +3,22 @@
  */
 
 var $ = require('jquery');
-var type = 'bsTransitionEnd';
+var TRANSITION_END = 'bsTransitionEnd';
+var transition = false;
+var supportsTransitionEnd = false;
+var transEndEventNames = {
+    WebkitTransition: 'webkitTransitionEnd',
+    MozTransition: 'transitionend',
+    OTransition: 'oTransitionEnd otransitionend',
+    transition: 'transitionend'
+};
 
-function transitionEnd() {
+function transitionEndTest() {
     var el = document.createElement('bootstrap');
-
-    var transEndEventNames = {
-        WebkitTransition : 'webkitTransitionEnd',
-        MozTransition    : 'transitionend',
-        OTransition      : 'oTransitionEnd otransitionend',
-        transition       : 'transitionend'
-    };
 
     for (var name in transEndEventNames) {
         if (el.style[name] !== undefined) {
-            return { end: transEndEventNames[name] }
+            return {end: transEndEventNames[name]}
         }
     }
 
@@ -25,29 +26,51 @@ function transitionEnd() {
 }
 
 // http://blog.alexmaccaw.com/css-transitions
-$.fn.emulateTransitionEnd = function (duration) {
+function transitionEndEmulator(duration) {
+    var _this = this;
+
     var called = false;
-    var $el = this;
-    $(this).one(type, function () { called = true });
-    var callback = function () { if (!called) $($el).trigger($.support.transition.end) };
-    setTimeout(callback, duration);
-    return this
-};
 
-$(function () {
-    $.support.transition = transitionEnd();
+    $(this).one(TRANSITION_END, function () {
+        called = true;
+    });
 
-    if (!$.support.transition) return;
+    setTimeout(function () {
+        if (!called) {
+            triggerTransitionEnd(_this);
+        }
+    }, duration);
 
-    $.event.special[type] = {
-        bindType: $.support.transition.end,
-        delegateType: $.support.transition.end,
-        handle: function (e) {
-            if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+    return this;
+}
+
+function triggerTransitionEnd(element) {
+    $(element).trigger(transition.end);
+}
+
+function setTransitionEndSupport() {
+    transition = transitionEndTest();
+    supportsTransitionEnd = Boolean(transition);
+
+    $.fn.emulateTransitionEnd = transitionEndEmulator;
+
+    if (supportsTransitionEnd) {
+        $.event.special[TRANSITION_END] = {
+            bindType: transition.end,
+            delegateType: transition.end,
+            handle: function (e) {
+                if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+            }
         }
     }
-});
+}
+
+setTransitionEndSupport();
 
 module.exports = {
-    eventType: type
+    TRANSITION_END: TRANSITION_END,
+    supportsTransitionEnd: supportsTransitionEnd,
+    reflow: function reflow(element) {
+
+    }
 };

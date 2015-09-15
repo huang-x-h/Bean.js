@@ -47,8 +47,8 @@ var Alert = Widget.extend({
             $el.remove();
         }
 
-        $.support.transition && $el.hasClass('fade') ?
-            $el.one(transition.eventType, $.proxy(removeElement, this))
+        transition.supportsTransitionEnd && $el.hasClass('fade') ?
+            $el.one(transition.TRANSITION_END, $.proxy(removeElement, this))
                 .emulateTransitionEnd(TRANSITION_DURATION) :
             removeElement()
     }
