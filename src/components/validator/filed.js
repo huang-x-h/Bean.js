@@ -77,7 +77,7 @@ ValidatorField.prototype = {
             result = constraint.rule.validate.apply(null, [value].concat(constraint.options));
 
             if (!result) {
-                this.validationResult = rules.getMessage(constraint.name, [this.options.display].concat(constraint.options));
+                this.validationResult = rules.getMessage.apply(null, [constraint.name, this.options.display].concat(constraint.options));
                 valid = false;
                 break;
             }
