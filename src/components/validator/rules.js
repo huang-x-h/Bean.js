@@ -9,7 +9,7 @@ var locale = require('../../locale');
 var ruleMessage;
 var rules = {};
 var numberOptions = {
-    domain: 'int',
+    domain: 'int', // int/decimal
     max: Infinity,
     min: -Infinity
 };
@@ -137,13 +137,28 @@ addRule('compare', function (str, options) {
 addRule('number', function (str, options) {
     options = _.extend({}, numberOptions, options);
 
-    if (options.domain === 'int') {
-        util.isInt(str, options);
-    } else {
-        util.isDecimal(str, options);
-    }
-}, function (display, options) {
+    var result = true;
+    if (str === '') return result;
 
+    str = +str;
+    if (options.domain === 'int') {
+        result = util.isInt(str, options);
+    } else {
+        result = util.isDecimal(str, options);
+    }
+    return result;
+}, function (display, options) {
+    var definition = options.domain === 'int' ? ruleMessage.integerDefinition : ruleMessage.numberDefinition;
+
+    if (options.min && options.max) {
+        return substitute(ruleMessage.numberBetweenError, display, definition, options.min, options.max);
+    } else if (options.min) {
+        return substitute(ruleMessage.numberGreaterError, display, definition, options.min);
+    } else if (options.max) {
+        return substitute(ruleMessage.numberLessError, display, definition, options.max);
+    } else {
+        return substitute(ruleMessage.numberError, display, definition);
+    }
 });
 
 module.exports = {
