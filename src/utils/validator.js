@@ -128,10 +128,6 @@ validator.isNumeric = function (str) {
     return numeric.test(str);
 };
 
-validator.isDecimal = function (str) {
-    return str !== '' && decimal.test(str);
-};
-
 validator.isEmail = function (str) {
     return email.test(str);
 };
@@ -143,11 +139,16 @@ validator.isInt = function (str, options) {
         && (!options.hasOwnProperty('max') || str <= options.max);
 };
 
-validator.isFloat = function (str, options) {
+validator.isDecimal = function (str, options) {
     options = options || {};
-    return str !== '' && float.test(str)
+
+    return decimal.test(str)
         && (!options.hasOwnProperty('min') || str >= options.min)
         && (!options.hasOwnProperty('max') || str <= options.max);
+};
+
+validator.isFloat = function (str) {
+    return str !== '' && float.test(str);
 };
 
 validator.isLength = function (str, min, max) {
