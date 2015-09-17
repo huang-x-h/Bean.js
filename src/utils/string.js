@@ -8,9 +8,9 @@ module.exports = {
     substitute: function (str) {
         if (str == null) return '';
 
-        var args = Array.prototype.slice(arguments, 1);
+        var args = Array.prototype.slice.call(arguments, 1);
 
-        if (args.length == 1 && _.isArray(rest[0])) {
+        if (args.length == 1 && _.isArray(args[0])) {
             args = args[0];
         }
 
