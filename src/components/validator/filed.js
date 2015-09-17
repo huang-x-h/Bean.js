@@ -5,6 +5,7 @@
 var _ = require('underscore');
 var rules = require('./rules');
 var Tooltip = require('../tooltip');
+var ERROR_CLASS = 'has-error';
 
 var ValidatorField = function (element, options) {
     this.constraints = [];
@@ -42,27 +43,25 @@ ValidatorField.prototype = {
     },
 
     validate: function () {
-        if (this.validateEnabled) return;
+        if (!this.validateEnabled) return;
 
         this.value = this.getValue();
         this.isValid(this.value);
 
         if (this.validationResult) {
-            this.$element.addClass('has-error');
-            this.tooltip = new Tooltip(this.$element, {
-                title: this.validationResult
-            });
-            this.tooltip.show();
+            this.$element.parent().addClass(ERROR_CLASS);
+            this.showErrorTip();
         } else {
-            this.tooltip.hide();
+            this.$element.parent().removeClass(ERROR_CLASS);
+            this.hideErrorTip();
         }
 
         return this.validationResult;
     },
 
     isValid: function (value) {
-        var that = this,
-            valid = true;
+        var valid = true,
+            constraints, constraint, result;
 
         this.validationResult = '';
 
@@ -72,21 +71,42 @@ ValidatorField.prototype = {
         if ('undefined' === typeof value || null === value)
             value = this.getValue();
 
-        $.each(this.constraints, function (index, constraint) {
-            var result = constraint.rule.validate.apply(null, [value].concat(constraint.options));
+        constraints = _.sortBy(this.constraints, 'priority');
+        while (constraints.length) {
+            constraint = constraints.pop();
+            result = constraint.rule.validate.apply(null, [value].concat(constraint.options));
 
             if (!result) {
-                that.validationResult = rules.getMessage(constraint.name);
+                this.validationResult = rules.getMessage(constraint.name, [this.options.display].concat(constraint.options));
                 valid = false;
-                return false;
+                break;
             }
-        });
+        }
 
         return valid;
     },
 
     hasConstraints: function () {
         return 0 !== this.constraints.length;
+    },
+
+    showErrorTip: function () {
+        var that = this;
+        if (!this.tooltip) {
+            this.tooltip = new Tooltip(this.$element, {
+                title: function () {
+                    return that.validationResult;
+                }
+            });
+        }
+
+        this.tooltip.show();
+    },
+
+    hideErrorTip: function () {
+        if (this.tooltip) {
+            this.tooltip.hide();
+        }
     },
 
     _bindConstraints: function () {
@@ -100,14 +120,15 @@ ValidatorField.prototype = {
         var trigger = this.options.trigger;
     },
 
-    addConstraint: function (name) {
-        var args = Array.prototype.slice.call(arguments, 1),
-            rule = rules.getRule(name);
+    addConstraint: function (name, options, priority) {
+        var rule = rules.getRule(name),
+            priority = priority || 0;
 
         this.constraints.push({
             name: name,
-            options: args,
-            rule: rule
+            options: options,
+            rule: rule,
+            priority: priority
         });
 
         return this;
@@ -116,7 +137,7 @@ ValidatorField.prototype = {
     _bindHtml5Constraints: function () {
         // html5 required
         if (this.$element.attr('required'))
-            this.addConstraint('required');
+            this.addConstraint('required', null, 100);
 
         // html5 pattern
         if ('string' === typeof this.$element.attr('pattern'))
@@ -136,15 +157,15 @@ ValidatorField.prototype = {
 
         // length
         if ('undefined' !== typeof this.$element.attr('minlength') && 'undefined' !== typeof this.$element.attr('maxlength'))
-            this.addConstraint('length', this.$element.attr('minlength'), this.$element.attr('maxlength'));
+            this.addConstraint('length', [this.$element.attr('minlength'), this.$element.attr('maxlength')]);
 
         // HTML5 minlength
         else if ('undefined' !== typeof this.$element.attr('minlength'))
-            this.addConstraint('length', this.$element.attr('minlength'));
+            this.addConstraint('length', [this.$element.attr('minlength'), ]);
 
         // HTML5 maxlength
         else if ('undefined' !== typeof this.$element.attr('maxlength'))
-            this.addConstraint('length', this.$element.attr('maxlength'));
+            this.addConstraint('length', [, this.$element.attr('maxlength')]);
 
 
         // html5 types

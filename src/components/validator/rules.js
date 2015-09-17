@@ -15,6 +15,7 @@ var numberOptions = {
 };
 var compareOptions = {
     numeric: false,
+    comparison: '',
     operation: ''
 };
 
@@ -46,29 +47,31 @@ addRule('pattern', util.matches, function () {
 });
 
 addRule('email', util.isEmail, function () {
-    return ruleMessage.emailError
+    return ruleMessage.emailError;
 });
 
 addRule('length', util.isLength, function (display, min, max) {
     if (min && max) {
-        return substitute(ruleMessage.notBetweenError);
+        return substitute(ruleMessage.notBetweenError, display, min, max);
     } else if (min) {
-        return ruleMessage.tooShortError;
+        return substitute(ruleMessage.tooShortError, display, min);
     } else {
-        return ruleMessage.tooLongError;
+        return substitute(ruleMessage.tooLongError, display, max);
     }
 });
 
-addRule('ip', util.isIP, function (versoin) {
-    if (versoin === '6') {
+addRule('ip', util.isIP, function (display, version) {
+    if (version === '6') {
         return ruleMessage.ip6Error;
     } else {
         return ruleMessage.ip4Error;
     }
 });
 
-addRule('compare', function (str, comparison, options) {
+addRule('compare', function (str, options) {
     options = _.extend({}, compareOptions, options);
+
+    var comparison = options.comparison;
 
     if (options.numeric) {
         str = +str;
@@ -105,7 +108,8 @@ addRule('compare', function (str, comparison, options) {
     }
 
     return result;
-}, function (operation) {
+}, function (display, options) {
+    var operation = options.operation;
     switch (operation) {
         case 'eq':
             return ruleMessage.equalError;
@@ -138,7 +142,7 @@ addRule('number', function (str, options) {
     } else {
         util.isDecimal(str, options);
     }
-}, function (options) {
+}, function (display, options) {
 
 });
 

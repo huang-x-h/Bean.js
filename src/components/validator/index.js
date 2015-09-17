@@ -35,11 +35,11 @@ var Validator = Widget.extend({
 
     validate: function () {
         var that = this;
-        this.validationResult = [];
+        this.validationResults = [];
 
         _.each(this.fields, function (validator, name) {
             var validationResult = validator.validate();
-            that.validationResult.push({
+            that.validationResults.push({
                 name: name,
                 validationResult: validationResult
             });
@@ -49,17 +49,18 @@ var Validator = Widget.extend({
     },
 
     reset: function () {
-
     },
 
     disabled: function (field) {
-        if (field) {
-
+        if (field in this.fields) {
+            this.fields[field].disalbed();
         }
     },
 
     enabled: function (field) {
-
+        if (field in this.fields) {
+            this.fields[field].enabled();
+        }
     },
 
     _parseFields: function () {
