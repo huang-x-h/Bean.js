@@ -112,22 +112,22 @@ addRule('compare', function (str, options) {
     var operation = options.operation;
     switch (operation) {
         case 'eq':
-            return ruleMessage.equalError;
+            return substitute(ruleMessage.equalError, display, options.display);
             break;
         case 'le':
-            return ruleMessage.lessEqualError;
+            return substitute(ruleMessage.lessEqualError, display, options.display);
             break;
         case 'ge':
-            return ruleMessage.greaterEqualError;
+            return substitute(ruleMessage.greaterEqualError, display, options.display);
             break;
         case 'lt':
-            return ruleMessage.lessError;
+            return substitute(ruleMessage.lessError, display, options.display);
             break;
         case 'gt':
-            return ruleMessage.greaterError;
+            return substitute(ruleMessage.greaterError, display, options.display);
             break;
         case 'ne':
-            return ruleMessage.notEqualError;
+            return substitute(ruleMessage.notEqualError, display, options.display);
             break;
         default:
             return '';

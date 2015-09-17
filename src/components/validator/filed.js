@@ -4,7 +4,7 @@
 
 var _ = require('underscore');
 var rules = require('./rules');
-var Tooltip = require('../tooltip');
+var ErrorTip = require('./errortip');
 var ERROR_CLASS = 'has-error';
 
 var ValidatorField = function (element, options) {
@@ -93,7 +93,7 @@ ValidatorField.prototype = {
     showErrorTip: function () {
         var that = this;
         if (!this.tooltip) {
-            this.tooltip = new Tooltip(this.$element, {
+            this.tooltip = new ErrorTip(this.$element, {
                 title: function () {
                     return that.validationResult;
                 }

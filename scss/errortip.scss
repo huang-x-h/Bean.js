@@ -1,0 +1,81 @@
+$errortip-color: $state-danger-text;
+$errortip-bg: $state-danger-bg;
+$errortip-arrow-color: $state-danger-bg;
+
+.errortip {
+  @extend .tooltip;
+}
+
+.errortip-arrow {
+  @extend .tooltip-arrow;
+}
+
+// Wrapper for the errortip content
+.errortip-inner {
+  max-width: $tooltip-max-width;
+  padding: 3px 8px;
+  color: $errortip-color;
+  text-align: center;
+  text-decoration: none;
+  background-color: $errortip-bg;
+  border-radius: $border-radius-base;
+}
+
+.errortip {
+  &.top .errortip-arrow {
+    bottom: 0;
+    left: 50%;
+    margin-left: -$tooltip-arrow-width;
+    border-width: $tooltip-arrow-width $tooltip-arrow-width 0;
+    border-top-color: $errortip-arrow-color;
+  }
+  &.top-left .errortip-arrow {
+    bottom: 0;
+    right: $tooltip-arrow-width;
+    margin-bottom: -$tooltip-arrow-width;
+    border-width: $tooltip-arrow-width $tooltip-arrow-width 0;
+    border-top-color: $errortip-arrow-color;
+  }
+  &.top-right .errortip-arrow {
+    bottom: 0;
+    left: $tooltip-arrow-width;
+    margin-bottom: -$tooltip-arrow-width;
+    border-width: $tooltip-arrow-width $tooltip-arrow-width 0;
+    border-top-color: $errortip-arrow-color;
+  }
+  &.right .errortip-arrow {
+    top: 50%;
+    left: 0;
+    margin-top: -$tooltip-arrow-width;
+    border-width: $tooltip-arrow-width $tooltip-arrow-width $tooltip-arrow-width 0;
+    border-right-color: $errortip-arrow-color;
+  }
+  &.left .errortip-arrow {
+    top: 50%;
+    right: 0;
+    margin-top: -$tooltip-arrow-width;
+    border-width: $tooltip-arrow-width 0 $tooltip-arrow-width $tooltip-arrow-width;
+    border-left-color: $errortip-arrow-color;
+  }
+  &.bottom .errortip-arrow {
+    top: 0;
+    left: 50%;
+    margin-left: -$tooltip-arrow-width;
+    border-width: 0 $tooltip-arrow-width $tooltip-arrow-width;
+    border-bottom-color: $errortip-arrow-color;
+  }
+  &.bottom-left .errortip-arrow {
+    top: 0;
+    right: $tooltip-arrow-width;
+    margin-top: -$tooltip-arrow-width;
+    border-width: 0 $tooltip-arrow-width $tooltip-arrow-width;
+    border-bottom-color: $errortip-arrow-color;
+  }
+  &.bottom-right .errortip-arrow {
+    top: 0;
+    left: $tooltip-arrow-width;
+    margin-top: -$tooltip-arrow-width;
+    border-width: 0 $tooltip-arrow-width $tooltip-arrow-width;
+    border-bottom-color: $errortip-arrow-color;
+  }
+}
