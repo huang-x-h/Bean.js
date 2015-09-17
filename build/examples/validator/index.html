@@ -9,25 +9,104 @@
     </head>
     <body>
         <div class="container">
-            <form>
+            <form style="margin-top: 50px;">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" class="form-control" required>
+                    <input name="username" type="text" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input name="password" type="password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input name="confirmPassword" type="password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Currency</label>
+                    <input name="currency" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Old</label>
+                    <input name="old" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Begin Date</label>
+                    <input name="beginDate" type="text" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input name="endDate" type="text" class="form-control" required>
                 </div>
                 <button type="button" class="btn btn-default">Validate</button>
             </form>
         </div>
         <script src="../../bundle.js"></script>
         <script>
-            var $validator = $('.form-group').validator({
-                fields:[{
-                    name: 'input',
-                    display: 'Username'
-                }]
-            });
+            $(function() {
+                $('[name="beginDate"]').datepicker();
+                $('[name="endDate"]').datepicker();
 
-            $('button').on('click', function (e) {
-                $validator.validator('validate');
+                var $validator = $('form').validator({
+                    fields:[{
+                        name: '[name="username"]',
+                        display: 'Username',
+                        rules: {
+                            length: [3, 20]
+                        }
+                    }, {
+                        name: '[name="password"]',
+                        display: 'Password',
+                        rules: {
+                            length: [6, 20]
+                        }
+                    }, {
+                        name: '[name="confirmPassword"]',
+                        display: 'Confirm Password',
+                        rules: {
+                            number: {
+                                comparison: '[name="password"]',
+                                operation: 'eq',
+                                display: 'Password'
+                            }
+                        }
+                    }, {
+                        name: '[name="currency"]',
+                        display: 'Currency',
+                        rules: {
+                            number: {
+                                domain: 'decimal',
+                                max: 30000
+                            }
+                        }
+                    }, {
+                        name: '[name="old"]',
+                        display: 'Old',
+                        rules: {
+                            number: {
+                                min: 1,
+                                max: 120
+                            }
+                        }
+                    }, {
+                        name: '[name="beginDate"]',
+                        display: 'Begin Date'
+                    }, {
+                        name: '[name="endDate"]',
+                        display: 'End Date',
+                        rules: {
+                            compare: {
+                                comparison: '[name="beginDate"]',
+                                operation: 'gt',
+                                display: 'Begin Date'
+                            }
+                        }
+                    }]
+                });
+
+                $('button').on('click', function (e) {
+                    $validator.validator('validate');
+                });
             });
         </script>
     </body>
