@@ -15,6 +15,7 @@ module.exports = Class.extend({
         this.$element = $(element);
         this.options = $.extend({}, this.options, this.$element.data(), options);
         this.bindings = $();
+        this.eventNamespace = "." + this.widgetName;
 
         this._create();
         this._on(this.events);
@@ -31,7 +32,7 @@ module.exports = Class.extend({
         }
 
         if (element !== this.$element)
-            this.bindings.add(element);
+            this.eventNamespacebindings.add(element);
 
         var key, method, match;
         for (key in events) {
@@ -39,12 +40,12 @@ module.exports = Class.extend({
             if (!_.isFunction(method)) method = this[events[key]];
             if (!method) continue;
             match = key.match(delegateEventSplitter);
-            element.on(match[1] + '.' + this.widgetName, match[2], _.bind(method, this));
+            element.on(match[1] + this.eventNamespace, match[2], _.bind(method, this));
         }
     },
 
     _off: function (element, eventName) {
-        eventName = (eventName || "").split(" ").join(this.widgetName + " ") + this.widgetName;
+        eventName = (eventName || "").split(" ").join(this.eventNamespace + " ") + this.eventNamespace;
         element.off(eventName);
 
         this.bindings = $(this.bindings.not(element).get());
@@ -59,9 +60,9 @@ module.exports = Class.extend({
     destroy: function () {
         this._destroy();
 
-        this.$element.off('.' + this.widgetName)
+        this.$element.off(this.eventNamespace)
             .removeData(this.widgetName);
-        this.bindings.off('.' + this.widgetName);
+        this.bindings.off(this.eventNamespace);
         this.bindings = $();
     }
 });
