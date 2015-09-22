@@ -206,63 +206,31 @@ var DatePicker = Widget.extend({
         }
 
         this._on(events);
-
-        this._secondaryEvents = [
-            [this.picker, {
-                click: _.bind(this.click, this)
-            }],
-            [$document, {
-                mousedown: _.bind(function (e) {
-                    // Clicked outside the datepicker, hide it
-                    if (!(this.$element.is(e.target)
-                        || this.$element.find(e.target).length
-                        || this.picker.is(e.target)
-                        || this.picker.find(e.target).length
-                        || this.picker.hasClass('datepicker-inline'))) {
-                        this.viewDate = this.date || this.options.defaultViewDate;
-                        this.hide();
-                    }
-                }, this)
-            }]
-        ];
-    },
-
-    _applyEvents: function (evs) {
-        for (var i = 0, el, ch, ev; i < evs.length; i++) {
-            el = evs[i][0];
-            if (evs[i].length === 2) {
-                ch = undefined;
-                ev = evs[i][1];
-            }
-            else if (evs[i].length === 3) {
-                ch = evs[i][1];
-                ev = evs[i][2];
-            }
-            el.on(ev, ch);
-        }
-    },
-    _unapplyEvents: function (evs) {
-        for (var i = 0, el, ev, ch; i < evs.length; i++) {
-            el = evs[i][0];
-            if (evs[i].length === 2) {
-                ch = undefined;
-                ev = evs[i][1];
-            }
-            else if (evs[i].length === 3) {
-                ch = evs[i][1];
-                ev = evs[i][2];
-            }
-            el.off(ev, ch);
-        }
     },
 
     _attachSecondaryEvents: function () {
         this._detachSecondaryEvents();
-        this._applyEvents(this._secondaryEvents);
+        this._on(this.picker, {
+            'click': 'click'
+        });
+        this._on($document, {
+            'mousedown': _.bind(function (e) {
+                // Clicked outside the datepicker, hide it
+                if (!(this.$element.is(e.target)
+                    || this.$element.find(e.target).length
+                    || this.picker.is(e.target)
+                    || this.picker.find(e.target).length
+                    || this.picker.hasClass('datepicker-inline'))) {
+                    this.viewDate = this.date || this.options.defaultViewDate;
+                    this.hide();
+                }
+            }, this)
+        });
     },
 
     _detachSecondaryEvents: function () {
-        this._unapplyEvents(this._secondaryEvents);
+        this._off(this.picker);
+        this._off($document);
     },
 
     _changeDate: function (e, date) {
@@ -622,11 +590,12 @@ var DatePicker = Widget.extend({
     },
 
     show: function () {
-        if (!this.isInline)
+        if (!this.isInline) {
             this.picker.appendTo(this.options.container);
+            this._attachSecondaryEvents();
+        }
         this.place();
         this.picker.show();
-        this._attachSecondaryEvents();
         this.trigger('show');
         return this;
     },
