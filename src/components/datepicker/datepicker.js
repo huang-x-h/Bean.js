@@ -592,10 +592,10 @@ var DatePicker = Widget.extend({
     show: function () {
         if (!this.isInline) {
             this.picker.appendTo(this.options.container);
-            this._attachSecondaryEvents();
         }
         this.place();
         this.picker.show();
+        this._attachSecondaryEvents();
         this.trigger('show');
         return this;
     },
