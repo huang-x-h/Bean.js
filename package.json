@@ -15,10 +15,11 @@
   "author": "huang.xinghui <huang.x.hui@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "autoprefixer": "^6.0.3",
     "browserify": "^10.2.0",
-    "gulp-autoprefixer": "^2.3.0",
-    "gulp-csso": "^1.0.0",
+    "cssnano": "^3.2.0",
     "gulp-livereload": "^3.8.0",
+    "gulp-postcss": "^6.0.0",
     "gulp-sass": "^2.0.1",
     "gulp-util": "^3.0.6",
     "hbsfy": "^2.2.1",

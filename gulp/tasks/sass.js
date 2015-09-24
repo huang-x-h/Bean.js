@@ -4,9 +4,10 @@
 
 var gulp = require('gulp');
 var sass = require('gulp-sass');
-var autoprefixer = require('gulp-autoprefixer');
+var postcss = require('gulp-postcss');
+var autoprefixer = require('autoprefixer');
+var cssnano = require('cssnano');
 var livereload = require('gulp-livereload');
-var csso = require('gulp-csso');
 var config = require('../config').sass;
 var options = {
     sass:  {
@@ -18,8 +19,7 @@ var options = {
 gulp.task('sass', function () {
     return gulp.src(config.src)
         .pipe(sass(options.sass))
-        .pipe(autoprefixer('last 2 versions', {map: false}))
-        .pipe(csso())
+        .pipe(postcss([autoprefixer({browsers: ['last 2 versions']}), cssnano]))
         .pipe(gulp.dest(config.dest))
         .pipe(livereload());
 });
