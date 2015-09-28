@@ -30,11 +30,9 @@
     "watchify": "^3.2.1"
   },
   "dependencies": {
-    "bootstrap": "^3.3.4",
     "handlebars": "^3.0.3",
     "immutable": "^3.7.5",
     "jquery": "^1.11.3",
-    "moment": "^2.10.3",
     "underscore": "^1.8.3"
   },
   "browserify": {
