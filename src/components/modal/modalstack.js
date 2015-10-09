@@ -32,7 +32,7 @@ function removeModalWindow(modalInstance, callback) {
 
     //remove window DOM element
     modalWindow.$modalElement.off('.data-api');
-    removeAfterAnimate(modalWindow.$modalElement, TRANSITION_DURATION, function () {
+    removeAfterAnimate(modalWindow.$modalElement, TRANSITION_DURATION, function() {
         $body.toggleClass(OPENED_MODAL_CLASS, openedWindows.length() > 0);
         checkRemoveBackdrop(callback);
     });
@@ -44,7 +44,7 @@ function checkRemoveBackdrop(callback) {
     if ($backdropElement) {
         currBackdropIndex = backdropIndex()
         if (currBackdropIndex == -1) {
-            removeAfterAnimate($backdropElement, BACKDROP_TRANSITION_DURATION, function () {
+            removeAfterAnimate($backdropElement, BACKDROP_TRANSITION_DURATION, function() {
                 $backdropElement = null;
                 callback();
             });
@@ -60,7 +60,7 @@ function checkRemoveBackdrop(callback) {
 function removeAfterAnimate($element, duration, callback) {
     $element.removeClass('in');
 
-    var callbackRemove = function () {
+    var callbackRemove = function() {
         $element.remove();
         callback();
     };
@@ -73,7 +73,7 @@ function removeAfterAnimate($element, duration, callback) {
 }
 
 var modalStack = {
-    open: function (modalInstance, options) {
+    open: function(modalInstance, options) {
         var modalOpener = document.activeElement;
 
         openedWindows.add(modalInstance, {
@@ -93,21 +93,16 @@ var modalStack = {
             }
         }
 
-        // if content is jquery element
-        if (options.content instanceof $) {
-            $modalElement = $(modalTpl({'z-index': 1050 + (openedWindows.length() - 1) * 10
-                , 'size': options.size}));
-            $modalElement.find('.modal-content').append(options.content);
-        } else {
-            $modalElement = $(modalTpl({'z-index': 1050 + (openedWindows.length() - 1) * 10
-                , 'content': options.content, 'size': options.size}));
-        }
+        $modalElement = $(modalTpl({
+            'z-index': 1050 + (openedWindows.length() - 1) * 10
+            , 'content': options.content, 'size': options.size
+        }));
 
         $modalElement
-            .on('click.dismiss.data-api', '[data-dismiss]', function (e) {
+            .on('click.dismiss.data-api', '[data-dismiss]', function(e) {
                 modalStack.dismiss(modalInstance, 'dismiss click');
             })
-            .on('click.close.data-api', '[data-close]', function (e) {
+            .on('click.close.data-api', '[data-close]', function(e) {
                 modalStack.close(modalInstance, 'close click');
             });
 
@@ -119,10 +114,10 @@ var modalStack = {
         $body.addClass(OPENED_MODAL_CLASS);
     },
 
-    close: function (modalInstance, result) {
+    close: function(modalInstance, result) {
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
-            removeModalWindow(modalInstance, function () {
+            removeModalWindow(modalInstance, function() {
                 modalWindow.value.deferred.resolve(result);
             });
             modalWindow.value.modalOpener.focus();
@@ -132,10 +127,10 @@ var modalStack = {
 
     },
 
-    dismiss: function (modalInstance, reason) {
+    dismiss: function(modalInstance, reason) {
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
-            removeModalWindow(modalInstance, function () {
+            removeModalWindow(modalInstance, function() {
                 modalWindow.value.deferred.reject(reason);
             });
             modalWindow.value.modalOpener.focus();
@@ -145,7 +140,7 @@ var modalStack = {
     }
 };
 
-$(document).on('keydown', function (evt) {
+$(document).on('keydown', function(evt) {
     var modal;
 
     if (evt.which === 27) {
