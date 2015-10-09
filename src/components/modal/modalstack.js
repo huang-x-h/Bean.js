@@ -101,9 +101,6 @@ var modalStack = {
         $modalElement
             .on('click.dismiss.data-api', '[data-dismiss]', function(e) {
                 modalStack.dismiss(modalInstance, 'dismiss click');
-            })
-            .on('click.close.data-api', '[data-close]', function(e) {
-                modalStack.close(modalInstance, 'close click');
             });
 
         $body.append($modalElement);
