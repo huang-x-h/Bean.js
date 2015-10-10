@@ -3,6 +3,7 @@
  */
 
 var _ = require('underscore');
+var Bean = require('../../core');
 var util = require('../../utils/validator');
 var substitute = require('../../utils/string').substitute;
 var locale = require('../../locale');
@@ -23,11 +24,11 @@ locale.get(function (data) {
     ruleMessage = data.validator;
 });
 
-function addValidator (name, fn) {
-
+function addValidator (name, fn, message) {
+    addRule(name, fn, message);
 }
 
-function addAsyncValidator (name, fn) {
+function addAsyncValidator (name, fn, message) {
 
 }
 
@@ -70,6 +71,9 @@ addRule('ip', util.isIP, function (display, version) {
 
 addRule('compare', function (str, options) {
     options = _.extend({}, compareOptions, options);
+
+    // if str or comparison is null/'', then do not compare each other
+    if (!str || !options.comparison) return true;
 
     var comparison = options.comparison;
 

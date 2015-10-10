@@ -3,14 +3,16 @@
  */
 
 var _ = require('underscore');
+var $ = require('jquery');
 var rules = require('./rules');
 var ErrorTip = require('./errortip');
 var ERROR_CLASS = 'has-error';
 
-var ValidatorField = function (element, options) {
+var ValidatorField = function (element, options, formInstance) {
     this.constraints = [];
     this.options = options;
     this.$element = element;
+    this.parent = formInstance;
     this.validateEnabled = true;
     this._bindConstraints();
 };
@@ -22,6 +24,10 @@ ValidatorField.prototype = {
 
     disabled: function () {
         this.validateEnabled = false;
+    },
+
+    getDisplay: function () {
+        return this.options.display;
     },
 
     getValue: function () {
@@ -74,10 +80,10 @@ ValidatorField.prototype = {
         constraints = _.sortBy(this.constraints, 'priority');
         while (constraints.length) {
             constraint = constraints.pop();
-            result = constraint.rule.validate.apply(null, [value].concat(constraint.options));
+            result = this._buildValidate(constraint, value);
 
             if (!result) {
-                this.validationResult = rules.getMessage.apply(null, [constraint.name, this.options.display].concat(constraint.options));
+                this.validationResult = this._buildMessage(constraint);
                 valid = false;
                 break;
             }
@@ -107,6 +113,35 @@ ValidatorField.prototype = {
         if (this.tooltip) {
             this.tooltip.hide();
         }
+    },
+
+    _buildValidate: function (constraint, value) {
+        var options = constraint.options;
+
+        if (constraint.name === 'compare') {
+            options = this._buildCompareOptions(constraint.options);
+        }
+
+        return constraint.rule.validate.apply(null, [value].concat(options));
+    },
+
+    _buildMessage: function (constraint) {
+        var options = constraint.options;
+
+        if (constraint.name === 'compare') {
+            options = this._buildCompareOptions(constraint.options);
+        }
+
+        return rules.getMessage.apply(null, [constraint.name, this.options.display].concat(options));
+    },
+
+    _buildCompareOptions: function (options) {
+        var optionsClone = _.clone(options);
+        var field = this.parent.getField(optionsClone.comparison);
+        optionsClone.comparison = field.getValue();
+        optionsClone.display = field.getDisplay();
+
+        return optionsClone;
     },
 
     _bindConstraints: function () {
@@ -161,7 +196,7 @@ ValidatorField.prototype = {
 
         // HTML5 minlength
         else if ('undefined' !== typeof this.$element.attr('minlength'))
-            this.addConstraint('length', [this.$element.attr('minlength'), ]);
+            this.addConstraint('length', [this.$element.attr('minlength')]);
 
         // HTML5 maxlength
         else if ('undefined' !== typeof this.$element.attr('maxlength'))

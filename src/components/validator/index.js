@@ -13,7 +13,8 @@ var Validator = Widget.extend({
         messages: {},
         fields: [],
         errorContainer: null,
-        errorClass: ''
+        errorClass: '',
+        async: false
     },
 
     _create: function () {
@@ -53,7 +54,7 @@ var Validator = Widget.extend({
 
     disabled: function (field) {
         if (field in this.fields) {
-            this.fields[field].disalbed();
+            this.fields[field].disabled();
         }
     },
 
@@ -61,6 +62,10 @@ var Validator = Widget.extend({
         if (field in this.fields) {
             this.fields[field].enabled();
         }
+    },
+
+    getField: function (name) {
+        return this.fields[name];
     },
 
     _parseFields: function () {
@@ -74,7 +79,7 @@ var Validator = Widget.extend({
         var name = field.name,
             $element = this.$element.find(name);
 
-        this.fields[name] = new ValidatorField($element, field);
+        this.fields[name] = new ValidatorField($element, field, this);
     }
 });
 
