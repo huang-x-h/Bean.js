@@ -4,6 +4,7 @@
 
 // copy from https://github.com/chieffancypants/angular-loading-bar
 var $ = require('jquery');
+var $body = require('../body');
 
 var spinner = $('<div id="loading-bar-spinner"><div class="spinner-icon"></div></div>'),
     loadingBarContainer = $('<div id="loading-bar"><div class="bar"><div class="peg"></div></div></div>'),
@@ -14,8 +15,6 @@ var spinner = $('<div id="loading-bar-spinner"><div class="spinner-icon"></div><
 
 module.exports = {
     start: function () {
-        var $parent = $('body');
-
         clearTimeout(completeTimeout);
 
         if (started) {
@@ -24,8 +23,8 @@ module.exports = {
 
         started = true;
 
-        $parent.append(loadingBarContainer);
-        $parent.append(spinner);
+        $body.append(loadingBarContainer);
+        $body.append(spinner);
 
         this.progress(status);
     },
