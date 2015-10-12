@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta charset="UTF-8">
+        <title>Tooltip</title>
+        <link rel="stylesheet" href="../../main.css">
+    </head>
+    <body>
+        <div class="container">
+            <h2>Tabs</h2>
+            <div class="bs-example">
+                <div data-role="tabs">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li><a href="javascript:;">Home</a></li>
+                        <li><a href="javascript:;">Profile</a></li>
+                        <li><a href="javascript:;">Messages</a></li>
+                        <li><a href="javascript:;">Settings</a></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane">home</div>
+                        <div class="tab-pane">profile</div>
+                        <div class="tab-pane">messages</div>
+                        <div class="tab-pane">settings</div>
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary js-add">Add</button>
+                    <button type="button" class="btn btn-danger js-remove">Remove</button>
+                </div>
+            </div>
+        </div>
+        <script src="../../bundle.js"></script>
+        <script>
+            var $tabs = $('[data-role="tabs"]').tabs()
+                    .on('tabs:active', function(e, index) {
+                        console.log('active index is ', index);
+                    });
+
+            $('.js-add').click(function() {
+                $tabs.tabs('addTab', {
+                    heading: 'AddTab',
+                    content: '<p>i am add tab content</p>',
+                    active: true
+                });
+            });
+
+            $('.js-remove').click(function() {
+                $tabs.tabs('removeTab', $tabs.tabs('selectedIndex'));
+            });
+        </script>
+    </body>
+</html>

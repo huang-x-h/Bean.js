@@ -10,7 +10,7 @@ require('./utils/image');
 
 require('./components/autocomplete/email');
 require('./components/button');
-require('./components/tab');
+require('./components/tabs');
 require('./components/tooltip');
 require('./components/popover');
 require('./components/collapse');
