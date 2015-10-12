@@ -6,5 +6,5 @@ var $document = require('./document');
 var locale = require('./locale');
 
 $document.ready(function init() {
-    locale.publish();
+  locale.publish();
 });

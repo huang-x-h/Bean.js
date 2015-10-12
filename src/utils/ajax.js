@@ -9,33 +9,33 @@ var loadingBar = require('../components/loadingbar');
 var reqsTotal = 0,
     reqsComplete = 0;
 
-Bean.ajax = function (url, options) {
-    if (typeof url === "object") {
-        options = url;
-        url = undefined;
-    }
+Bean.ajax = function(url, options) {
+  if (typeof url === "object") {
+    options = url;
+    url = undefined;
+  }
 
-    options.complete = decorateComplete(options.complete);
+  options.complete = decorateComplete(options.complete);
 
-    if (reqsTotal === 0) {
-        loadingBar.start();
-    }
+  if (reqsTotal === 0) {
+    loadingBar.start();
+  }
 
-    reqsTotal++;
+  reqsTotal++;
 
-    return $.ajax(url, options);
+  return $.ajax(url, options);
 };
 
 function decorateComplete(complete) {
-    return function (jqXHR, textStatus) {
-        reqsComplete++;
+  return function(jqXHR, textStatus) {
+    reqsComplete++;
 
-        if (reqsComplete >= reqsTotal) {
-            loadingBar.finish();
-        } else {
-            loadingBar.progress(reqsComplete / reqsTotal);
-        }
-
-        complete(jqXHR, textStatus);
+    if (reqsComplete >= reqsTotal) {
+      loadingBar.finish();
+    } else {
+      loadingBar.progress(reqsComplete / reqsTotal);
     }
+
+    complete(jqXHR, textStatus);
+  }
 }

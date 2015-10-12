@@ -8,23 +8,23 @@ var Widget = require('../../widget');
 var template = require('./loading.hbs');
 
 var Loading = Widget.extend({
-    options: {
-        customClass: null
-    },
+  options: {
+    customClass: null
+  },
 
-    _create: function () {
-        this.$loading = $(template({
-            customClass: this.options.customClass
-        }));
-        this.$element.append(this.$loading);
-    },
+  _create: function() {
+    this.$loading = $(template({
+      customClass: this.options.customClass
+    }));
+    this.$element.append(this.$loading);
+  },
 
-    finish: function () {
-        this.$loading.remove();
+  finish: function() {
+    this.$loading.remove();
 
-        // remove widget
-        this.destroy();
-    }
+    // remove widget
+    this.destroy();
+  }
 });
 
 plugin('loading', Loading);

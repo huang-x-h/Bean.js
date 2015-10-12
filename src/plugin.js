@@ -7,43 +7,43 @@ var $ = require('jquery');
 module.exports = plugin;
 
 function plugin(widgetName, widgetClass) {
-    // add widgetName to widget prototype
-    widgetClass.prototype.widgetName = widgetName;
+  // add widgetName to widget prototype
+  widgetClass.prototype.widgetName = widgetName;
 
-    function Plugin(option) {
-        var isMethodCall = typeof option === "string",
-            args = Array.prototype.slice.call(arguments, 1),
-            returnValue = this;
+  function Plugin(option) {
+    var isMethodCall = typeof option === "string",
+        args = Array.prototype.slice.call(arguments, 1),
+        returnValue = this;
 
-        if (isMethodCall) {
-            this.each(function () {
-                var $this = $(this);
-                var data = $this.data(widgetName);
+    if (isMethodCall) {
+      this.each(function() {
+        var $this = $(this);
+        var data = $this.data(widgetName);
 
-                if (!data) $this.data(widgetName, data = new widgetClass(this));
-                returnValue = data[option].apply(data, args);
-            });
-        } else {
-            this.each(function () {
-                var $this = $(this);
-                var options = typeof option == 'object' && option;
+        if (!data) $this.data(widgetName, data = new widgetClass(this));
+        returnValue = data[option].apply(data, args);
+      });
+    } else {
+      this.each(function() {
+        var $this = $(this);
+        var options = typeof option == 'object' && option;
 
-                $this.data(widgetName, new widgetClass(this, options));
-            });
-        }
-
-        return returnValue;
+        $this.data(widgetName, new widgetClass(this, options));
+      });
     }
 
-    var old = $.fn[widgetName];
+    return returnValue;
+  }
 
-    $.fn[widgetName] = Plugin;
+  var old = $.fn[widgetName];
 
-    // Widget NO CONFLICT
-    // ====================
+  $.fn[widgetName] = Plugin;
 
-    $.fn[widgetName].noConflict = function () {
-        $.fn[widgetName] = old;
-        return this;
-    };
+  // Widget NO CONFLICT
+  // ====================
+
+  $.fn[widgetName].noConflict = function() {
+    $.fn[widgetName] = old;
+    return this;
+  };
 }

@@ -10,16 +10,16 @@ var cssnano = require('cssnano');
 var livereload = require('gulp-livereload');
 var config = require('../config').sass;
 var options = {
-    sass:  {
-        errLogToConsole: true,
-        precision: 8
-    }
+  sass: {
+    errLogToConsole: true,
+    precision: 8
+  }
 };
 
-gulp.task('sass', function () {
-    return gulp.src(config.src)
-        .pipe(sass(options.sass))
-        .pipe(postcss([autoprefixer({browsers: ['last 2 versions']}), cssnano]))
-        .pipe(gulp.dest(config.dest))
-        .pipe(livereload());
+gulp.task('sass', function() {
+  return gulp.src(config.src)
+      .pipe(sass(options.sass))
+      .pipe(postcss([autoprefixer({browsers: ['last 2 versions']}), cssnano]))
+      .pipe(gulp.dest(config.dest))
+      .pipe(livereload());
 });

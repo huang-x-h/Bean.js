@@ -4,7 +4,7 @@
 
 var gulp = require('gulp');
 
-gulp.task('i18n', function () {
-    return gulp.src('./src/locales/*')
-        .pipe(gulp.dest('./build/i18n/'));
+gulp.task('i18n', function() {
+  return gulp.src('./src/locales/*')
+      .pipe(gulp.dest('./build/i18n/'));
 });

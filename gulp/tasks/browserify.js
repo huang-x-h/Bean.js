@@ -9,25 +9,28 @@ var source = require('vinyl-source-stream');
 var config = require('../config').browserify;
 
 function handleErrors(e) {
-    console.log(e.message);
+  console.log(e.message);
 }
 
-gulp.task('browserify', function () {
-    var bundler = browserify({
-        // Required watchify args
-        cache: {}, packageCache: {}, fullPaths: true,
-        // Specify the entry point of your app
-        entries: config.entries,
-        // Add file extentions to make optional in your requires
-        extensions: config.extensions,
-        // Enable source maps!
-        debug: config.debug
-    });
+gulp.task('browserify', function() {
+  var bundler = browserify({
+    // Required watchify args
+    cache: {}, packageCache: {}, fullPaths: true,
 
-    return bundler
-        .bundle()
-        .on('error', handleErrors)
-        .pipe(source(config.outputName))
-        .pipe(gulp.dest(config.dest))
-        .pipe(livereload());
+    // Specify the entry point of your app
+    entries: config.entries,
+
+    // Add file extentions to make optional in your requires
+    extensions: config.extensions,
+
+    // Enable source maps!
+    debug: config.debug
+  });
+
+  return bundler
+      .bundle()
+      .on('error', handleErrors)
+      .pipe(source(config.outputName))
+      .pipe(gulp.dest(config.dest))
+      .pipe(livereload());
 });

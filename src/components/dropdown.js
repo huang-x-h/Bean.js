@@ -10,44 +10,44 @@ var $document = require('../document');
 var toggle = '[data-toggle="dropdown"]';
 
 var DropDown = Widget.extend({
-    options: {
-        target: null
-    },
+  options: {
+    target: null
+  },
 
-    events: {
-        'click': 'toggle'
-    },
+  events: {
+    'click': 'toggle'
+  },
 
-    _create: function () {
-        this.$parent = this.getParent();
-    },
+  _create: function() {
+    this.$parent = this.getParent();
+  },
 
-    open: function () {
-        this.$parent.addClass('open');
-        this.trigger('open');
-    },
+  open: function() {
+    this.$parent.addClass('open');
+    this.trigger('open');
+  },
 
-    close: function () {
-        this.$parent.removeClass('open');
-        this.trigger('close');
-    },
+  close: function() {
+    this.$parent.removeClass('open');
+    this.trigger('close');
+  },
 
-    toggle: function (e) {
-        var isActive = this.$parent.hasClass('open');
+  toggle: function(e) {
+    var isActive = this.$parent.hasClass('open');
 
-        clearMenus(e);
+    clearMenus(e);
 
-        if (!isActive) this.open();
-        return false;
-    },
+    if (!isActive) this.open();
+    return false;
+  },
 
-    getParent: function () {
-        if (this.options.target) {
-            return (this.options.target instanceof $ ? this.options.target : $(this.options.target)).parent();
-        } else {
-            return this.$element.parent();
-        }
+  getParent: function() {
+    if (this.options.target) {
+      return (this.options.target instanceof $ ? this.options.target : $(this.options.target)).parent();
+    } else {
+      return this.$element.parent();
     }
+  }
 });
 
 plugin('dropdown', DropDown);
@@ -55,13 +55,13 @@ plugin('dropdown', DropDown);
 module.exports = DropDown;
 
 function clearMenus(e) {
-    if (e && e.which === 3) return;
+  if (e && e.which === 3) return;
 
-    $(toggle).dropdown('close');
+  $(toggle).dropdown('close');
 }
 
 $document
     .on('click.dropdown.data-api', clearMenus)
-    .on('click.dropdown.data-api', '[data-toggle="dropdown"]', function (e) {
-        return $(this).dropdown('toggle');
+    .on('click.dropdown.data-api', '[data-toggle="dropdown"]', function(e) {
+      return $(this).dropdown('toggle');
     });

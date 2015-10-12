@@ -8,7 +8,7 @@ var gulp = require('gulp'),
     server = require('../config').server;
 
 gulp.task('server', function(done) {
-    http.createServer(
-        st({ path: server.basePath, index: 'index.html', cache: false })
-    ).listen(3000, done);
+  http.createServer(
+      st({path: server.basePath, index: 'index.html', cache: false})
+  ).listen(3000, done);
 });

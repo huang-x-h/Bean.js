@@ -11,29 +11,29 @@ require('../components/loading');
 var invokeCount = 0,
     startTimer;
 
-Bean.block = function () {
-    var $loading;
+Bean.block = function() {
+  var $loading;
 
-    if (invokeCount === 0) {
-        $body.loading({
-            customClass: 'pg-blocking'
-        });
+  if (invokeCount === 0) {
+    $body.loading({
+      customClass: 'pg-blocking'
+    });
 
-        $loading = $body.data('loading').$loading;
-        startTimer = setTimeout(function () {
-            $loading.removeClass('pg-blocking');
-        }, 2000);
-    }
+    $loading = $body.data('loading').$loading;
+    startTimer = setTimeout(function() {
+      $loading.removeClass('pg-blocking');
+    }, 2000);
+  }
 
-    invokeCount++;
+  invokeCount++;
 };
 
-Bean.unblock = function () {
-    invokeCount--;
+Bean.unblock = function() {
+  invokeCount--;
 
-    if (invokeCount === 0) {
-        clearTimeout(startTimer);
+  if (invokeCount === 0) {
+    clearTimeout(startTimer);
 
-        $body.loading('finish');
-    }
+    $body.loading('finish');
+  }
 };

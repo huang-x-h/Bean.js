@@ -5,29 +5,29 @@
 var $ = require('jquery');
 var Bean = require('../../core');
 var modalStack = require('./modalstack');
-var DEFAULTS ={
-    content: '',
-    backdrop: true,
-    keyboard: true,
-    size: null
+var DEFAULTS = {
+  content: '',
+  backdrop: true,
+  keyboard: true,
+  size: null
 };
 
-Bean.openModal = function (options) {
-    var modalResultDeferred = $.Deferred();
+Bean.openModal = function(options) {
+  var modalResultDeferred = $.Deferred();
 
-    var modalInstance = {
-        result: modalResultDeferred.promise(),
-        close: function (result) {
-            return modalStack.close(modalInstance, result);
-        },
-        dismiss: function (reason) {
-            return modalStack.dismiss(modalInstance, reason);
-        }
-    };
+  var modalInstance = {
+    result: modalResultDeferred.promise(),
+    close: function(result) {
+      return modalStack.close(modalInstance, result);
+    },
+    dismiss: function(reason) {
+      return modalStack.dismiss(modalInstance, reason);
+    }
+  };
 
-    modalStack.open(modalInstance, $.extend({
-        deferred: modalResultDeferred
-    }, DEFAULTS, options));
+  modalStack.open(modalInstance, $.extend({
+    deferred: modalResultDeferred
+  }, DEFAULTS, options));
 
-    return modalInstance;
+  return modalInstance;
 };
