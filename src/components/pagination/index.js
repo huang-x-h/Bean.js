@@ -128,7 +128,7 @@ var Pagination = Widget.extend({
   },
 
   dispatchPageChange: function() {
-    this.trigger('pagechange', this.pageIndex);
+    this._trigger('pagechange', this.pageIndex);
   }
 });
 

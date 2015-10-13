@@ -24,12 +24,12 @@ var DropDown = Widget.extend({
 
   open: function() {
     this.$parent.addClass('open');
-    this.trigger('open');
+    this._trigger('open');
   },
 
   close: function() {
     this.$parent.removeClass('open');
-    this.trigger('close');
+    this._trigger('close');
   },
 
   toggle: function(e) {

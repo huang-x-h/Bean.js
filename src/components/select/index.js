@@ -50,7 +50,7 @@ var ComboBox = Widget.extend({
     if (index > -1 && index < this._dataSource.size) {
       this._selectedItem = this._dataSource.get(index);
       this._selectedIndex = index;
-      this.trigger('change');
+      this._trigger('change');
     }
   },
 

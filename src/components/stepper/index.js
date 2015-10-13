@@ -60,7 +60,7 @@ var Stepper = Widget.extend({
     this.$minusButton.toggleClass('disabled', this._value == this.options.minValue);
     this.$plusButton.toggleClass('disabled', this._value == this.options.maxValue);
 
-    this.trigger('change', this._value)
+    this._trigger('change', this._value)
   }
 });
 

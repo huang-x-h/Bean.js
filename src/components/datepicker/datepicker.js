@@ -268,10 +268,10 @@ var DatePicker = Widget.extend({
     else if (date) {
       // setting date by typing
       if (String(oldDates) !== String(this.date))
-        this.trigger('change');
+        this._trigger('change');
     }
     if (!this.date && oldDates)
-      this.trigger('clear');
+      this._trigger('clear');
 
     this.showMode();
     this.$element.change();
@@ -596,7 +596,7 @@ var DatePicker = Widget.extend({
     this.place();
     this.picker.show();
     this._attachSecondaryEvents();
-    this.trigger('show');
+    this._trigger('show');
     return this;
   },
 
@@ -613,7 +613,7 @@ var DatePicker = Widget.extend({
     if (this.isInput && this.$element.val() || this.hasInput && this.$element.find('input').val())
       this.setValue();
 
-    this.trigger('hide');
+    this._trigger('hide');
     return this;
   },
 
@@ -650,7 +650,7 @@ var DatePicker = Widget.extend({
     }
 
     this.update();
-    this.trigger('changeDate');
+    this._trigger('changeDate');
 
     if (this.options.autoclose) {
       this.hide();
@@ -669,7 +669,7 @@ var DatePicker = Widget.extend({
 
   setDate: function(date) {
     this.update(date);
-    this.trigger('changeDate');
+    this._trigger('changeDate');
     this.setValue();
     return this;
   },
@@ -899,14 +899,14 @@ var DatePicker = Widget.extend({
           case 0:
             this.viewDate = util.addMonths(this.viewDate, dir);
             this.showMode();
-            this.trigger('changeMonth', this.viewDate);
+            this._trigger('changeMonth', this.viewDate);
             break;
           case 1:
           case 2:
             this.viewDate = util.addYears(this.viewDate, dir);
             this.showMode();
             if (this.viewMode === 1)
-              this.trigger('changeYear', this.viewDate);
+              this._trigger('changeYear', this.viewDate);
             break;
         }
         break;
@@ -930,12 +930,12 @@ var DatePicker = Widget.extend({
         month = target.parent().find('span').index(target);
         this.viewDate.setMonth(month);
         this.showMode(-1);
-        this.trigger('changeMonth', this.viewDate);
+        this._trigger('changeMonth', this.viewDate);
       } else if (target.hasClass('year')) {
         year = parseInt(target.text(), 10) || 0;
         this.viewDate.setFullYear(year);
         this.showMode(-1);
-        this.trigger('changeYear', this.viewDate);
+        this._trigger('changeYear', this.viewDate);
       } else if (target.hasClass('label')) {
         if (target.hasClass('label-hours')) {
           this.updateHours();
@@ -948,19 +948,19 @@ var DatePicker = Widget.extend({
         if (target.hasClass('hour')) {
           hour = parseInt(target.text(), 10) || 0;
           this.viewDate.setHours(hour);
-          this.trigger('changeHour', this.viewDate);
+          this._trigger('changeHour', this.viewDate);
           this.picker.find('.datepicker-times').remove();
           this.viewMode = 0;
         } else if (target.hasClass('minute')) {
           minute = parseInt(target.text(), 10) || 0;
           this.viewDate.setMinutes(minute);
-          this.trigger('changeMinute', this.viewDate);
+          this._trigger('changeMinute', this.viewDate);
           this.picker.find('.datepicker-times').remove();
           this.viewMode = 0;
         } else if (target.hasClass('second')) {
           second = parseInt(target.text(), 10) || 0;
           this.viewDate.setSeconds(second);
-          this.trigger('changeSecond', this.viewDate);
+          this._trigger('changeSecond', this.viewDate);
           this.picker.find('.datepicker-times').remove();
           this.viewMode = 0;
         }
@@ -1018,7 +1018,7 @@ var DatePicker = Widget.extend({
     this.showMode();
     this.setValue();
     if (!which || which !== 'view') {
-      this.trigger('changeDate');
+      this._trigger('changeDate');
     }
     var element;
     if (this.isInput) {
@@ -1067,11 +1067,11 @@ var DatePicker = Widget.extend({
         dir = e.keyCode === 37 ? -1 : 1;
         if (e.ctrlKey) {
           newViewDate = util.addYears(focusDate, dir);
-          this.trigger('changeYear', newViewDate);
+          this._trigger('changeYear', newViewDate);
         }
         else if (e.shiftKey) {
           newViewDate = util.addMonths(focusDate, dir);
-          this.trigger('changeMonth', newViewDate);
+          this._trigger('changeMonth', newViewDate);
         }
         else {
           newViewDate = util.addDays(focusDate, dir);
@@ -1090,11 +1090,11 @@ var DatePicker = Widget.extend({
         dir = e.keyCode === 38 ? -1 : 1;
         if (e.ctrlKey) {
           newViewDate = util.addYears(focusDate, dir);
-          this.trigger('changeYear', newViewDate);
+          this._trigger('changeYear', newViewDate);
         }
         else if (e.shiftKey) {
           newViewDate = util.addMonths(focusDate, dir);
-          this.trigger('changeMonth', newViewDate);
+          this._trigger('changeMonth', newViewDate);
         }
         else {
           newViewDate = util.addDays(focusDate, dir * 7);
@@ -1127,9 +1127,9 @@ var DatePicker = Widget.extend({
     }
     if (dateChanged) {
       if (this.date)
-        this.trigger('changeDate');
+        this._trigger('changeDate');
       else
-        this.trigger('clearDate');
+        this._trigger('clearDate');
 
       var element;
       if (this.isInput) {

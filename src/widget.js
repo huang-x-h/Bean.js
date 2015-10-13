@@ -52,10 +52,15 @@ module.exports = Class.extend({
       this.bindings = $(this.bindings.not(element).get());
   },
 
-  trigger: function(type, data) {
+  _trigger: function(type, data) {
+    var callback = this.options[type];
+
     var e = $.Event((this.widgetName + ':' + type).toLowerCase());
     this.$element.trigger(e, data);
-    return e;
+
+    return _.isFunction(callback)
+        && callback.apply(this, [e].concat(data)) === false
+        || e.isDefaultPrevented();
   },
 
   destroy: function() {

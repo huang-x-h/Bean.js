@@ -46,7 +46,7 @@ var List = Widget.extend({
       this._selectedItem = this._dataSource.get(index);
       this._selectedIndex = index;
       this._setSelection();
-      this.trigger('change');
+      this._trigger('change');
     }
   },
 
@@ -59,7 +59,7 @@ var List = Widget.extend({
       this._setSelectedIndex(this.$element.find('li').index($li));
     }
 
-    this.trigger('click');
+    this._trigger('click');
   },
 
   _onKeyDown: function(e) {

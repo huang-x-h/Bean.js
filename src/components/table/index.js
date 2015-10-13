@@ -59,7 +59,7 @@ var Table = Widget.extend({
     if (index !== -1) {
       this._dataSource = this._dataSource.delete(index);
       this.$tbody.children().eq(index).remove();
-      this.trigger('remove', data);
+      this._trigger('remove', data);
     }
   },
 
@@ -73,7 +73,7 @@ var Table = Widget.extend({
     _.forEach(data, function(value, key) {
       that._updateCell(item, index, key);
     });
-    this.trigger('update', data, index);
+    this._trigger('update', data, index);
   },
 
   _onClick: function(e) {
@@ -101,7 +101,7 @@ var Table = Widget.extend({
       this._selectedItem = this._dataSource.get(index);
       this._selectedIndex = index;
       this._setSelection();
-      this.trigger('change');
+      this._trigger('change');
     }
   },
 
@@ -112,7 +112,7 @@ var Table = Widget.extend({
       this._selectedItem = item;
       this._selectedIndex = index;
       this._setSelection();
-      this.trigger('change');
+      this._trigger('change');
     }
   },
 

@@ -103,7 +103,7 @@ var ToolTip = Widget.extend({
     if (this.isOpened()) return;
 
     if (this.hasContent() && this.enabled) {
-      this.trigger('beforeShow');
+      this._trigger('beforeShow');
 
       var that = this;
 
@@ -227,7 +227,7 @@ var ToolTip = Widget.extend({
       that.trigger('hide');
     }
 
-    this.trigger('beforeHide');
+    this._trigger('beforeHide');
 
     $tip.removeClass('in');
 

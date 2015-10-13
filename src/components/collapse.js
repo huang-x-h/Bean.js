@@ -43,8 +43,7 @@ var Collapse = Widget.extend({
       if (activesData && activesData.transitioning) return
     }
 
-    var startEvent = this.trigger('beforeShow');
-    if (startEvent.isDefaultPrevented()) return;
+    if (this._trigger('beforeShow')) return;
 
     if (actives && actives.length) {
       actives.collapse('hide');
@@ -68,7 +67,7 @@ var Collapse = Widget.extend({
           .removeClass('collapsing')
           .addClass('collapse in')[dimension]('');
       this.transitioning = 0;
-      this.trigger('show');
+      this._trigger('show');
     };
 
     if (!transition.supportsTransitionEnd) return complete.call(this);
@@ -83,8 +82,8 @@ var Collapse = Widget.extend({
   hide: function() {
     if (this.transitioning || !this.$element.hasClass('in')) return
 
-    var startEvent = this.trigger('beforeCollapse');
-    if (startEvent.isDefaultPrevented()) return;
+    if (this._trigger('beforeCollapse'))
+      return;
 
     var dimension = this.dimension();
 
@@ -106,7 +105,7 @@ var Collapse = Widget.extend({
       this.$element
           .removeClass('collapsing')
           .addClass('collapse');
-      this.trigger('hide');
+      this._trigger('hide');
     };
 
     if (!transition.supportsTransitionEnd) return complete.call(this);

@@ -53,7 +53,7 @@ var Tabs = Widget.extend({
     this._toggleActiveTab(tab, true);
 
     this._selectedIndex = index;
-    this.trigger('active', index);
+    this._trigger('active', index);
   },
 
   _toggleActiveTab: function(tab, active) {

@@ -44,12 +44,12 @@ var MonthPicker = DatePicker.extend({
         year = this.viewDate.getFullYear();
         this.viewDate.setMonth(month);
         this._setDate(new Date(year, month));
-        this.trigger('changeMonth', this.viewDate);
+        this._trigger('changeMonth', this.viewDate);
       } else if (target.hasClass('year')) {
         year = parseInt(target.text(), 10) || 0;
         this.viewDate.setFullYear(year);
         this.showMode(-1);
-        this.trigger('changeYear', this.viewDate);
+        this._trigger('changeYear', this.viewDate);
       }
     }
   }
