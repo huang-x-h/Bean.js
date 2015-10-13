@@ -35,10 +35,11 @@
         </div>
         <script src="../../bundle.js"></script>
         <script>
-            var $tabs = $('[data-role="tabs"]').tabs()
-                    .on('tabs:active', function(e, index) {
-                        console.log('active index is ', index);
-                    });
+            var $tabs = $('[data-role="tabs"]').tabs({
+                active: function(e, index) {
+                    console.log('active index is ', index);
+                }
+            });
 
             $('.js-add').click(function() {
                 $tabs.tabs('addTab', {
