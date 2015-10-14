@@ -157,7 +157,7 @@ var ToolTip = Widget.extend({
       this.applyPlacement(calculatedOffset, placement);
 
       var complete = function() {
-        that.trigger('show');
+        that._trigger('show');
       };
 
       transition.supportsTransitionEnd && this.$tip.hasClass('fade') ?
@@ -224,7 +224,7 @@ var ToolTip = Widget.extend({
       $tip.detach();
       that.$element
           .removeAttr('aria-describedby');
-      that.trigger('hide');
+      that._trigger('hide');
     }
 
     this._trigger('beforeHide');

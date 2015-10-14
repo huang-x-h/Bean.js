@@ -50,7 +50,7 @@ var Table = Widget.extend({
       this.$tbody.children().eq(index).before($tr);
     }
     this._dataSource = this._dataSource.splice(index, 0, data);
-    this.trigger('add', data, index);
+    this._trigger('add', data, index);
   },
 
   removeItem: function(data) {
