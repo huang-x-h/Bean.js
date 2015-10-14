@@ -19,7 +19,7 @@ var options = {
 gulp.task('sass', function() {
   return gulp.src(config.src)
       .pipe(sass(options.sass))
-      .pipe(postcss([autoprefixer({browsers: ['last 2 versions']}), cssnano]))
+      .pipe(postcss([autoprefixer({browsers: ['last 2 versions']}), cssnano({zindex: false})]))
       .pipe(gulp.dest(config.dest))
       .pipe(livereload());
 });
