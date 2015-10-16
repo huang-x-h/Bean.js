@@ -11,7 +11,8 @@ var toggle = '[data-toggle="dropdown"]';
 
 var DropDown = Widget.extend({
   options: {
-    target: null
+    target: null,
+    position: 'bottomLeft' // topLeft/topRight/bottomLeft/bottomRight
   },
 
   events: {
@@ -19,7 +20,17 @@ var DropDown = Widget.extend({
   },
 
   _create: function() {
+    var parentClass = 'dropdown';
     this.$parent = this.getParent();
+
+    if (this.options.position.indexOf('top') !== -1) {
+      parentClass = 'dropup';
+    }
+    this.$parent.addClass(parentClass);
+
+    if (this.options.position.indexOf('Right') !== -1) {
+      this.$parent.children('.dropdown-menu').addClass('dropdown-menu-right')
+    }
   },
 
   open: function() {
