@@ -26,7 +26,7 @@ module.exports = {
     this.$element.append(this.dropdown().$element);
     this.$element.addClass('open');
     this._opened = true;
-    this.trigger('open');
+    this._trigger('open');
   },
 
   close: function() {
@@ -35,7 +35,7 @@ module.exports = {
     this.dropdown().$element.detach();
     this.$element.removeClass('open');
     this._opened = false;
-    this.trigger('close');
+    this._trigger('close');
   },
 
   _onKeyDown: function(e) {
