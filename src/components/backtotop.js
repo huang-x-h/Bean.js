@@ -4,6 +4,7 @@
 
 var $ = require('jquery');
 var Widget = require('../widget');
+var Debouncer = require('../debouncer');
 var plugin = require('../plugin');
 var $window = $(window);
 
@@ -17,12 +18,17 @@ var BackToTop = Widget.extend({
   },
 
   _create: function() {
-    this._on($window, {
-      'scroll': '_onScroll'
-    });
+    this.debouncer = new Debouncer($.proxy(this._update, this));
+
+    window.addEventListener('scroll', this.debouncer, false);
+    this.debouncer.handleEvent();
   },
 
-  _onScroll: function(e) {
+  _destroy: function() {
+    window.removeEventListener('scroll', this.debouncer, false);
+  },
+
+  _update: function() {
     if ($window.scrollTop() > this.options.offset) {
       this.$element.fadeIn();
     } else {
