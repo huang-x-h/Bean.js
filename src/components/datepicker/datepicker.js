@@ -925,7 +925,6 @@ var DatePicker = Widget.extend({
     var year, month, day, hour, minute, second;
 
     if (!target.hasClass('disabled')) {
-      this.viewDate.setDate(1);
       if (target.hasClass('month')) {
         month = target.parent().find('span').index(target);
         this.viewDate.setMonth(month);
