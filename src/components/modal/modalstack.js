@@ -6,8 +6,6 @@ var $ = require('jquery');
 var $body = require('../../body');
 var transition = require('../../transition');
 var StackedMap = require('./stackedmap');
-var modalTpl = require('./modal.hbs');
-var backdropTpl = require('./backdrop.hbs');
 var openedWindows = StackedMap.createNew();
 var OPENED_MODAL_CLASS = 'modal-open';
 var BACKDROP_TRANSITION_DURATION = 150;
@@ -42,7 +40,7 @@ function checkRemoveBackdrop(callback) {
   var currBackdropIndex;
   //remove backdrop if no longer needed
   if ($backdropElement) {
-    currBackdropIndex = backdropIndex()
+    currBackdropIndex = backdropIndex();
     if (currBackdropIndex == -1) {
       removeAfterAnimate($backdropElement, BACKDROP_TRANSITION_DURATION, function() {
         $backdropElement = null;
@@ -86,24 +84,35 @@ var modalStack = {
 
     if (currBackdropIndex >= 0) {
       if (!$backdropElement) {
-        $backdropElement = $(backdropTpl());
+        $backdropElement = $('<div class="modal-backdrop fade in"></div>');
         $body.append($backdropElement);
       } else {
         $backdropElement.css('z-index', 1040 + (currBackdropIndex && 1 || 0) + currBackdropIndex * 10);
       }
     }
 
-    $modalElement = $(modalTpl({
-      'z-index': 1050 + (openedWindows.length() - 1) * 10
-      , 'content': options.content, 'size': options.size
-    }));
+    $modalElement = $(options.content);
+
+    if (options.size) {
+      $modalElement.find('.modal-dialog').addClass('modal=' + options.size);
+    }
+    $modalElement.css({
+      'z-index': 1050 + (openedWindows.length() - 1) * 10,
+      'display': 'block'
+    });
+    $body.append($modalElement);
+
+    $modalElement.scrollTop(0);
+
+    // reflow
+    $modalElement[0].offsetWidth;
+
+    $modalElement.addClass('in');
 
     $modalElement
         .on('click.dismiss.data-api', '[data-dismiss]', function(e) {
           modalStack.dismiss(modalInstance, 'dismiss click');
         });
-
-    $body.append($modalElement);
 
     openedWindows.top().value.$modalElement = $modalElement;
     openedWindows.top().value.modalOpener = modalOpener;
