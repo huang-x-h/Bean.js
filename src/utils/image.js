@@ -2,9 +2,9 @@
  * Created by huangxinghui on 2015/8/20.
  */
 
+// refer to https://github.com/toddmotto/echo
 var $ = require('jquery');
 var _ = require('underscore');
-var transition = require('../transition');
 var util = require('../utils/element');
 var Debouncer = require('../debouncer');
 
@@ -14,12 +14,8 @@ function lazyLoad(element) {
       imageLoader = document.createElement('img');
 
   imageLoader.onload = function() {
-    $element.addClass('fade');
     $element.attr('src', imageSource);
-    $element.addClass('in').one(transition.TRANSITION_END, function() {
-      $element.removeAttr('data-lazy');
-      $element.removeClass('fade in');
-    }).emulateTransitionEnd();
+    $element.removeAttr('data-lazy');
   };
 
   imageLoader.src = imageSource;
