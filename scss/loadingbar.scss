@@ -1,7 +1,7 @@
 #loading-bar,
 #loading-bar-spinner {
   pointer-events: none;
-  transition: 350ms linear all;
+  transition: .35s linear all;
 }
 
 #loading-bar .bar {
@@ -14,7 +14,7 @@
   height: 2px;
   border-bottom-right-radius: 1px;
   border-top-right-radius: 1px;
-  transition: width 350ms;
+  transition: width .35s;
 }
 
 /* Fancy blur effect */
@@ -44,7 +44,7 @@
   border-top-color: #29d;
   border-left-color: #29d;
   border-radius: 50%;
-  animation: loading-bar-spinner 400ms linear infinite;
+  animation: loading-bar-spinner .4s linear infinite;
 }
 
 @keyframes loading-bar-spinner {
