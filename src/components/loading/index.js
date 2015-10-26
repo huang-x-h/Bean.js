@@ -5,17 +5,17 @@
 var $ = require('jquery');
 var plugin = require('../../plugin');
 var Widget = require('../../widget');
-var template = require('./loading.hbs');
+var template = '<div class="loading-screen">'
+    + '<div class="loading-center-outer">'
+    + '<div class="loading-center-middle">'
+    + '<img src="images/spin.gif">'
+    + '</div>'
+    + '</div>'
+    + '</div>';
 
 var Loading = Widget.extend({
-  options: {
-    customClass: null
-  },
-
   _create: function() {
-    this.$loading = $(template({
-      customClass: this.options.customClass
-    }));
+    this.$loading = $(template);
     this.$element.append(this.$loading);
   },
 
