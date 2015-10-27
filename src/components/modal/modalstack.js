@@ -91,7 +91,13 @@ var modalStack = {
       }
     }
 
+    $body.addClass(OPENED_MODAL_CLASS);
+
     $modalElement = $(options.content);
+    $modalElement
+        .on('click.dismiss.data-api', '[data-dismiss]', function(e) {
+          modalStack.dismiss(modalInstance, 'dismiss click');
+        });
 
     if (options.size) {
       $modalElement.find('.modal-dialog').addClass('modal=' + options.size);
@@ -109,15 +115,8 @@ var modalStack = {
 
     $modalElement.addClass('in');
 
-    $modalElement
-        .on('click.dismiss.data-api', '[data-dismiss]', function(e) {
-          modalStack.dismiss(modalInstance, 'dismiss click');
-        });
-
     openedWindows.top().value.$modalElement = $modalElement;
     openedWindows.top().value.modalOpener = modalOpener;
-
-    $body.addClass(OPENED_MODAL_CLASS);
   },
 
   close: function(modalInstance, result) {
