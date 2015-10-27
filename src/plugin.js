@@ -29,7 +29,7 @@ function plugin(widgetName, widgetClass) {
         var $this = $(this);
         var options = typeof option == 'object' && option;
 
-        $this.data(widgetName, new widgetClass(this, options));
+        $this.data(affix + widgetName, new widgetClass(this, options));
       });
     }
 
