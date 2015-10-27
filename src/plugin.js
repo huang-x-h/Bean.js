@@ -3,6 +3,7 @@
  */
 
 var $ = require('jquery');
+var affix = 'bean.';
 
 module.exports = plugin;
 
@@ -18,9 +19,9 @@ function plugin(widgetName, widgetClass) {
     if (isMethodCall) {
       this.each(function() {
         var $this = $(this);
-        var data = $this.data(widgetName);
+        var data = $this.data(affix + widgetName);
 
-        if (!data) $this.data(widgetName, data = new widgetClass(this));
+        if (!data) $this.data(affix + widgetName, data = new widgetClass(this));
         returnValue = data[option].apply(data, args);
       });
     } else {
