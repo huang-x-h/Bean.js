@@ -7,6 +7,7 @@ var _ = require('underscore');
 var plugin = require('../plugin');
 var Widget = require('../widget');
 var $document = require('../document');
+var triangle = require('../utils/triangle');
 var DATA_TOGGLE = '[data-toggle="dropdown"]';
 var CLASS_NAME = {
   OPEN: 'open'
@@ -15,7 +16,7 @@ var CLASS_NAME = {
 var DropDown = Widget.extend({
   options: {
     target: null,
-    position: 'bottomLeft' // topLeft/topRight/bottomLeft/bottomRight
+    position: 'bottom left'
   },
 
   events: {
@@ -31,9 +32,7 @@ var DropDown = Widget.extend({
     }
     this.$parent.addClass(parentClass);
 
-    if (this.options.position.indexOf('Right') !== -1) {
-      this.$parent.children('.dropdown-menu').addClass('dropdown-menu-right')
-    }
+    this.$parent.children('.dropdown-menu').addClass('dropdown-menu-' + triangle[this.options.position]);
   },
 
   open: function() {
