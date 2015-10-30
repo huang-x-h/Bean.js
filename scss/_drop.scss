@@ -1,0 +1,60 @@
+$drop-border: $dropdown-border !default;
+$drop-bg: $dropdown-bg !default;
+$themePrefix: drop;
+
+.#{$themePrefix} {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: $zindex-dropdown;
+  min-width: 160px;
+  padding: 5px 8px;
+  margin: 2px 0 0; // override default ul
+  background-color: $dropdown-bg;
+  background-clip: padding-box;
+  border: 1px solid $drop-border;
+  border-radius: $border-radius-base;
+  @include box-shadow(0 6px 12px rgba(0, 0, 0, .175));
+
+  @include triangle();
+
+  // bottom center
+  &.#{$themePrefix}-element-attached-top.#{$themePrefix}-element-attached-center {
+    @include triangle-s($drop-border, $drop-bg);
+  }
+
+  // bottom left
+  &.#{$themePrefix}-element-attached-top.#{$themePrefix}-element-attached-left {
+    @include triangle-se($drop-border, $drop-bg);
+  }
+
+  // bottom right
+  &.#{$themePrefix}-element-attached-top.#{$themePrefix}-element-attached-right {
+    @include triangle-sw($drop-border, $drop-bg);
+  }
+
+  // top center
+  &.#{$themePrefix}-element-attached-bottom.#{$themePrefix}-element-attached-center {
+    @include triangle-n($drop-border, $drop-bg);
+  }
+
+  // top left
+  &.#{$themePrefix}-element-attached-bottom.#{$themePrefix}-element-attached-left {
+    @include triangle-ne($drop-border, $drop-bg);
+  }
+
+  // top right
+  &.#{$themePrefix}-element-attached-bottom.#{$themePrefix}-element-attached-right {
+    @include triangle-nw($drop-border, $drop-bg);
+  }
+
+  // left middle
+  &.#{$themePrefix}-element-attached-middle.#{$themePrefix}-element-attached-right {
+    @include triangle-w($drop-border, $drop-bg);
+  }
+
+  // right middle
+  &.#{$themePrefix}-element-attached-middle.#{$themePrefix}-element-attached-left {
+    @include triangle-e($drop-border, $drop-bg);
+  }
+}
