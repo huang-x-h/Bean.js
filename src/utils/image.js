@@ -30,10 +30,24 @@ function render() {
 }
 
 module.exports = Bean.image = {
-  lazyLoad: function(options) {
+  scrollLoad: function() {
     var debouncer = new Debouncer(render);
     window.addEventListener('scroll', debouncer, false);
 
     render();
+  },
+
+  lazyLoad: function(selector) {
+    if (selector instanceof $) {
+      selector.each(function(element) {
+        lazyLoad(element);
+      });
+    } else if (_.isString(selector)) {
+      $(selector).each(function(element) {
+        lazyLoad(element);
+      });
+    } else {
+      lazyLoad(selector);
+    }
   }
 };
