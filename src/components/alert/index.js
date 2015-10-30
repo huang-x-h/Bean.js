@@ -35,7 +35,7 @@ var Alert = Widget.extend({
 
     if (e) e.preventDefault();
 
-    if (this._trigger('beforeClose')) return;
+    if (!this._trigger('beforeClose')) return;
 
     $el.removeClass('in');
 

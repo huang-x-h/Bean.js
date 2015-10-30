@@ -58,9 +58,9 @@ module.exports = Class.extend({
     var e = $.Event((this.widgetName + ':' + type).toLowerCase());
     this.$element.trigger(e, data);
 
-    return _.isFunction(callback)
+    return !(_.isFunction(callback)
         && callback.apply(this, [e].concat(data)) === false
-        || e.isDefaultPrevented();
+        || e.isDefaultPrevented());
   },
 
   destroy: function() {

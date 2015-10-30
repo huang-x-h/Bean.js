@@ -19,7 +19,7 @@ var Collapse = Widget.extend({
   show: function() {
     if (this.transitioning || this.$element.hasClass('in')) return;
 
-    if (this._trigger('beforeShow')) return;
+    if (!this._trigger('beforeShow')) return;
 
     var dimension = this.dimension();
 
@@ -50,7 +50,7 @@ var Collapse = Widget.extend({
   hide: function() {
     if (this.transitioning || !this.$element.hasClass('in')) return;
 
-    if (this._trigger('beforeCollapse')) return;
+    if (!this._trigger('beforeCollapse')) return;
 
     var dimension = this.dimension();
 

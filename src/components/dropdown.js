@@ -31,7 +31,6 @@ var DropDown = Widget.extend({
       parentClass = 'dropup';
     }
     this.$parent.addClass(parentClass);
-
     this.$parent.children('.dropdown-menu').addClass('dropdown-menu-' + triangle[this.options.position]);
   },
 
@@ -41,7 +40,7 @@ var DropDown = Widget.extend({
   },
 
   close: function() {
-    if (this._trigger('beforeClose')){
+    if (!this._trigger('beforeClose')){
       return false;
     }
 
