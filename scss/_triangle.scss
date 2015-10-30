@@ -1,5 +1,132 @@
 $triangle-size: 8px !default;
 
+@mixin triangle($triangle-size: $triangle-size) {
+  &:before {
+    position: absolute;
+    display: inline-block;
+    content: "";
+    border: $triangle-size solid transparent;
+  }
+  &:after {
+    position: absolute;
+    display: inline-block;
+    content: "";
+    border: ($triangle-size - 1) solid transparent;
+  }
+}
+
+@mixin triangle-s($triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
+  &:before {
+    top: -($triangle-size * 2);
+    left: 50%;
+    margin-left: -$triangle-size;
+    border-bottom-color: $triangle-border;
+  }
+  &:after {
+    top: -(($triangle-size - 1) * 2);
+    left: 50%;
+    margin-left: -($triangle-size - 1);
+    border-bottom-color: $triangle-bg;
+  }
+}
+
+@mixin triangle-se($triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
+  &:before {
+    top: -($triangle-size * 2);
+    left: $triangle-size;
+    border-bottom-color: $triangle-border;
+  }
+  &:after {
+    top: -(($triangle-size - 1) * 2);
+    left: $triangle-size + 1;
+    border-bottom-color: $triangle-bg;
+  }
+}
+
+@mixin triangle-sw($triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
+  &:before {
+    top: -($triangle-size * 2);
+    right: $triangle-size;
+    border-bottom-color: $triangle-border;
+  }
+  &:after {
+    top: -(($triangle-size - 1) * 2);
+    right: $triangle-size + 1;
+    border-bottom-color: $triangle-bg;
+  }
+}
+
+@mixin triangle-n($triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
+  &:before {
+    bottom: -($triangle-size * 2);
+    left: 50%;
+    margin-left: -$triangle-size;
+    border-top-color: $triangle-border;
+  }
+  &:after {
+    bottom: -(($triangle-size - 1) * 2);
+    left: 50%;
+    margin-left: -($triangle-size - 1);
+    border-top-color: $triangle-bg;
+  }
+}
+
+@mixin triangle-ne($triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
+  &:before {
+    bottom: -($triangle-size * 2);
+    left: $triangle-size;
+    border-top-color: $triangle-border;
+  }
+  &:after {
+    bottom: -(($triangle-size - 1) * 2);
+    left: $triangle-size + 1;
+    border-top-color: $triangle-bg;
+  }
+}
+
+@mixin triangle-nw($triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
+  &:before {
+    bottom: -($triangle-size * 2);
+    right: $triangle-size;
+    border-top-color: $triangle-border;
+  }
+  &:after {
+    bottom: -(($triangle-size - 1) * 2);
+    right: $triangle-size + 1;
+    border-top-color: $triangle-bg;
+  }
+}
+
+@mixin triangle-w($triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
+  &:before {
+    right: -($triangle-size * 2);
+    top: 50%;
+    margin-top: -$triangle-size;
+    border-left-color: $triangle-border;
+  }
+  &:after {
+    right: -(($triangle-size - 1) * 2);
+    top: 50%;
+    margin-top: -($triangle-size - 1);
+    border-left-color: $triangle-bg;
+  }
+}
+
+@mixin triangle-e($triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
+  &:before {
+    left: -($triangle-size * 2);
+    top: 50%;
+    margin-top: -$triangle-size;
+    border-right-color: $triangle-border;
+  }
+  &:after {
+    left: -(($triangle-size - 1) * 2);
+    top: 50%;
+    margin-top: -$triangle-size;
+    border-right-color: $triangle-bg;
+  }
+}
+
 @mixin mixin-triangle($selector, $triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
   #{$selector} {
     &:before {
@@ -101,4 +228,33 @@ $triangle-size: 8px !default;
     }
   }
 
+  #{$selector}-w {
+    &:before {
+      right: -($triangle-size * 2);
+      top: 50%;
+      margin-top: -$triangle-size;
+      border-left-color: $triangle-border;
+    }
+    &:after {
+      right: -(($triangle-size - 1) * 2);
+      top: 50%;
+      margin-top: -($triangle-size - 1);
+      border-left-color: $triangle-bg;
+    }
+  }
+
+  #{$selector}-e {
+    &:before {
+      left: -($triangle-size * 2);
+      top: 50%;
+      margin-top: -$triangle-size;
+      border-right-color: $triangle-border;
+    }
+    &:after {
+      left: -(($triangle-size - 1) * 2);
+      top: 50%;
+      margin-top: -$triangle-size;
+      border-right-color: $triangle-bg;
+    }
+  }
 }
