@@ -1,0 +1,9 @@
+// refer to https://github.com/primer/primer/blob/master/scss/_truncate.scss
+.css-truncate {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: top;
+}
