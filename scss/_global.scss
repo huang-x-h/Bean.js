@@ -2,6 +2,31 @@
  * Created by huangxinghui on 2015/10/30.
  */
 
+$triangle-size: 8px !default;
+
 img[data-lazy] {
   background: #FFF url("./images/spin.gif") no-repeat center center;
+}
+
+@mixin css-triangle($triangle-color, $triangle-direction, $triangle-size: $triangle-size) {
+  position: absolute;
+  display: inline-block;
+  content: "";
+  border: $triangle-size solid transparent;
+
+  @if $triangle-direction == top {
+    border-top-color: $triangle-color;
+  }
+
+  @if $triangle-direction == right {
+    border-right-color: $triangle-color;
+  }
+
+  @if $triangle-direction == bottom {
+    border-bottom-color: $triangle-color;
+  }
+
+  @if $triangle-direction == left {
+    border-left-color: $triangle-color;
+  }
 }

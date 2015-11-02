@@ -1,1 +1,6 @@
-@include mixin-triangle('.dropdown-menu', $dropdown-border, $dropdown-bg);
+// add dropdown triangle
+
+@include triangle('.dropdown-menu', sw, $dropdown-border, $dropdown-bg);
+@include triangle('.dropdown-menu', se, $dropdown-border, $dropdown-bg);
+@include triangle('.dropdown-menu', nw, $dropdown-border, $dropdown-bg);
+@include triangle('.dropdown-menu', ne, $dropdown-border, $dropdown-bg);

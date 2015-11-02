@@ -1,20 +1,3 @@
-$triangle-size: 8px !default;
-
-@mixin triangle($triangle-size: $triangle-size) {
-  &:before {
-    position: absolute;
-    display: inline-block;
-    content: "";
-    border: $triangle-size solid transparent;
-  }
-  &:after {
-    position: absolute;
-    display: inline-block;
-    content: "";
-    border: ($triangle-size - 1) solid transparent;
-  }
-}
-
 @mixin triangle-s($triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
   &:before {
     top: -($triangle-size * 2);
@@ -127,23 +110,64 @@ $triangle-size: 8px !default;
   }
 }
 
-@mixin mixin-triangle($selector, $triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
-  #{$selector} {
-    @include triangle($triangle-size)
+@mixin triangle($selector, $triangle, $triangle-border, $triangle-bg, $triangle-size: $triangle-size) {
+  @if $triangle == sw {
+    #{$selector}-sw {
+      &:before {
+        @include css-triangle($triangle-border, bottom);
+        top: -($triangle-size * 2);
+        right: $triangle-size;
+      }
+      &:after {
+        @include css-triangle($triangle-bg, bottom);
+        top: -(($triangle-size - 1) * 2);
+        right: $triangle-size + 1;
+      }
+    }
   }
 
-  &#{$selector}-sw {
-    @include triangle-sw($triangle-border, $triangle-bg, $triangle-size);
+  @if $triangle == se {
+    #{$selector}-se {
+      &:before {
+        @include css-triangle($triangle-border, bottom);
+        top: -($triangle-size * 2);
+        left: $triangle-size;
+      }
+      &:after {
+        @include css-triangle($triangle-bg, bottom);
+        top: -(($triangle-size - 1) * 2);
+        left: $triangle-size + 1;
+      }
+    }
   }
 
-  #{$selector}-se {
-    @include triangle-se($triangle-border, $triangle-bg, $triangle-size);
+  @if $triangle == nw {
+    #{$selector}-nw {
+      &:before {
+        @include css-triangle($triangle-border, top);
+        bottom: -($triangle-size * 2);
+        right: $triangle-size;
+      }
+      &:after {
+        @include css-triangle($triangle-bg, top);
+        bottom: -(($triangle-size - 1) * 2);
+        right: $triangle-size + 1;
+      }
+    }
   }
 
-  #{$selector}-ne {
-    @include triangle-ne($triangle-border, $triangle-bg, $triangle-size);
-  }
-  #{$selector}-nw {
-    @include triangle-nw($triangle-border, $triangle-bg, $triangle-size);
+  @if $triangle == ne {
+    #{$selector}-ne {
+      &:before {
+        @include css-triangle($triangle-border, top);
+        bottom: -($triangle-size * 2);
+        left: $triangle-size;
+      }
+      &:after {
+        @include css-triangle($triangle-bg, top);
+        bottom: -(($triangle-size - 1) * 2);
+        left: $triangle-size + 1;
+      }
+    }
   }
 }
