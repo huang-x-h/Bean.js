@@ -108,6 +108,11 @@ var Drop = Widget.extend({
   },
 
   _setupEvents: function() {
+    if (this.options.trigger === 'sticky') {
+      setTimeout(this.show.bind(this), 0);
+      return;
+    }
+
     var triggers = this.options.trigger.split(' ');
 
     if (triggers.indexOf('click') >= 0) {

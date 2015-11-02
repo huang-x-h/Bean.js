@@ -4,12 +4,12 @@
         <meta name="viewport"
               content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta charset="UTF-8">
-        <title>Dropdown</title>
+        <title>Drop</title>
         <link rel="stylesheet" href="../../main.css">
         <link rel="stylesheet" href="/examples/doc.css">
     </head>
     <body>
-        <h2>Drop</h2>
+        <h2>Drop Click Trigger</h2>
         <div class="bs-example">
             <div class="btn-group">
                 <button type="button" class="btn btn-danger js-bottom-left">bottom left</button>
@@ -20,6 +20,18 @@
                 <button type="button" class="btn btn-danger js-top-right">top right</button>
                 <button type="button" class="btn btn-danger js-left-middle">left middle</button>
                 <button type="button" class="btn btn-danger js-right-middle">right middle</button>
+            </div>
+        </div>
+        <h2>Drop hover Trigger</h2>
+        <div class="bs-example">
+            <div class="btn-group">
+                <button type="button" class="btn btn-danger js-hover">Hover me</button>
+            </div>
+        </div>
+        <h2>Drop sticky Trigger</h2>
+        <div class="bs-example">
+            <div class="btn-group">
+                <button type="button" class="btn btn-danger js-sticky">Sticky</button>
             </div>
         </div>
 
@@ -62,6 +74,16 @@
 
             $('.js-right-middle').drop({
                 position: 'right middle',
+                content: 'Hello World'
+            });
+
+            $('.js-hover').drop({
+                trigger: 'hover',
+                content: 'Hello World'
+            });
+
+            $('.js-sticky').drop({
+                trigger: 'sticky',
                 content: 'Hello World'
             });
         </script>
