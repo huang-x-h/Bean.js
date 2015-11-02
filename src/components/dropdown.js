@@ -7,7 +7,6 @@ var _ = require('underscore');
 var plugin = require('../plugin');
 var Widget = require('../widget');
 var $document = require('../document');
-var triangle = require('../utils/triangle');
 var DATA_TOGGLE = '[data-toggle="dropdown"]';
 var CLASS_NAME = {
   OPEN: 'open'
@@ -24,14 +23,7 @@ var DropDown = Widget.extend({
   },
 
   _create: function() {
-    var parentClass = 'dropdown';
     this.$parent = this.getParent();
-
-    if (this.options.position.indexOf('top') !== -1) {
-      parentClass = 'dropup';
-    }
-    this.$parent.addClass(parentClass);
-    this.$parent.children('.dropdown-menu').addClass('dropdown-menu-' + triangle[this.options.position]);
   },
 
   open: function() {

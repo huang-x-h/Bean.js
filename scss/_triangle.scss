@@ -133,8 +133,6 @@ $triangle-size: 8px !default;
   }
 
   &#{$selector}-sw {
-    left: auto;
-    right: 0;
     @include triangle-sw($triangle-border, $triangle-bg, $triangle-size);
   }
 
@@ -146,8 +144,6 @@ $triangle-size: 8px !default;
     @include triangle-ne($triangle-border, $triangle-bg, $triangle-size);
   }
   #{$selector}-nw {
-    left: auto;
-    right: 0;
     @include triangle-nw($triangle-border, $triangle-bg, $triangle-size);
   }
 }
