@@ -9,7 +9,7 @@ $dropPrefix: drop;
   z-index: $zindex-dropdown;
   min-width: 160px;
   padding: 5px 8px;
-  margin: 2px 0 0; // override default ul
+  margin: 0; // override default ul
   background-color: $drop-bg;
   background-clip: padding-box;
   border: 1px solid $drop-border;
