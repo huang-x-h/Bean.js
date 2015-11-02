@@ -48,6 +48,11 @@ var Drop = Widget.extend({
     this._setupEvents();
   },
 
+  _destroy: function() {
+    this.remove();
+    this.tether.destroy();
+  },
+
   _setupElement: function() {
     this.$drop = $(this.options.template).html(this.options.content);
     this.$drop.addClass(this.options.classes);
