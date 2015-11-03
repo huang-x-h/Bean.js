@@ -59,7 +59,16 @@ var Drop = Widget.extend({
   },
 
   _setupTether: function() {
-    var dropAttach = this.options.position.split(' ');
+    var position = this.options.position,
+        dropAttach;
+
+    if (/top|bottom/.test(position)) {
+      position += ' center';
+    } else if(/left|right/.test(position)) {
+      position += ' middle';
+    }
+
+    dropAttach = position.split(' ');
     dropAttach[0] = MIRROR_ATTACH[dropAttach[0]];
     dropAttach = dropAttach.join(' ');
 
@@ -93,7 +102,7 @@ var Drop = Widget.extend({
       element: this.$drop,
       target: this.$element,
       attachment: sortAttach(dropAttach),
-      targetAttachment: sortAttach(this.options.position),
+      targetAttachment: sortAttach(position),
       classPrefix: classPrefix,
       offset: '0 0',
       targetOffset: '0 0',
