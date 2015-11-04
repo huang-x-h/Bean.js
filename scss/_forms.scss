@@ -29,3 +29,15 @@
   height: $input-height-small;
   line-height: $input-height-small;
 }
+
+.form-actions {
+  @include clearfix;
+
+  .btn {
+    float: right;
+
+    + .btn {
+      margin-right: 5px;
+    }
+  }
+}
