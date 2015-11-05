@@ -39,7 +39,8 @@ var Drop = Widget.extend({
     template: '<div class="drop"></div>',
     constrainToScrollParent: false,
     constrainToWindow: true,
-    remove: true
+    remove: true,
+    tetherOptions: {}
   },
 
   _create: function() {
@@ -112,7 +113,7 @@ var Drop = Widget.extend({
     };
 
     if (this.options.tetherOptions !== false) {
-      this.tether = new Tether(opts);
+      this.tether = new Tether($.extend({}, opts, this.options.tetherOptions));
     }
   },
 
@@ -172,7 +173,7 @@ var Drop = Widget.extend({
       return;
     }
 
-    this.hide();
+    this.close();
   },
 
   enter: function(e) {
@@ -190,16 +191,16 @@ var Drop = Widget.extend({
 
     this.outTimeout = setTimeout(function() {
       if (!that.onUs)
-        that.hide();
+        that.close();
       that.outTimeout = null;
     }, 50);
   },
 
   toggle: function() {
-    this.isOpened() ? this.hide() : this.show();
+    this.isOpened() ? this.close() : this.open();
   },
 
-  show: function() {
+  open: function() {
     if (this.isOpened()) {
       return;
     }
@@ -218,10 +219,10 @@ var Drop = Widget.extend({
       this.tether.position();
     }
 
-    this._trigger('show');
+    this._trigger('open');
   },
 
-  hide: function() {
+  close: function() {
     if (!this.isOpened()) {
       return;
     }
@@ -244,7 +245,7 @@ var Drop = Widget.extend({
   },
 
   remove: function() {
-    this.hide();
+    this.close();
     this.$drop.remove();
   },
 
