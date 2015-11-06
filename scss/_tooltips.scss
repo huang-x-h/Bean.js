@@ -2,6 +2,7 @@
 $multiline-max-width: 250px;
 $tooltip-background-color: rgba(0, 0, 0, 0.8);
 $tooltip-text-color: #fff;
+$tooltip-zIndex: 100000;
 
 .tooltipped {
   position: relative;
@@ -10,7 +11,7 @@ $tooltip-text-color: #fff;
 // This is the tooltip bubble
 .tooltipped:after {
   position: absolute;
-  z-index: 1000000;
+  z-index: $tooltip-zIndex;
   display: none;
   padding: 5px 8px;
   font: normal normal 11px/1.5 $font-family-base;
@@ -32,7 +33,7 @@ $tooltip-text-color: #fff;
 // This is the tooltip arrow
 .tooltipped:before {
   position: absolute;
-  z-index: 1000001;
+  z-index: $tooltip-zIndex + 1;
   display: none;
   width: 0;
   height: 0;
