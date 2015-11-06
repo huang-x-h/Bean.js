@@ -1,0 +1,55 @@
+$block-zIndex: 1000000;
+$block-backdrop-bg: #000 !default;
+$block-backdrop-opacity: .5 !default;
+
+.block {
+  position: relative;
+}
+
+.block-screen {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: $block-zIndex + 1;
+
+  &.fixed {
+    position: fixed;
+  }
+}
+
+.block-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: $block-zIndex;
+  background-color: $block-backdrop-bg;
+  opacity: $block-backdrop-opacity;
+
+  &.fixed {
+    position: fixed;
+  }
+}
+
+.block-center-outer {
+  width: 100%;
+  padding: 0;
+  display: table !important;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+}
+
+.block-center-middle {
+  padding: 0;
+  vertical-align: middle;
+  display: table-cell !important;
+  margin: 0;
+  text-align: center;
+  opacity: 1;
+}

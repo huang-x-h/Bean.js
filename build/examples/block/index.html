@@ -6,27 +6,75 @@
         <meta charset="UTF-8">
         <title>Block</title>
         <link rel="stylesheet" href="../../main.css">
+        <link rel="stylesheet" href="/examples/doc.css">
     </head>
     <body>
         <div class="container">
-            <div class="panel panel-default">
-                <div class="panel-heading">Panel heading without title</div>
-                <div class="panel-body">
-                    Panel content
-                    <button type="button" onclick="clickHandler()">Block</button>
+            <h2>Global Block</h2>
+            <section class="bs-example">
+                <button type="button" class="btn btn-default js-global">Block</button>
+            </section>
+
+            <h2>Partial Block</h2>
+            <section class="bs-example">
+                <div class="panel panel-default js-panel-partial">
+                    <div class="panel-heading">Panel heading</div>
+                    <div class="panel-body">
+                        Panel content
+                    </div>
+                    <div class="panel-footer">
+                        <button type="button" class="btn btn-default js-partial">Block</button>
+                    </div>
                 </div>
-            </div>
+            </section>
+
+            <h2>Custom Block</h2>
+            <section class="bs-example">
+                <div class="bs-example">
+                    <div class="panel panel-default js-panel-custom">
+                        <div class="panel-heading">Panel heading</div>
+                        <div class="panel-body">
+                            Panel content
+                        </div>
+                        <div class="panel-footer">
+                            <button type="button" class="btn btn-default js-custom">Block</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
 
         <script src="../../bundle.js"></script>
         <script>
-            function clickHandler() {
+
+            $('.js-global').click(function() {
                 Bean.block();
 
                 setTimeout(function () {
                     Bean.unblock();
                 }, 3000);
-            }
+            });
+
+            $('.js-partial').click(function() {
+                $('.js-panel-partial').block('show');
+
+                setTimeout(function () {
+                    $('.js-panel-partial').block('hide');
+                }, 3000);
+            });
+
+            $('.js-custom').click(function() {
+                $('.js-panel-custom').block({
+                    template: '<p>Hello world</p>'
+                });
+
+                $('.js-panel-custom').block('show');
+
+                setTimeout(function () {
+                    $('.js-panel-custom').block('hide');
+                }, 3000);
+            });
+
         </script>
     </body>
 </html>

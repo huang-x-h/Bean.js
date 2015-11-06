@@ -9,6 +9,7 @@ require('./utils/block');
 require('./utils/image');
 
 require('./components/autocomplete/email');
+require('./components/block');
 require('./components/button');
 require('./components/tabs');
 require('./components/tooltip');
@@ -20,7 +21,6 @@ require('./components/alert');
 require('./components/dropdown');
 require('./components/pagination');
 require('./components/progressbar');
-require('./components/loading');
 require('./components/slideout');
 require('./components/list');
 require('./components/select');
