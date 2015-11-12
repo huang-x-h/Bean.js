@@ -32,11 +32,11 @@ function sortAttach(str) {
 
 var Drop = Widget.extend({
   options: {
+    classPrefix: classPrefix,
     position: 'bottom left',
     trigger: 'click',
     content: '',
     classes: '',
-    template: '<div class="drop"></div>',
     constrainToScrollParent: false,
     constrainToWindow: true,
     remove: true,
@@ -55,7 +55,8 @@ var Drop = Widget.extend({
   },
 
   _setupElement: function() {
-    this.$drop = $(this.options.template).html(this.options.content);
+    this.$drop = $('<div></div>').html(this.options.content);
+    this.$drop.addClass(this.options.classPrefix);
     this.$drop.addClass(this.options.classes);
   },
 
@@ -104,7 +105,7 @@ var Drop = Widget.extend({
       target: this.$element,
       attachment: sortAttach(dropAttach),
       targetAttachment: sortAttach(position),
-      classPrefix: classPrefix,
+      classPrefix: this.options.classPrefix,
       offset: '0 0',
       targetOffset: '0 0',
       enabled: false,
@@ -119,7 +120,7 @@ var Drop = Widget.extend({
 
   _setupEvents: function() {
     if (this.options.trigger === 'sticky') {
-      setTimeout(this.show.bind(this), 0);
+      setTimeout(this.open.bind(this), 0);
       return;
     }
 
@@ -178,7 +179,7 @@ var Drop = Widget.extend({
 
   enter: function(e) {
     this.onUs = true;
-    this.show();
+    this.open();
   },
 
   leave: function(e) {
@@ -213,7 +214,7 @@ var Drop = Widget.extend({
       this.tether.enable();
     }
 
-    this.$drop.addClass(classPrefix + '-open');
+    this.$drop.addClass(this.options.classPrefix + '-open');
 
     if (typeof this.tether !== 'undefined') {
       this.tether.position();
@@ -231,7 +232,7 @@ var Drop = Widget.extend({
       return;
     }
 
-    this.$drop.removeClass(classPrefix + '-open');
+    this.$drop.removeClass(this.options.classPrefix + '-open');
 
     this._trigger('close');
 
@@ -251,7 +252,7 @@ var Drop = Widget.extend({
 
   isOpened: function() {
     if (this.$drop) {
-      return this.$drop.hasClass(classPrefix + '-open');
+      return this.$drop.hasClass(this.options.classPrefix + '-open');
     }
   }
 });
