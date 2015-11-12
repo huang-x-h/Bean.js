@@ -11,13 +11,11 @@ var ListMixin = require('../mixins/list');
 var Widget = require('../widget');
 
 function defaultItemRenderer(data) {
-  return '<a href="javascript:;">' + this.itemToLabel(data) + '</a>';
+  return this.itemToLabel(data);
 }
 
 var List = Widget.extend({
   options: {
-    dataTextField: 'text',
-    dataValueField: 'value',
     itemRenderer: defaultItemRenderer
   },
 
@@ -27,6 +25,7 @@ var List = Widget.extend({
   },
 
   _create: function() {
+    this.$element.addClass('list');
     this._setDataSource(this.options.dataSource);
     this._setSelectedIndex(this.options.selectedIndex);
   },
@@ -37,7 +36,7 @@ var List = Widget.extend({
     this._selectedItem = null;
 
     this.$element.html(this._dataSource.reduce(function(previous, current) {
-      return previous + '<li>' + _.bind(this.options.itemRenderer, this, current)() + '</li>';
+      return previous + '<li class="list-item">' + _.bind(this.options.itemRenderer, this, current)() + '</li>';
     }, '', this));
   },
 
@@ -63,7 +62,8 @@ var List = Widget.extend({
   },
 
   _onKeyDown: function(e) {
-    var c = e.keyCode;
+    var c = e
+        .keyCode;
 
     if (c === 38 || c === 40) { // Down/Up arrow
       e.preventDefault();
@@ -81,36 +81,6 @@ var List = Widget.extend({
 
   goto: function(index) {
     this._setSelectedIndex(index);
-  },
-
-  itemToLabel: function(data) {
-    var label = '';
-    if (_.isString(data)) {
-      label = data;
-    } else if (_.isObject(data)) {
-      label = data[this.options.dataTextField];
-    }
-
-    return label;
-  },
-
-  itemToValue: function(data) {
-    var label = '';
-    if (_.isString(data)) {
-      label = data;
-    } else if (_.isObject(data)) {
-      label = data[this.options.dataValueField];
-    }
-
-    return label;
-  },
-
-  text: function() {
-    return this.itemToLabel(this._selectedItem);
-  },
-
-  value: function() {
-    return this.itemToValue(this._selectedItem);
   },
 
   _setSelection: function() {

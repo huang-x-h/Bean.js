@@ -4,28 +4,36 @@
         <meta name="viewport"
               content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta charset="UTF-8">
-        <title>ComboBox</title>
+        <title>Select</title>
         <link rel="stylesheet" href="../../main.css">
         <link rel="stylesheet" href="/examples/doc.css">
     </head>
     <body>
         <div class="container">
-            <h2>ComboBox</h2>
+            <h2>Select</h2>
             <div class="bs-example">
-                <div class="combobox" data-toggle="combobox"></div>
+                <select class="form-control">
+                    <option value="">Please Select...</option>
+                    <option value="1">Hello</option>
+                    <option value="2">World</option>
+                </select>
+            </div>
+            <h2>Input</h2>
+            <div class="bs-example">
+                <input type="text" class="form-control">
             </div>
         </div>
         <script src="../../bundle.js"></script>
         <script>
-            var $combobox = $('[data-toggle="combobox"]').combobox({
+            $('select, input').select({
                 dataSource: [
                     {text: 'Hello', value: 'Hello'},
                     {text: 'World', value: 'World'}
                 ]
             });
 
-            $combobox.on('combobox:change', function () {
-                console.log('value=', $combobox.combobox('value'))
+            $('select').on('select:change', function () {
+                console.log('value=', $('select').select('value'))
             })
         </script>
     </body>

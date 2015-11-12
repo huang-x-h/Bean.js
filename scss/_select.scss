@@ -1,0 +1,25 @@
+.select {
+  @include css-dropdown();
+
+  &.select-open {
+    opacity: 1;
+  }
+}
+
+.select-select {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  opacity: 0;
+}
+
+.select-target {
+  background: #fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAUCAMAAACzvE1FAAAADFBMVEUzMzMzMzMzMzMzMzMKAG/3AAAAA3RSTlMAf4C/aSLHAAAAPElEQVR42q3NMQ4AIAgEQTn//2cLdRKppSGzBYwzVXvznNWs8C58CiussPJj8h6NwgorrKRdTvuV9v16Afn0AYFOB7aYAAAAAElFTkSuQmCC) no-repeat right 8px center;
+  background-size: 8px 10px;
+
+  &,
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+}

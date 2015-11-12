@@ -7,6 +7,8 @@ var $ = require('jquery');
 
 module.exports = {
   options: {
+    dataTextField: 'text',
+    dataValueField: 'value',
     selectedIndex: -1,
     dataSource: []
   },
@@ -14,7 +16,7 @@ module.exports = {
   selectedIndex: function(index) {
     if (_.isUndefined(index)) {
       return this._selectedIndex;
-    } else if (this._selectedIndex != value) {
+    } else if (this._selectedIndex != index) {
       this._setSelectedIndex(index);
     }
   },
@@ -39,5 +41,35 @@ module.exports = {
     }
   },
 
-  _setDataSource: $.noop
+  _setDataSource: $.noop,
+
+  itemToLabel: function(data) {
+    var label = '';
+    if (_.isString(data)) {
+      label = data;
+    } else if (_.isObject(data)) {
+      label = data[this.options.dataTextField];
+    }
+
+    return label;
+  },
+
+  itemToValue: function(data) {
+    var label = '';
+    if (_.isString(data)) {
+      label = data;
+    } else if (_.isObject(data)) {
+      label = data[this.options.dataValueField];
+    }
+
+    return label;
+  },
+
+  text: function() {
+    return this.itemToLabel(this._selectedItem);
+  },
+
+  value: function() {
+    return this.itemToValue(this._selectedItem);
+  }
 };
