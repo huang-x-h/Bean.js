@@ -34,7 +34,7 @@ var Drop = Widget.extend({
   options: {
     classPrefix: classPrefix,
     position: 'bottom left',
-    trigger: 'click',
+    trigger: 'click', // hover/click/sticky/manual
     content: '',
     classes: '',
     constrainToScrollParent: false,
