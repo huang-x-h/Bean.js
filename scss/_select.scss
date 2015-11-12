@@ -2,7 +2,7 @@
   @include css-dropdown();
 
   &.select-open {
-    opacity: 1;
+    display: block;
   }
 }
 

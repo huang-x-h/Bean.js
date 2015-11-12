@@ -32,14 +32,9 @@ img[data-lazy] {
 }
 
 @mixin css-dropdown($drop-border:$dropdown-border, $drop-bg:$dropdown-bg, $drop-zindex:$zindex-dropdown, $drop-radius:$border-radius-base) {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  opacity: 0;
+  display: none;
   z-index: $drop-zindex;
   min-width: 160px;
-  padding: 0;
-  margin: 0; // override default ul
   background-color: $drop-bg;
   background-clip: padding-box;
   border: 1px solid $drop-border;

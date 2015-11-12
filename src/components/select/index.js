@@ -3,7 +3,6 @@
  */
 
 var $ = require('jquery');
-var _ = require('underscore');
 var plugin = require('../../plugin');
 var mixin = require('../../utils/mixin');
 var Widget = require('../../widget');
@@ -16,30 +15,40 @@ var classPrefix = 'select';
 var Select = Widget.extend({
   options: {
     placeholder: 'Please Select...',
-    selectedIndex: -1
+    selectedIndex: 0
   },
 
   _create: function () {
     var that = this;
-
     this.__valueChange__ = false;
     this.$element.addClass(classPrefix + '-select');
+    this.setupDataSource();
+
     this.$target = $(template({placeholder: this.options.placeholder})).insertAfter(this.$element);
+
+    this.list = new List($('<ul></ul>'), $.extend({
+      click: function () {
+        that._onEnter();
+      },
+      change: function (e) {
+        that._selectedIndex = this.selectedIndex();
+        that._selectedItem = this.selectedItem();
+        that.__valueChange__ = true;
+      }
+    }, this.options));
 
     this.drop = new Drop(this.$target, {
       classPrefix: classPrefix,
+      content: this.list.$element,
       remove: false,
       close: function () {
         if (that.__valueChange__) {
           that.__valueChange__ = false;
-          that.$element.val(that.value());
+          that.$element.val(that.list.value());
           that._trigger('change');
         }
       }
     });
-
-    this._setDataSource(this.setupDataSource());
-    this._setSelectedIndex(this.options.selectedIndex);
 
     this.setupEvents();
   },
@@ -50,29 +59,33 @@ var Select = Widget.extend({
     });
   },
 
-  _parseSelect: function() {
-    this.options.placeholder = this.$element.text();
-  },
-
   setupDataSource: function () {
-    var that = this;
+    var that = this,
+        selectOption;
 
     if (this.$element.is('select')) {
-      var dataSource = [];
+      selectOption = this.$element.find('[selected]');
+
+      if (selectOption.length === 0) {
+        selectOption = this.$element.children()[0];
+      } else {
+        selectOption = selectOption[0];
+        this.options.selectedIndex = this.$element.children().index(selectOption);
+      }
+      this.options.placeholder = selectOption.textContent;
+      this.options.dataSource = [];
       this.$element.children().each(function (index, option) {
         var item = {};
         item[that.options.dataTextField] = option.textContent;
         item[that.options.dataValueField] = option.value;
-        dataSource.push(item);
+        that.options.dataSource.push(item);
       });
-
-      return dataSource;
     } else {
       var placeholderOption = {};
       placeholderOption[this.options.dataTextField] = this.options.placeholder;
       placeholderOption[this.options.dataValueField] = null;
 
-      return [placeholderOption].concat(this.options.dataSource);
+      this.options.dataSource = [placeholderOption].concat(this.options.dataSource);
     }
   },
 

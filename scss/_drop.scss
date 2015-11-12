@@ -54,6 +54,6 @@ $dropPrefix: drop;
   }
 
   &.#{$dropPrefix}-open {
-    opacity: 1;
+    display: block;
   }
 }
