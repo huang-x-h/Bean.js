@@ -6,23 +6,23 @@ var $ = require('jquery');
 var Immutable = require('immutable');
 var plugin = require('../../plugin');
 var Widget = require('../../widget');
-var mixin = require('../../utils/mixin');
-var DropDownMixin = require('../../mixins/dropdown');
+var Drop = require('../drop');
 var List = require('../list');
+var classPrefix = 'typeahead';
 
 var EmailList = List.extend({
-  _setDataSource: function(value, prefix) {
+  _setDataSource: function (value, prefix) {
     this._dataSource = new Immutable.List(value);
     this._selectedIndex = -1;
     this._selectedItem = null;
     this.prefix = prefix;
 
-    this.$element.html(this._dataSource.reduce(function(previous, current) {
-      return previous + '<li><a href="javascript:;">' + prefix + '@' + current + '</a></li>';
+    this.$element.html(this._dataSource.reduce(function (previous, current) {
+      return previous + '<li class="list-item">' + prefix + '@' + current + '</li>';
     }, '', this));
   },
 
-  itemToLabel: function(data) {
+  itemToLabel: function (data) {
     return this.prefix + '@' + data;
   }
 });
@@ -34,57 +34,87 @@ var EmailAutoComplete = Widget.extend({
 
   events: {
     'input': '_onInput',
-    'blur input': '_onBlur',
-    'keydown': '_onKeyDown',
-    'mousedown li': '_onMouseDown'
+    'blur': '_onBlur',
+    'keydown': '_onKeyDown'
   },
 
-  dropdown: function() {
-    if (!this.$dropdown) {
-      this.$dropdown = new EmailList($('<ul class="dropdown-menu"></ul>'));
-    }
+  _create: function () {
+    var that = this;
+    this.__valueChange__ = false;
+    this.$element.attr({
+      autocomplete: "off",
+      spellcheck: false
+    });
 
-    return this.$dropdown;
+    this.list = new EmailList($('<ul"></ul>'), {
+      click: function () {
+        that._onEnter();
+      },
+      change: function (e) {
+        that._selectedItem = this.selectedItem();
+        that.__valueChange__ = true;
+      }
+    });
+
+    this.drop = new Drop(this.$element, {
+      classPrefix: classPrefix,
+      content: this.list.$element,
+      trigger: 'manual',
+      close: function () {
+        if (that.__valueChange__) {
+          that.__valueChange__ = false;
+          that.$element.val(that.list.text());
+          that._trigger('change');
+        }
+      }
+    });
   },
 
-  _onInput: function() {
-    var text = this.$input.val(),
+  _onInput: function () {
+    var text = this.$element.val(),
         arr = text.split('@'),
         suffixes;
 
     if (arr.length === 1 || arr[1] === '') {
       suffixes = this.options.suffixes;
     } else {
-      suffixes = this.options.suffixes.filter(function(suffix) {
+      suffixes = this.options.suffixes.filter(function (suffix) {
         return suffix.indexOf(arr[1]) !== -1;
       });
     }
 
-    this.dropdown()._setDataSource(suffixes, arr[0]);
-    this.open();
+    this.list._setDataSource(suffixes, arr[0]);
+    this.drop.open();
   },
 
-  _onBlur: function(e) {
-    this.close();
+  _onBlur: function (e) {
+    this.drop.close();
   },
 
-  _onMouseDown: function(e) {
-    var $li = $(e.currentTarget),
-        dropDownInstance = this.dropdown(),
-        index = dropDownInstance.$element.find('li').index($li);
+  _onKeyDown: function (e) {
+    var c = e.keyCode;
 
-    var item = dropDownInstance.dataSource().get(index);
-    this.$input.val(dropDownInstance.itemToLabel(item));
-    this.close();
+    // If the dropdown `ul` is in view, then act on keydown for the following keys:
+    // Enter / Esc / Up / Down
+    if (this.drop.isOpened()) {
+      if (c === 13) { // Enter
+        e.preventDefault();
+        this._onEnter();
+      }
+      else if (c === 27) { // Esc
+        this.drop.close();
+      }
+      else if (c === 38 || c === 40) { // Down/Up arrow
+        e.preventDefault();
+        this.list[c === 38 ? "previous" : "next"]();
+      }
+    }
   },
 
-  _onEnter: function() {
-    this.$input.val(this.dropdown().text());
-    this.close();
+  _onEnter: function () {
+    this.drop.close();
   }
 });
-
-mixin(EmailAutoComplete, DropDownMixin);
 
 plugin('emailautocomplete', EmailAutoComplete);
 

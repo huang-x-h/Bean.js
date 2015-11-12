@@ -10,7 +10,7 @@ var Widget = require('../../widget');
 var Drop = require('../drop');
 var ListMixin = require('../../mixins/list');
 var HighlightList = require('./highlightlist');
-var classPrefix = 'select';
+var classPrefix = 'typeahead';
 
 function filter_contains(data, input) {
   return RegExp(input, "i").test(this.itemToLabel(data));

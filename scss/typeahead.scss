@@ -1,4 +1,4 @@
-.typeahead {
+.typeahead-wrapper {
   @extend .has-feedback;
 
   mark {
@@ -16,5 +16,13 @@
     line-height: $input-height-base;
     text-align: center;
     cursor: pointer;
+  }
+}
+
+.typeahead {
+  @include css-dropdown();
+
+  &.typeahead-open {
+    display: block;
   }
 }
