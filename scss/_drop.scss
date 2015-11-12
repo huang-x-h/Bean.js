@@ -3,18 +3,8 @@ $drop-bg: $dropdown-bg !default;
 $dropPrefix: drop;
 
 .#{$dropPrefix} {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: $zindex-dropdown;
-  min-width: 160px;
+  @include css-dropdown($drop-border, $drop-bg);
   padding: 5px 8px;
-  margin: 0; // override default ul
-  background-color: $drop-bg;
-  background-clip: padding-box;
-  border: 1px solid $drop-border;
-  border-radius: $border-radius-base;
-  @include box-shadow(0 6px 12px rgba(0, 0, 0, .175));
 
   &:before {
     @include css-triangle($drop-border, null);
@@ -61,5 +51,9 @@ $dropPrefix: drop;
   // right middle
   &.#{$dropPrefix}-element-attached-middle.#{$dropPrefix}-element-attached-left {
     @include triangle-e($drop-border, $drop-bg);
+  }
+
+  &.#{$dropPrefix}-open {
+    opacity: 1;
   }
 }
