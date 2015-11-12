@@ -7,7 +7,7 @@ var Immutable = require('immutable');
 var List = require('../list');
 
 function defaultHighLightItemRenderer(data, input) {
-  return '<a href="javascript:;">' + this.itemToLabel(data).replace(RegExp(input, "gi"), "<mark>$&</mark>") + '</a>';
+  return this.itemToLabel(data).replace(RegExp(input, "gi"), "<mark>$&</mark>");
 }
 
 var HighlightList = List.extend({
@@ -21,7 +21,7 @@ var HighlightList = List.extend({
     this._selectedItem = null;
 
     this.$element.html(this._dataSource.reduce(function(previous, current) {
-      return previous + '<li>' + _.bind(this.options.itemRenderer, this, current, highlight)() + '</li>';
+      return previous + '<li class="list-item">' + _.bind(this.options.itemRenderer, this, current, highlight)() + '</li>';
     }, '', this));
   }
 });
