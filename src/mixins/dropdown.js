@@ -24,7 +24,6 @@ module.exports = {
     if (this.isOpen()) return;
 
     this.$element.append(this.dropdown().$element);
-    this.$element.addClass('open');
     this._opened = true;
     this._trigger('open');
   },
@@ -33,7 +32,6 @@ module.exports = {
     if (!this.isOpen()) return;
 
     this.dropdown().$element.detach();
-    this.$element.removeClass('open');
     this._opened = false;
     this._trigger('close');
   },
