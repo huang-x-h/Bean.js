@@ -1,9 +1,17 @@
 // refer to https://github.com/primer/primer/blob/master/scss/_truncate.scss
 .css-truncate {
-  display: inline-block;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: top;
+  &.css-truncate-target,
+  .css-truncate-target {
+    display: inline-block;
+    max-width: 125px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: top;
+  }
+
+  &.expandable:hover .css-truncate-target,
+  &.expandable:hover.css-truncate-target {
+    max-width: 10000px !important;
+  }
 }
