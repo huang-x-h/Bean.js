@@ -51,7 +51,6 @@ var DatePicker = Widget.extend({
     startView: 0,
     endView: 2,
     calendarWeeks: false,
-    defaultViewDate: new Date(),
     datesDisabled: [],
     daysOfWeekDisabled: [],
     daysOfWeekHighlighted: [],
@@ -75,7 +74,6 @@ var DatePicker = Widget.extend({
   _create: function() {
     this.picker = $(wrapperTemplate());
 
-    this.viewDate = this.options.defaultViewDate;
     this.focusDate = null;
 
     var plc = String(this.options.orientation).toLowerCase().split(/\s+/g),
@@ -221,7 +219,7 @@ var DatePicker = Widget.extend({
             || this.picker.is(e.target)
             || this.picker.find(e.target).length
             || this.picker.hasClass('datepicker-inline'))) {
-          this.viewDate = this.date || this.options.defaultViewDate;
+          this.viewDate = this.date || new Date();
           this.hide();
         }
       }, this)
@@ -259,7 +257,7 @@ var DatePicker = Widget.extend({
     else if (this.viewDate > this.options.endDate)
       this.viewDate = new Date(this.options.endDate);
     else
-      this.viewDate = this.options.defaultViewDate;
+      this.viewDate = new Date();
 
     if (fromArgs) {
       // setting date by clicking
@@ -746,7 +744,7 @@ var DatePicker = Widget.extend({
       if (itemZIndex !== 'auto' && itemZIndex !== 0) parentsZindex.push(parseInt(itemZIndex));
     });
     var zIndex = Math.max.apply(Math, parentsZindex) + this.options.zIndexOffset;
-    var offset = this.component ? this.component.parent().offset() : this.$element.offset();
+    var offset = this.component ? this.component.offset() : this.$element.offset();
     var height = this.component ? this.component.outerHeight(true) : this.$element.outerHeight(false);
     var width = this.component ? this.component.outerWidth(true) : this.$element.outerWidth(false);
     var left = offset.left - appendOffset.left,
