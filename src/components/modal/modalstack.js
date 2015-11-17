@@ -5,7 +5,9 @@
 var $ = require('jquery');
 var $body = require('../../body');
 var transition = require('../../transition');
+var util = require('../../utils/element');
 var StackedMap = require('./stackedmap');
+var modalTpl = require('./modal.hbs');
 var openedWindows = StackedMap.createNew();
 var OPENED_MODAL_CLASS = 'modal-open';
 var BACKDROP_TRANSITION_DURATION = 150;
@@ -84,8 +86,10 @@ var modalStack = {
 
     if (currBackdropIndex >= 0) {
       if (!$backdropElement) {
-        $backdropElement = $('<div class="modal-backdrop fade in"></div>');
+        $backdropElement = $('<div class="modal-backdrop fade"></div>');
         $body.append($backdropElement);
+        util.forceReflow($backdropElement);
+        $backdropElement.addClass('in');
       } else {
         $backdropElement.css('z-index', 1040 + (currBackdropIndex && 1 || 0) + currBackdropIndex * 10);
       }
@@ -93,26 +97,19 @@ var modalStack = {
 
     $body.addClass(OPENED_MODAL_CLASS);
 
-    $modalElement = $(options.content);
+    $modalElement = $(modalTpl({
+      'z-index': 1050 + (openedWindows.length() - 1) * 10
+      , 'content': options.content, 'size': options.size
+    }));
     $modalElement
         .on('click.dismiss.data-api', '[data-dismiss]', function(e) {
           modalStack.dismiss(modalInstance, 'dismiss click');
         });
 
-    if (options.size) {
-      $modalElement.find('.modal-dialog').addClass('modal=' + options.size);
-    }
-    $modalElement.css({
-      'z-index': 1050 + (openedWindows.length() - 1) * 10,
-      'display': 'block'
-    });
     $body.append($modalElement);
 
-    $modalElement.scrollTop(0);
-
     // reflow
-    $modalElement[0].offsetWidth;
-
+    util.forceReflow($modalElement);
     $modalElement.addClass('in');
 
     openedWindows.top().value.$modalElement = $modalElement;
