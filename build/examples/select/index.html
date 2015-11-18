@@ -32,8 +32,8 @@
                 ]
             });
 
-            $('select').on('select:change', function () {
-                console.log('value=', $('select').select('value'))
+            $('input').on('select:change', function (e, item) {
+                console.log('value=', item.value)
             })
         </script>
     </body>

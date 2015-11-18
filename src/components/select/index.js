@@ -7,8 +7,8 @@ var plugin = require('../../plugin');
 var mixin = require('../../utils/mixin');
 var Widget = require('../../widget');
 var ListMixin = require('../../mixins/list');
-var Drop = require('../drop');
-var List = require('../list');
+var keyboard = require('../../utils/keyboard');
+var DropList = require('../droplist');
 var template = require('./select.hbs');
 var classPrefix = 'select';
 
@@ -20,35 +20,21 @@ var Select = Widget.extend({
 
   _create: function () {
     var that = this;
-    this.__valueChange__ = false;
     this.$element.addClass(classPrefix + '-select');
     this.setupDataSource();
 
     this.$target = $(template({placeholder: this.options.placeholder})).insertAfter(this.$element);
 
-    this.list = new List($('<ul></ul>'), $.extend({
-      click: function () {
-        that._onEnter();
-      },
+    this.dropList = new DropList($('<ul></ul>'), $.extend({
+      target: this.$target,
+      remove: false,
       change: function (e) {
         that._selectedIndex = this.selectedIndex();
         that._selectedItem = this.selectedItem();
-        that.__valueChange__ = true;
+        that.$target.text(this.text());
+        that._trigger('change', that._selectedItem);
       }
     }, this.options));
-
-    this.drop = new Drop(this.$target, {
-      classPrefix: classPrefix,
-      content: this.list.$element,
-      remove: false,
-      close: function () {
-        if (that.__valueChange__) {
-          that.__valueChange__ = false;
-          that.$element.val(that.list.value());
-          that._trigger('change');
-        }
-      }
-    });
 
     this.setupEvents();
   },
@@ -90,52 +76,33 @@ var Select = Widget.extend({
   },
 
   _setDataSource: function (value) {
-    var that = this;
-
     this._selectedIndex = -1;
     this._selectedItem = null;
 
-    this.list = new List($('<ul></ul>'), {
-      dataSource: value,
-      click: function () {
-        that._onEnter();
-      },
-      change: function (e) {
-        that._selectedIndex = this.selectedIndex();
-        that._selectedItem = this.selectedItem();
-        that.__valueChange__ = true;
-      }
-    });
-    this.drop.$drop.html(this.list.$element);
+    this.dropList.dataSource(value);
   },
 
   _setSelectedIndex: function (index) {
-    this.list.selectedIndex(index);
+    this.dropList.selectedIndex(index);
   },
 
   _onKeyDown: function (e) {
     var c = e.keyCode;
 
-    // If the dropdown `ul` is in view, then act on keydown for the following keys:
-    // Enter / Esc / Up / Down
-    if (this.drop.isOpened()) {
-      if (c === 13) { // Enter
+    if (this.dropList.isOpened()) {
+      if (c === keyboard.ENTER) {
         e.preventDefault();
-        this._onEnter();
+        this.dropList.selectHighlightedOption();
+        this.dropList.close();
       }
-      else if (c === 27) { // Esc
-        this.drop.close();
+      else if (c === keyboard.ESC) { // Esc
+        this.dropList.close();
       }
-      else if (c === 38 || c === 40) { // Down/Up arrow
+      else if (c === keyboard.UP || c === keyboard.DOWN) { // Down/Up arrow
         e.preventDefault();
-        this.list[c === 38 ? "previous" : "next"]();
+        this.dropList.moveHighlight(c);
       }
     }
-  },
-
-  _onEnter: function () {
-    this.$target.text(this.list.text());
-    this.drop.close();
   }
 });
 
