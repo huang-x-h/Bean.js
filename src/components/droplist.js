@@ -2,48 +2,97 @@
  * Created by huangxinghui on 2015/11/13.
  */
 
-var List = require('./list');
+var Immutable = require('immutable');
+var _ = require('underscore');
 var Widget = require('../widget');
 var Drop = require('./drop');
 var keyboard = require('../utils/keyboard');
-var classPrefix = 'select';
+var mixin = require('../utils/mixin');
+var ListMixin = require('../mixins/list');
 var highlightClass = 'highlight';
-var highlightSelector = '.highlight';
+var highlightSelector = '.' + highlightClass;
+var selectClass = 'active';
+var selectSelector = '.' + selectClass;
 
 function defaultItemRenderer(data) {
   return this.itemToLabel(data);
 }
 
-var DropList = List.extend({
+var DropList = Widget.extend({
   options: {
+    classPrefix: 'droplist',
     target: null,
     remove: true,
+    trigger: 'manual',
     itemRenderer: defaultItemRenderer
   },
 
-  events: {
-    'click li': '_onClick'
-  },
-
   _create: function () {
-    this._super();
+    this._setDataSource(this.options.dataSource);
+    this._setSelectedIndex(this.options.selectedIndex);
 
     this.$target = this.options.target;
     this.drop = new Drop(this.$target, {
-      classPrefix: classPrefix,
+      classPrefix: this.options.classPrefix,
+      trigger: this.options.trigger,
       content: this.$element,
       remove: this.options.remove
     });
     this.$element.css('width', this.$target.outerWidth());
+
+    if (!this.options.remove) {
+      this.setupEvents();
+    }
+  },
+
+  _setDataSource: function (value) {
+    this._dataSource = new Immutable.List(value);
+    this._selectedIndex = -1;
+    this._selectedItem = null;
+
+    this.$element.html(this._dataSource.reduce(function (previous, current) {
+      return previous + '<li>' + _.bind(this.options.itemRenderer, this, current)() + '</li>';
+    }, '', this));
+  },
+
+  _setSelectedIndex: function (index) {
+    if (index > -1 && index < this._dataSource.size) {
+      this._selectedItem = this._dataSource.get(index);
+      this._selectedIndex = index;
+      this._setSelection();
+      this._trigger('change');
+    }
+  },
+
+  _setSelection: function () {
+    this.$element.children(selectSelector).removeClass(selectClass);
+    this.$element.children().eq(this._selectedIndex).addClass(selectClass);
   },
 
   _onClick: function (e) {
-    this._super(e);
+    e.preventDefault();
+
+    var $li = $(e.currentTarget);
+
+    if (!$li.hasClass(selectClass)) {
+      this._setSelectedIndex(this.$element.children().index($li));
+    }
+
     this.drop.close();
+  },
+
+  setupEvents: function () {
+    this._on({
+      'click li': '_onClick'
+    });
   },
 
   open: function () {
     this.drop.open();
+
+    if (this.options.remove) {
+      this.setupEvents();
+    }
   },
 
   close: function () {
@@ -51,7 +100,7 @@ var DropList = List.extend({
     this.drop.close();
   },
 
-  isOpened: function() {
+  isOpened: function () {
     return this.drop.isOpened();
   },
 
@@ -87,11 +136,12 @@ var DropList = List.extend({
     var $highlight = this.$element.find(highlightSelector),
         children = this.$element.children();
 
-    if ($highlight.length === 0) return;
+    if ($highlight.length === 0 || $highlight.hasClass(selectClass)) return;
 
     var highlightedIndex = children.index($highlight);
     this._setSelectedIndex(highlightedIndex);
   }
 });
 
+mixin(DropList, ListMixin);
 module.exports = DropList;

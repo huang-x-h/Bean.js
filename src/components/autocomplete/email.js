@@ -6,11 +6,10 @@ var $ = require('jquery');
 var Immutable = require('immutable');
 var plugin = require('../../plugin');
 var Widget = require('../../widget');
-var Drop = require('../drop');
-var List = require('../list');
-var classPrefix = 'typeahead';
+var DropList = require('../droplist');
+var keyboard = require('../../utils/keyboard');
 
-var EmailList = List.extend({
+var EmailList = DropList.extend({
   _setDataSource: function (value, prefix) {
     this._dataSource = new Immutable.List(value);
     this._selectedIndex = -1;
@@ -34,38 +33,23 @@ var EmailAutoComplete = Widget.extend({
 
   events: {
     'input': '_onInput',
-    'blur': '_onBlur',
     'keydown': '_onKeyDown'
   },
 
   _create: function () {
     var that = this;
-    this.__valueChange__ = false;
     this.$element.attr({
       autocomplete: "off",
       spellcheck: false
     });
 
-    this.list = new EmailList($('<ul"></ul>'), {
-      click: function () {
-        that._onEnter();
-      },
+    this.dropList = new EmailList($('<ul></ul>'), {
+      target: this.$element,
+      remove: true,
       change: function (e) {
         that._selectedItem = this.selectedItem();
-        that.__valueChange__ = true;
-      }
-    });
-
-    this.drop = new Drop(this.$element, {
-      classPrefix: classPrefix,
-      content: this.list.$element,
-      trigger: 'manual',
-      close: function () {
-        if (that.__valueChange__) {
-          that.__valueChange__ = false;
-          that.$element.val(that.list.text());
-          that._trigger('change');
-        }
+        that.$element.val(this.text());
+        that._trigger('change', that._selectedItem);
       }
     });
   },
@@ -83,36 +67,27 @@ var EmailAutoComplete = Widget.extend({
       });
     }
 
-    this.list._setDataSource(suffixes, arr[0]);
-    this.drop.open();
-  },
-
-  _onBlur: function (e) {
-    this.drop.close();
+    this.dropList._setDataSource(suffixes, arr[0]);
+    this.dropList.open();
   },
 
   _onKeyDown: function (e) {
     var c = e.keyCode;
 
-    // If the dropdown `ul` is in view, then act on keydown for the following keys:
-    // Enter / Esc / Up / Down
-    if (this.drop.isOpened()) {
-      if (c === 13) { // Enter
+    if (this.dropList.isOpened()) {
+      if (c === keyboard.ENTER) { // Enter
         e.preventDefault();
-        this._onEnter();
+        this.dropList.selectHighlightedOption();
+        this.dropList.close();
       }
-      else if (c === 27) { // Esc
-        this.drop.close();
+      else if (c === keyboard.ESC) { // Esc
+        this.dropList.close();
       }
-      else if (c === 38 || c === 40) { // Down/Up arrow
+      else if (c === keyboard.DOWN || c === keyboard.UP) { // Down/Up arrow
         e.preventDefault();
-        this.list[c === 38 ? "previous" : "next"]();
+        this.dropList.moveHighlight(c);
       }
     }
-  },
-
-  _onEnter: function () {
-    this.drop.close();
   }
 });
 

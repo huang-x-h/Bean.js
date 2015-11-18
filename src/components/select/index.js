@@ -28,6 +28,7 @@ var Select = Widget.extend({
     this.dropList = new DropList($('<ul></ul>'), $.extend({
       target: this.$target,
       remove: false,
+      trigger: 'click',
       change: function (e) {
         that._selectedIndex = this.selectedIndex();
         that._selectedItem = this.selectedItem();

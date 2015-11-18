@@ -1,11 +1,3 @@
-.select {
-  @include css-dropdown();
-
-  &.select-open {
-    display: block;
-  }
-}
-
 .select-select {
   display: none;
   pointer-events: none;

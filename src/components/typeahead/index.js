@@ -7,10 +7,9 @@ var _ = require('underscore');
 var plugin = require('../../plugin');
 var mixin = require('../../utils/mixin');
 var Widget = require('../../widget');
-var Drop = require('../drop');
 var ListMixin = require('../../mixins/list');
 var HighlightList = require('./highlightlist');
-var classPrefix = 'typeahead';
+var keyboard = require('../../utils/keyboard');
 
 function filter_contains(data, input) {
   return RegExp(input, "i").test(this.itemToLabel(data));
@@ -27,14 +26,12 @@ var Typeahead = Widget.extend({
 
   events: {
     'input': '_onInput',
-    'blur input': '_onBlur',
     'keydown input': '_onKeyDown',
     'click .glyphicon-remove': '_onClickRemove'
   },
 
   _create: function() {
     var that = this;
-    this.__valueChange__ = false;
     this.$input = this.$element.find('input').attr({
       autocomplete: "off",
       spellcheck: false
@@ -42,26 +39,13 @@ var Typeahead = Widget.extend({
     this.$close = this.$element.find('.glyphicon-remove');
     this._inputHandler = _.debounce(this._evaluate, this.options.delay, true);
 
-    this.list = new HighlightList($('<ul></ul>'), $.extend({
-      click: function () {
-        that._onEnter();
-      },
+    this.dropList = new HighlightList($('<ul></ul>'), {
+      target: this.$element,
+      remove: true,
       change: function (e) {
         that._selectedItem = this.selectedItem();
-        that.__valueChange__ = true;
-      }
-    }, this.options));
-
-    this.drop = new Drop(this.$element, {
-      classPrefix: classPrefix,
-      content: this.list.$element,
-      trigger: 'manual',
-      close: function () {
-        if (that.__valueChange__) {
-          that.__valueChange__ = false;
-          that.$input.val(that.value());
-          that._trigger('change');
-        }
+        that.$input.val(this.text());
+        that._trigger('change', that._selectedItem);
       }
     });
   },
@@ -69,10 +53,6 @@ var Typeahead = Widget.extend({
   _onInput: function(e) {
     this.$close.removeClass('hide');
     this._inputHandler(e);
-  },
-
-  _onBlur: function(e) {
-    this.drop.close();
   },
 
   _onClickRemove: function(e) {
@@ -85,23 +65,20 @@ var Typeahead = Widget.extend({
 
     // If the dropdown `ul` is in view, then act on keydown for the following keys:
     // Enter / Esc / Up / Down
-    if (this.drop.isOpened()) {
-      if (c === 13) { // Enter
+    if (this.dropList.isOpened()) {
+      if (c === keyboard.ENTER) { // Enter
         e.preventDefault();
-        this._onEnter();
+        this.dropList.selectHighlightedOption();
+        this.dropList.close();
       }
-      else if (c === 27) { // Esc
-        this.drop.close();
+      else if (c === keyboard.ESC) { // Esc
+        this.dropList.close();
       }
-      else if (c === 38 || c === 40) { // Down/Up arrow
+      else if (c === keyboard.UP || c === keyboard.DOWN) { // Down/Up arrow
         e.preventDefault();
-        this.list[c === 38 ? "previous" : "next"]();
+        this.dropList.moveHighlight(c);
       }
     }
-  },
-
-  _onEnter: function () {
-    this.drop.close();
   },
 
   _evaluate: function() {
@@ -117,10 +94,10 @@ var Typeahead = Widget.extend({
   },
 
   _toggleDrop: function() {
-    if (this.list.dataSource().size > 0) {
-      this.drop.open();
+    if (this.dropList.dataSource().size > 0) {
+      this.dropList.open();
     } else {
-      this.drop.close();
+      this.dropList.close();
     }
   },
 
@@ -137,7 +114,7 @@ var Typeahead = Widget.extend({
           return index < that.options.maxItems - 1;
         });
 
-    this.list._setDataSource(dataSource, input);
+    this.dropList._setDataSource(dataSource, input);
     this._toggleDrop();
   },
 
@@ -150,7 +127,7 @@ var Typeahead = Widget.extend({
         qs: input
       }
     }).then(function(data) {
-      that.list._setDataSource(data, input);
+      that.dropList._setDataSource(data, input);
       that._toggleDrop();
     });
   }
