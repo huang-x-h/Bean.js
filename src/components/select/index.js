@@ -33,6 +33,7 @@ var Select = Widget.extend({
         that._selectedIndex = this.selectedIndex();
         that._selectedItem = this.selectedItem();
         that.$target.text(this.text());
+        that.$element.val(this.value());
         that._trigger('change', that._selectedItem);
       }
     }, this.options));
