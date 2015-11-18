@@ -103,6 +103,10 @@ var Select = Widget.extend({
         e.preventDefault();
         this.dropList.moveHighlight(c);
       }
+    } else {
+      if (c === keyboard.UP || c === keyboard.DOWN || c === keyboard.SPACE) {
+        this.dropList.open();
+      }
     }
   }
 });
