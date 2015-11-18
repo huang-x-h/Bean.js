@@ -22,7 +22,6 @@ require('./components/dropdown');
 require('./components/pagination');
 require('./components/progressbar');
 require('./components/slideout');
-require('./components/list');
 require('./components/select');
 require('./components/stepper');
 require('./components/typeahead');
