@@ -19,19 +19,9 @@
 
     &:hover,
     &.highlight {
-      color: $dropdown-link-hover-color;
+      color: $dropdown-link-active-color;
       text-decoration: none;
-      background-color: $dropdown-link-hover-bg;
-    }
-
-    &.active {
-      &,
-      &:hover{
-        color: $dropdown-link-active-color;
-        text-decoration: none;
-        background-color: $dropdown-link-active-bg;
-        outline: 0;
-      }
+      background-color: $dropdown-link-active-bg;
     }
 
     &.disabled {

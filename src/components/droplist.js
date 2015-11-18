@@ -11,8 +11,6 @@ var mixin = require('../utils/mixin');
 var ListMixin = require('../mixins/list');
 var highlightClass = 'highlight';
 var highlightSelector = '.' + highlightClass;
-var selectClass = 'active';
-var selectSelector = '.' + selectClass;
 
 function defaultItemRenderer(data) {
   return this.itemToLabel(data);
@@ -59,25 +57,14 @@ var DropList = Widget.extend({
     if (index > -1 && index < this._dataSource.size) {
       this._selectedItem = this._dataSource.get(index);
       this._selectedIndex = index;
-      this._setSelection();
       this._trigger('change');
     }
-  },
-
-  _setSelection: function () {
-    this.$element.children(selectSelector).removeClass(selectClass);
-    this.$element.children().eq(this._selectedIndex).addClass(selectClass);
   },
 
   _onClick: function (e) {
     e.preventDefault();
 
-    var $li = $(e.currentTarget);
-
-    if (!$li.hasClass(selectClass)) {
-      this._setSelectedIndex(this.$element.children().index($li));
-    }
-
+    this.selectedIndex(this.$element.children().index($(e.currentTarget)));
     this.drop.close();
   },
 
@@ -136,10 +123,10 @@ var DropList = Widget.extend({
     var $highlight = this.$element.find(highlightSelector),
         children = this.$element.children();
 
-    if ($highlight.length === 0 || $highlight.hasClass(selectClass)) return;
+    if ($highlight.length === 0) return;
 
     var highlightedIndex = children.index($highlight);
-    this._setSelectedIndex(highlightedIndex);
+    this.selectedIndex(highlightedIndex);
   }
 });
 
