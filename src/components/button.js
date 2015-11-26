@@ -5,6 +5,7 @@
 var $ = require('jquery');
 var plugin = require('../plugin');
 var Widget = require('../widget');
+var DISABLED = 'disabled';
 
 var Button = Widget.extend({
   options: {
@@ -13,30 +14,42 @@ var Button = Widget.extend({
 
   _create: function() {
     this.isLoading = false;
+    this.resetText = this._elementValue();
+  },
+
+  loading: function() {
+    this.setState('loading');
+  },
+
+  reset: function() {
+    this.setState('reset');
   },
 
   setState: function(state) {
-    var d = 'disabled';
     var $el = this.$element;
-    var val = $el.is('input') ? 'val' : 'html';
-    var data = $el.data();
-
-    state = state + 'Text';
-
-    if (data.resetText == null) $el.data('resetText', $el[val]());
 
     // push to event loop to allow forms to submit
     setTimeout($.proxy(function() {
-      $el[val](data[state] == null ? this.options[state] : data[state]);
-
-      if (state == 'loadingText') {
+      if (state === 'loading') {
+        this._elementValue(this.options.loadingText);
         this.isLoading = true;
-        $el.addClass(d).attr(d, d);
+        $el.addClass(DISABLED).attr(DISABLED, DISABLED);
       } else if (this.isLoading) {
+        this._elementValue(this.resetText);
         this.isLoading = false;
-        $el.removeClass(d).removeAttr(d);
+        $el.removeClass(DISABLED).removeAttr(DISABLED);
       }
     }, this), 0);
+  },
+
+  _elementValue: function(value) {
+    var val = this.$element.is('input') ? 'val' : 'html';
+
+    if (arguments.length === 0) {
+      return this.$element[val]();
+    } else {
+      this.$element[val](value);
+    }
   },
 
   toggle: function() {
