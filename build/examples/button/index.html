@@ -6,19 +6,62 @@
         <meta charset="UTF-8">
         <title>Button</title>
         <link rel="stylesheet" href="../../main.css">
+        <link rel="stylesheet" href="/examples/doc.css">
     </head>
     <body>
-        <button type="button" id="myButton" data-toggle="button" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
-            Loading state
-        </button>
+        <div class="container">
+            <h2>Stateful</h2>
+            <section class="bs-example">
+                <button type="button" id="myButton" data-toggle="button" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+                    Click Me
+                </button>
+            </section>
+
+            <h2>Single toggle</h2>
+            <section class="bs-example">
+                <button type="button" class="btn btn-primary" data-toggle="button">
+                    Single toggle
+                </button>
+            </section>
+
+            <h2>Checkbox/Radio</h2>
+            <section class="bs-example">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary active">
+                        <input type="checkbox" autocomplete="off" checked> Checkbox 1 (pre-checked)
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="checkbox" autocomplete="off"> Checkbox 2
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="checkbox" autocomplete="off"> Checkbox 3
+                    </label>
+                </div>
+            </section>
+            <section class="bs-example">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Radio 1 (preselected)
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option2" autocomplete="off"> Radio 2
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option3" autocomplete="off"> Radio 3
+                    </label>
+                </div>
+            </section>
+        </div>
+
         <script src="../../bundle.js"></script>
         <script>
             $('#myButton').on('click', function () {
-                var $btn = $(this).button('setState', 'loading');
+                var $btn = $(this);
+                $btn.button('loading');
 
                 setTimeout(function() {
                     // business logic...
-                    $btn.button('setState', 'reset')
+                    $btn.button('reset')
                 }, 1000);
             })
         </script>
