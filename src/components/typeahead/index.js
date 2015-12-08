@@ -37,7 +37,7 @@ var Typeahead = Widget.extend({
       spellcheck: false
     });
     this.$close = this.$element.find('.glyphicon-remove');
-    this._inputHandler = _.debounce(this._evaluate, this.options.delay, true);
+    this._inputHandler = _.debounce(this._evaluate, this.options.delay);
 
     this.dropList = new HighlightList($('<ul></ul>'), {
       target: this.$element,
