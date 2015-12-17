@@ -32,5 +32,6 @@ require('./components/datepicker/timepicker');
 require('./components/validator');
 require('./components/backtotop');
 require('./components/drop');
+require('./components/headroom');
 
 require('./bootstrap');

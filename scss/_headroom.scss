@@ -1,0 +1,11 @@
+.headroom {
+  transition: transform .2s linear;
+}
+
+.headroom--pinned {
+  transform: translateY(0%);
+}
+
+.headroom--unpinned {
+  transform: translateY(-100%);
+}

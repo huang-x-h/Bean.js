@@ -18,7 +18,7 @@ var BackToTop = Widget.extend({
   },
 
   _create: function() {
-    this.debouncer = new Debouncer($.proxy(this._update, this));
+    this.debouncer = new Debouncer(this._update.bind(this));
 
     window.addEventListener('scroll', this.debouncer, false);
     this.debouncer.handleEvent();
