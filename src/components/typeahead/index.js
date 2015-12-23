@@ -25,7 +25,6 @@ var Typeahead = Widget.extend({
   },
 
   events: {
-    'input': '_onInput',
     'keydown input': '_onKeyDown',
     'click .glyphicon-remove': '_onClickRemove'
   },
@@ -66,19 +65,23 @@ var Typeahead = Widget.extend({
     // If the dropdown `ul` is in view, then act on keydown for the following keys:
     // Enter / Esc / Up / Down
     if (this.dropList.isOpened()) {
-      if (c === keyboard.ENTER) { // Enter
-        e.preventDefault();
-        this.dropList.selectHighlightedOption();
-        this.dropList.close();
-      }
-      else if (c === keyboard.ESC) { // Esc
-        this.dropList.close();
-      }
-      else if (c === keyboard.UP || c === keyboard.DOWN) { // Down/Up arrow
-        e.preventDefault();
-        this.dropList.moveHighlight(c);
+      switch (c) {
+        case keyboard.ENTER:
+          e.preventDefault();
+          this.dropList.selectHighlightedOption();
+          this.dropList.close();
+          return;
+        case keyboard.ESC:
+          this.dropList.close();
+          return;
+        case keyboard.DOWN:
+        case keyboard.UP:
+          this.dropList.moveHighlight(c);
+          return;
       }
     }
+
+    this._onInput(e);
   },
 
   _evaluate: function() {
