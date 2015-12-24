@@ -4,6 +4,7 @@
 
 // copy from https://github.com/chriso/validator.js
 var Bean = require('../core');
+var string = require('./string');
 
 var ipv4Maybe = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
     , ipv6Block = /^[0-9A-F]{1,4}$/i
@@ -152,8 +153,7 @@ validator.isFloat = function(str) {
 };
 
 validator.isLength = function(str, min, max) {
-  var surrogatePairs = str.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g) || [];
-  var len = str.length - surrogatePairs.length;
+  var len = string.utf8Length(str);
   return len >= min && (typeof max === 'undefined' || len <= max);
 };
 
