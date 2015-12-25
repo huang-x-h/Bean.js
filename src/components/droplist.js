@@ -25,7 +25,7 @@ var DropList = Widget.extend({
     itemRenderer: defaultItemRenderer
   },
 
-  _create: function () {
+  _create: function() {
     this._setDataSource(this.options.dataSource);
     this._setSelectedIndex(this.options.selectedIndex);
 
@@ -43,17 +43,17 @@ var DropList = Widget.extend({
     }
   },
 
-  _setDataSource: function (value) {
+  _setDataSource: function(value) {
     this._dataSource = new Immutable.List(value);
     this._selectedIndex = -1;
     this._selectedItem = null;
 
-    this.$element.html(this._dataSource.reduce(function (previous, current) {
+    this.$element.html(this._dataSource.reduce(function(previous, current) {
       return previous + '<li>' + _.bind(this.options.itemRenderer, this, current)() + '</li>';
     }, '', this));
   },
 
-  _setSelectedIndex: function (index) {
+  _setSelectedIndex: function(index) {
     if (index > -1 && index < this._dataSource.size) {
       this._selectedItem = this._dataSource.get(index);
       this._selectedIndex = index;
@@ -61,20 +61,20 @@ var DropList = Widget.extend({
     }
   },
 
-  _onClick: function (e) {
+  _onClick: function(e) {
     e.preventDefault();
 
     this.selectedIndex(this.$element.children().index($(e.currentTarget)));
     this.drop.close();
   },
 
-  setupEvents: function () {
+  setupEvents: function() {
     this._on({
       'click li': '_onClick'
     });
   },
 
-  open: function () {
+  open: function() {
     this.drop.open();
 
     if (this.options.remove) {
@@ -82,16 +82,16 @@ var DropList = Widget.extend({
     }
   },
 
-  close: function () {
+  close: function() {
     this.$element.find(highlightSelector).removeClass(highlightClass);
     this.drop.close();
   },
 
-  isOpened: function () {
+  isOpened: function() {
     return this.drop.isOpened();
   },
 
-  moveHighlight: function (directionKeyCode) {
+  moveHighlight: function(directionKeyCode) {
     var $highlight = this.$element.find(highlightSelector),
         children = this.$element.children();
 
@@ -119,7 +119,7 @@ var DropList = Widget.extend({
     children.eq(highlightedIndex).addClass(highlightClass);
   },
 
-  selectHighlightedOption: function () {
+  selectHighlightedOption: function() {
     var $highlight = this.$element.find(highlightSelector),
         children = this.$element.children();
 

@@ -3,9 +3,7 @@
  */
 // http://ejohn.org/blog/simple-javascript-inheritance/
 
-var initializing = false, fnTest = /xyz/.test(function() {
-  xyz;
-}) ? /\b_super\b/ : /.*/;
+var initializing = false, fnTest = /xyz/.test(function() { xyz; }) ? /\b_super\b/ : /.*/;
 
 module.exports = Class;
 

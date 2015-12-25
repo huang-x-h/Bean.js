@@ -4,4 +4,4 @@
 
 var gulp = require('gulp');
 
-gulp.task('default', ['browserify', 'sass', 'locale', 'image']);
+gulp.task('default', ['lint', 'browserify', 'sass', 'locale', 'image']);
