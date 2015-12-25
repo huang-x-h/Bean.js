@@ -41,7 +41,7 @@ var Typeahead = Widget.extend({
     this.dropList = new HighlightList($('<ul></ul>'), {
       target: this.$element,
       remove: true,
-      change: function (e) {
+      change: function(e) {
         that._selectedItem = this.selectedItem();
         that.$input.val(this.text());
         that._trigger('change', that._selectedItem);
@@ -59,7 +59,7 @@ var Typeahead = Widget.extend({
     this.$close.addClass('hide');
   },
 
-  _onKeyDown: function (e) {
+  _onKeyDown: function(e) {
     var c = e.keyCode;
 
     // If the dropdown `ul` is in view, then act on keydown for the following keys:

@@ -28,7 +28,8 @@ var EmailList = DropList.extend({
 
 var EmailAutoComplete = Widget.extend({
   options: {
-    suffixes: ["qq.com", "gmail.com", "126.com", "163.com", "hotmail.com", "263.com", "21cn.com", "yahoo.com", "yahoo.com.cn", "live.com", "sohu.com", "sina.com", "sina.com.cn"]
+    suffixes: ["qq.com", "gmail.com", "126.com", "163.com", "hotmail.com", "263.com",
+      "21cn.com", "yahoo.com", "yahoo.com.cn", "live.com", "sohu.com", "sina.com", "sina.com.cn"]
   },
 
   events: {

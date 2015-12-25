@@ -18,7 +18,7 @@ var Select = Widget.extend({
     selectedIndex: 0
   },
 
-  _create: function () {
+  _create: function() {
     var that = this;
     this.$element.addClass(classPrefix + '-select');
     this.setupDataSource();
@@ -29,7 +29,7 @@ var Select = Widget.extend({
       target: this.$target,
       remove: false,
       trigger: 'click',
-      change: function (e) {
+      change: function(e) {
         that._selectedIndex = this.selectedIndex();
         that._selectedItem = this.selectedItem();
         that.$target.text(this.text());
@@ -41,13 +41,13 @@ var Select = Widget.extend({
     this.setupEvents();
   },
 
-  setupEvents: function () {
+  setupEvents: function() {
     this._on(this.$target, {
       'keydown': '_onKeyDown'
     });
   },
 
-  setupDataSource: function () {
+  setupDataSource: function() {
     var that = this,
         selectOption;
 
@@ -62,7 +62,7 @@ var Select = Widget.extend({
       }
       this.options.placeholder = selectOption.textContent;
       this.options.dataSource = [];
-      this.$element.children().each(function (index, option) {
+      this.$element.children().each(function(index, option) {
         var item = {};
         item[that.options.dataTextField] = option.textContent;
         item[that.options.dataValueField] = option.value;
@@ -77,18 +77,18 @@ var Select = Widget.extend({
     }
   },
 
-  _setDataSource: function (value) {
+  _setDataSource: function(value) {
     this._selectedIndex = -1;
     this._selectedItem = null;
 
     this.dropList.dataSource(value);
   },
 
-  _setSelectedIndex: function (index) {
+  _setSelectedIndex: function(index) {
     this.dropList.selectedIndex(index);
   },
 
-  _onKeyDown: function (e) {
+  _onKeyDown: function(e) {
     var c = e.keyCode;
 
     if (this.dropList.isOpened()) {

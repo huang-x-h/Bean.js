@@ -79,7 +79,8 @@ var SlideOut = Widget.extend({
   },
 
   _translateXTo: function(translateX) {
-    this.panel[0].style['-webkit-transform'] = this.panel[0].style.transform = 'translate3d(' + translateX + 'px, 0, 0)';
+    this.panel[0].style['-webkit-transform'] = this.panel[0].style.transform
+        = 'translate3d(' + translateX + 'px, 0, 0)';
   },
 
   _bodyClick: function(e) {

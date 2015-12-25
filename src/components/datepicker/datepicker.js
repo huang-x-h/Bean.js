@@ -23,21 +23,9 @@ locale.get(function(value) {
 });
 
 var modes = [
-  {
-    clsName: 'days',
-    navFnc: 'Month',
-    navStep: 1
-  },
-  {
-    clsName: 'months',
-    navFnc: 'FullYear',
-    navStep: 1
-  },
-  {
-    clsName: 'years',
-    navFnc: 'FullYear',
-    navStep: 10
-  }];
+  {clsName: 'days', navFnc: 'Month', navStep: 1},
+  {clsName: 'months', navFnc: 'FullYear', navStep: 1},
+  {clsName: 'years', navFnc: 'FullYear', navStep: 10}];
 
 function isDateEquals(date1, date2) {
   return date1.getFullYear() === date2.getFullYear()

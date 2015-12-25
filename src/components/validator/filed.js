@@ -191,7 +191,8 @@ ValidatorField.prototype = {
       this.addConstraint('number', {max: this.$element.attr('max')});
 
     // length
-    if ('undefined' !== typeof this.$element.attr('minlength') && 'undefined' !== typeof this.$element.attr('maxlength'))
+    if ('undefined' !== typeof this.$element.attr('minlength')
+        && 'undefined' !== typeof this.$element.attr('maxlength'))
       this.addConstraint('length', [this.$element.attr('minlength'), this.$element.attr('maxlength')]);
 
     // HTML5 minlength

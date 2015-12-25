@@ -5,7 +5,7 @@
 var _ = require('underscore');
 
 module.exports = {
-  substitute: function (str) {
+  substitute: function(str) {
     if (str == null) return '';
 
     var args = Array.prototype.slice.call(arguments, 1);
