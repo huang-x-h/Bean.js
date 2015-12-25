@@ -7,7 +7,6 @@ var sass = require('gulp-sass');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
 var cssnano = require('cssnano');
-var livereload = require('gulp-livereload');
 var config = require('../config').sass;
 var options = {
   sass: {
@@ -20,6 +19,5 @@ gulp.task('sass', function() {
   return gulp.src(config.src)
       .pipe(sass(options.sass))
       .pipe(postcss([autoprefixer({browsers: ['last 2 versions']}), cssnano({zindex: false})]))
-      .pipe(gulp.dest(config.dest))
-      .pipe(livereload());
+      .pipe(gulp.dest(config.dest));
 });

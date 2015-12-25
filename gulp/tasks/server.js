@@ -3,12 +3,18 @@
  */
 
 var gulp = require('gulp'),
-    http = require('http'),
-    st = require('st'),
+    browserSync = require('browser-sync'),
+    reload = browserSync.reload,
     server = require('../config').server;
 
 gulp.task('server', function(done) {
-  http.createServer(
-      st({path: server.basePath, index: 'index.html', cache: false})
-  ).listen(3000, done);
+  browserSync({
+    notify: false,
+    logPrefix: 'Bean',
+    server: [server.basePath],
+    port: 3000
+  });
+
+  gulp.watch(['./scss/*.scss'], ['sass', reload]);
+  gulp.watch(['./src/**/*.js'], ['lint', 'browserify', reload]);
 });

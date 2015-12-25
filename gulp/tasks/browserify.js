@@ -4,7 +4,6 @@
 
 var browserify = require('browserify');
 var gulp = require('gulp');
-var livereload = require('gulp-livereload');
 var source = require('vinyl-source-stream');
 var config = require('../config').browserify;
 
@@ -31,6 +30,5 @@ gulp.task('browserify', function() {
       .bundle()
       .on('error', handleErrors)
       .pipe(source(config.outputName))
-      .pipe(gulp.dest(config.dest))
-      .pipe(livereload());
+      .pipe(gulp.dest(config.dest));
 });
