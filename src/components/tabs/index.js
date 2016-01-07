@@ -106,6 +106,8 @@ var Tabs = Widget.extend({
   },
 
   _onClick: function(e) {
+    e.preventDefault();
+
     var index = this.$tabs.children().index(e.currentTarget);
     this._setSelectedIndex(index);
   },
