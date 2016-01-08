@@ -7,6 +7,7 @@ require('./utils/validator');
 require('./utils/ajax');
 require('./utils/block');
 require('./utils/image');
+require('./utils/cookies');
 
 require('./components/autocomplete/email');
 require('./components/block');
