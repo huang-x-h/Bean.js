@@ -4,14 +4,13 @@
 
 var $ = require('jquery');
 var _ = require('underscore');
-var log = require('./log');
+var logger = require('./logger');
 var $document = require('../document');
 var Bean = require('../core');
 
 var lastCookies = {};
 var lastCookieString = '';
 var $base = $document.find('base');
-
 var defaults = this.defaults = {};
 
 function calcOptions(options) {
@@ -80,7 +79,7 @@ function cookieWriter() {
     // - 4096 bytes per cookie
     var cookieLength = str.length + 1;
     if (cookieLength > 4096) {
-      log.warn("Cookie '" + name +
+      logger.warn("Cookie '" + name +
           "' possibly not set or overflowed because it was too large (" +
           cookieLength + " > 4096 bytes)!");
     }
