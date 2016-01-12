@@ -32,7 +32,7 @@ module.exports = Class.extend({
     }
 
     if (element !== this.$element)
-      this.bindings.add(element);
+      this.bindings = this.bindings.add(element);
 
     var key, method, match;
     for (key in events) {
