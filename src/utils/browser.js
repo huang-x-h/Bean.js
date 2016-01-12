@@ -4,7 +4,7 @@
 
 // refer to https://github.com/ded/bowser/blob/master/bowser.js
 function detect(ua) {
-  var result;
+  var result = {};
 
   function getFirstMatch(regex) {
     var match = ua.match(regex);
@@ -13,7 +13,9 @@ function detect(ua) {
 
   if (/msie|trident/i.test(ua)) {
     result = {
-      name: 'Internet Explorer', msie: true, version: getFirstMatch(/(?:msie |rv:)(\d+(\.\d+)?)/i)
+      name: 'Internet Explorer',
+      msie: true,
+      version: getFirstMatch(/(?:msie |rv:)(\d+(\.\d+)?)/i)
     }
   }
 
