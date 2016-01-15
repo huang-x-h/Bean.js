@@ -72,6 +72,7 @@ var DropList = Widget.extend({
     this._on({
       'click li': '_onClick',
       'mousedown': function(e) {
+        // prevent when click droplist trigger blur event, such as typeahead
         e.preventDefault();
       }
     });
