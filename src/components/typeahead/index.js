@@ -55,7 +55,10 @@ var Typeahead = Widget.extend({
 
   _setupEvents: function() {
     this._on({
-      'click .glyphicon-remove': '_onClickRemove'
+      'click .glyphicon-remove': '_onClickRemove',
+      'mousedown .glyphicon-remove': function(e) {
+        e.preventDefault();
+      }
     });
 
     var events = {
@@ -64,15 +67,19 @@ var Typeahead = Widget.extend({
       'keydown': '_onKeydown'
     };
 
-    // ie9 Doesn't fire an input event when deleting text (via Backspace, Delete, Cut, etc.).
-    // http://caniuse.com/#search=input
-    if (browser.msie && browser.version < 10) {
-      events['keydown'] = events['keyup'] = events['cut'] = events['paste'] = '_onSpecialInput';
-    } else {
+    if (!browser.msie || browser.version > 9) {
       events['input'] = '_onInput';
-    }
+      this._on(this.$input, events);
+    } else {
+      // ie9 Doesn't fire an input event when deleting text (via Backspace, Delete, Cut, etc.).
+      // http://caniuse.com/#search=input
+      events['keyup'] = events['cut'] = events['paste'] = '_onSpecialInput';
+      this._on(this.$input, events);
 
-    this._on(this.$input, events);
+      this._on(this.$input, {
+        'keydown': '_onSpecialInput'
+      });
+    }
   },
 
   _onBlur: function(e) {
@@ -80,7 +87,7 @@ var Typeahead = Widget.extend({
   },
 
   _onFocus: function(e) {
-
+    this._evaluate();
   },
 
   _onSpecialInput: function(e) {
@@ -88,7 +95,7 @@ var Typeahead = Widget.extend({
       return;
     }
 
-    _.defer(this._onInput.bind(this, e));
+    _.defer(this._onInput.bind(this)(e));
   },
 
   _onInput: function(e) {
@@ -154,7 +161,7 @@ var Typeahead = Widget.extend({
 
     _.chain(this.options.dataSource)
       .filter(function(item) {
-        return that.options.filter.bind(that, item, input)();
+        return that.options.filter.bind(that)(item, input);
       })
       .every(function(item, index) {
         dataSource.push(item);
