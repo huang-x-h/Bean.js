@@ -8,7 +8,8 @@ var ErrorTip = Tooltip.extend({
   options: {
     animation: true,
     placement: 'top-left',
-    template: '<div class="errortip" role="errortip"><div class="errortip-arrow"></div><div class="errortip-inner"></div></div>',
+    template: '<div class="errortip" role="errortip"><div class="errortip-arrow"></div>' +
+    '<div class="errortip-inner"></div></div>',
     trigger: 'hover',
     title: '',
     html: false,

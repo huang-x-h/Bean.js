@@ -14,7 +14,8 @@ var ToolTip = Widget.extend({
   options: {
     animation: true,
     placement: 'top',
-    template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+    template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div>' +
+    '<div class="tooltip-inner"></div></div>',
     trigger: 'hover',
     title: '',
     html: false,
