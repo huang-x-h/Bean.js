@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8">
+  <title>Tree</title>
+  <link rel="stylesheet" href="../../main.css">
+  <link rel="stylesheet" href="/examples/doc.css">
+</head>
+<body>
+<div class="container">
+  <h2>Tree</h2>
+
+  <div class="bs-example">
+    <div id="tree" style="height: 300px;"></div>
+
+    <div>
+      <button type="button" class="btn btn-default" onclick="expandHandler()">Expand</button>
+      <button type="button" class="btn btn-default" onclick="collapseHandler()">Collapse</button>
+      <button type="button" class="btn btn-default" onclick="expandAllHandler()">Expand All</button>
+      <button type="button" class="btn btn-default" onclick="collapseAllHandler()">Collapse All</button>
+      <button type="button" class="btn btn-default" onclick="addHandler()">Add</button>
+      <button type="button" class="btn btn-default" onclick="removeHandler()">Remove</button>
+      <button type="button" class="btn btn-default" onclick="updateHandler()">Update</button>
+    </div>
+  </div>
+</div>
+<script src="../../bundle.js"></script>
+<script>
+  var tree = $('#tree').tree({
+    labelField: 'label',
+    dataSource: [
+      {label:'Parent', children: [
+        {label: 'Child1'},
+        {label: 'Child2', children: [
+          {label: 'Grand Child1'},
+          {label: 'Grand Child2'},
+          {label: 'Grand Child3'}]},
+        {label: 'Child3'}]}]
+  });
+  tree.on('itemClick', function(data) {
+    console.log(data);
+  });
+
+  function expandHandler() {
+    var node = tree.getSelectedNode();
+    if (!node) {
+      alert("choose node to expand");
+      return;
+    }
+    tree.expandNode(node);
+  }
+
+  function expandAllHandler() {
+    tree.expandAll();
+  }
+
+  function addHandler() {
+    var node = tree.getSelectedNode();
+    if (!node) {
+      alert("choose node to add");
+      return;
+    }
+    tree.append({label: 'Add Item'}, node);
+  }
+
+  function removeHandler() {
+    var node = tree.getSelectedNode();
+    tree.remove(node);
+  }
+
+  function updateHandler() {
+    var node = tree.getSelectedNode();
+    if (!node) {
+      alert("choose node to update");
+      return;
+    }
+    var data = node.data;
+    data.label = "Update Item";
+
+    tree.update(node);
+  }
+
+  function collapseHandler() {
+    var node = tree.getSelectedNode();
+    if (!node) {
+      alert("choose node to collapse");
+      return;
+    }
+    tree.collapseNode(node);
+  }
+
+  function collapseAllHandler() {
+    tree.collapseAll();
+  }
+</script>
+</body>
+</html>

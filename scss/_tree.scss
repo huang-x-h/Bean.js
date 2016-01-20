@@ -1,0 +1,89 @@
+.tree {
+  padding-top: $padding-base-vertical;
+  padding-bottom: $padding-base-vertical;
+  margin: 2px 0 0;
+  overflow-y: auto;
+  font-size: $font-size-base;
+  background-color: $dropdown-bg;
+  border: 1px solid $dropdown-border;
+  border-radius: $border-radius-base;
+
+  ul {
+    min-width: 160px;
+    padding-left: 0;
+    list-style: none;
+
+    > li > a {
+      display: block;
+      padding: 3px 20px;
+      clear: both;
+      font-weight: normal;
+      line-height: $line-height-base;
+      color: $dropdown-link-color;
+      white-space: nowrap;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+        color: $dropdown-link-hover-color;
+        background-color: $dropdown-link-hover-bg;
+      }
+    }
+
+    > .active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: $dropdown-link-active-color;
+        text-decoration: none;
+        outline: 0;
+        background-color: $dropdown-link-active-bg;
+      }
+    }
+  }
+}
+
+.tree-indentation {
+  width: 14px;
+}
+
+.children-list {
+  display: none;
+}
+
+.open {
+  > .children-list {
+    display: block;
+  }
+}
+
+//.tree {
+//  &__item {
+//    display: flex;
+//    line-height: $line-height-button;
+//    padding-left: $spacing-medium;
+//
+//    a {
+//      color: $color-text-default;
+//    }
+//
+//    a:hover,
+//    a:focus {
+//      outline: 0;
+//      text-decoration: none;
+//    }
+//
+//    &:hover,
+//    &:focus {
+//      $include tree-item-hover;
+//    }
+//  }
+//
+//  &__branch {
+//
+//  }
+//
+//  &__group {
+//
+//  }
+//}
