@@ -37,7 +37,14 @@
             });
 
             var $remoteTypeahead = $('#remoteTypeahead').typeahead({
-                remote: 'typeahead/data.json'
+                remote: function(qs) {
+                  return $.ajax({
+                    url: 'data.json',
+                    data: {
+                      qs: qs
+                    }
+                  });
+                }
             });
 
             $localTypeahead.on('typeahead:change', function () {

@@ -174,13 +174,7 @@ var Typeahead = Widget.extend({
 
   _remoteQuery: function(input) {
     var that = this;
-    $.ajax({
-      url: this.options.remote,
-      type: 'POST',
-      data: {
-        qs: input
-      }
-    }).then(function(data) {
+    this.options.remote(input).then(function(data) {
       that.dropList._setDataSource(data, input);
       that._toggleDrop();
     });
