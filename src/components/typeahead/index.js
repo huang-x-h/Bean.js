@@ -95,7 +95,7 @@ var Typeahead = Widget.extend({
       return;
     }
 
-    _.defer(this._onInput.bind(this)(e));
+    _.defer(this._onInput.bind(this, e));
   },
 
   _onInput: function(e) {
@@ -161,7 +161,7 @@ var Typeahead = Widget.extend({
 
     _.chain(this.options.dataSource)
       .filter(function(item) {
-        return that.options.filter.bind(that)(item, input);
+        return that.options.filter.bind(that, item, input)();
       })
       .every(function(item, index) {
         dataSource.push(item);

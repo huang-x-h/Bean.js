@@ -49,7 +49,7 @@ var DropList = Widget.extend({
     this._selectedItem = null;
 
     this.$element.html(this._dataSource.reduce(function(previous, current) {
-      return previous + '<li>' + this.options.itemRenderer.bind(this)(current) + '</li>';
+      return previous + '<li>' + this.options.itemRenderer.bind(this, current)() + '</li>';
     }, '', this));
   },
 
