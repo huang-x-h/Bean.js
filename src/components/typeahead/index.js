@@ -91,7 +91,7 @@ var Typeahead = Widget.extend({
   },
 
   _onSpecialInput: function(e) {
-    if (specialKeyCodes.indexOf(e.keyCode)) {
+    if (specialKeyCodes.indexOf(e.keyCode) > -1) {
       return;
     }
 
