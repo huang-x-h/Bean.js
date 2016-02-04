@@ -18,7 +18,7 @@ module.exports = {
     return (box.right >= viewport.l && box.bottom >= viewport.t && box.left <= viewport.r && box.top <= viewport.b);
   },
 
-  forceReflow: function(element) {
+  reflow: function(element) {
     if (element) {
       if (!element.nodeType && element instanceof $) {
         element = element[0];

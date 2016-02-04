@@ -88,7 +88,7 @@ var modalStack = {
       if (!$backdropElement) {
         $backdropElement = $('<div class="modal-backdrop fade"></div>');
         $body.append($backdropElement);
-        util.forceReflow($backdropElement);
+        util.reflow($backdropElement);
         $backdropElement.addClass('in');
       } else {
         $backdropElement.css('z-index', 1040 + (currBackdropIndex && 1 || 0) + currBackdropIndex * 10);
@@ -109,7 +109,7 @@ var modalStack = {
     $body.append($modalElement);
 
     // reflow
-    util.forceReflow($modalElement);
+    util.reflow($modalElement);
     $modalElement.addClass('in');
 
     openedWindows.top().value.$modalElement = $modalElement;

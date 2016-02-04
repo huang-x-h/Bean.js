@@ -3,6 +3,7 @@
  */
 var $ = require('jquery');
 var transition = require('../../transition');
+var util = require('../../utils/element');
 var Widget = require('../../widget');
 var TRANSITION_DURATION = 350;
 
@@ -54,7 +55,8 @@ var Collapse = Widget.extend({
 
     var dimension = this.dimension();
 
-    this.$element[dimension](this.$element[dimension]())[0].offsetHeight;
+    this.$element[dimension](this.$element[dimension]());
+    util.reflow(this.$element);
 
     this.$element
         .addClass('collapsing')
