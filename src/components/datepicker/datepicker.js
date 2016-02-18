@@ -10,6 +10,7 @@ var Widget = require('../../widget');
 var locale = require('../../locale');
 var util = require('../../utils/date');
 var $document = require('../../document');
+var keyboard = require('../../utils/keyboard');
 var timeTemplate = require('./time.hbs');
 var dayTemplate = require('./day.hbs');
 var monthTemplate = require('./month.hbs');
@@ -27,10 +28,13 @@ var modes = [
   {clsName: 'months', navFnc: 'FullYear', navStep: 1},
   {clsName: 'years', navFnc: 'FullYear', navStep: 10}];
 
+var specialKeyCodes = [keyboard.DOWN, keyboard.UP, keyboard.LEFT, keyboard.RIGHT
+  , keyboard.SPACE, keyboard.ENTER, keyboard.TAB, keyboard.ESC];
+
 function isDateEquals(date1, date2) {
   return date1.getFullYear() === date2.getFullYear()
-      && date1.getMonth() === date2.getMonth()
-      && date1.getDate() === date2.getDate();
+    && date1.getMonth() === date2.getMonth()
+    && date1.getDate() === date2.getDate();
 }
 
 var DatePicker = Widget.extend({
@@ -64,7 +68,7 @@ var DatePicker = Widget.extend({
 
     this.focusDate = null;
 
-    var plc = String(this.options.orientation).toLowerCase().split(/\s+/g),
+    var plc  = String(this.options.orientation).toLowerCase().split(/\s+/g),
         _plc = this.options.orientation.toLowerCase();
 
     if (!_plc || _plc === 'auto')
@@ -101,9 +105,9 @@ var DatePicker = Widget.extend({
 
     if (this.options.calendarWeeks)
       this.picker.find('tfoot .today, tfoot')
-          .attr('colspan', function(i, val) {
-            return parseInt(val) + 1;
-          });
+        .attr('colspan', function(i, val) {
+          return parseInt(val) + 1;
+        });
 
     this._allow_update = false;
 
@@ -149,7 +153,7 @@ var DatePicker = Widget.extend({
     if (this.isInput) { // single input
       events = {
         'keyup': _.bind(function(e) {
-          if (_.indexOf([27, 37, 39, 38, 40, 32, 13, 9], e.keyCode) === -1)
+          if (specialKeyCodes.indexOf(e.keyCode) === -1)
             this.update();
         }, this),
         'keydown': 'keydown',
@@ -161,7 +165,7 @@ var DatePicker = Widget.extend({
     else if (this.component && this.hasInput) { // component: input + button
       events = {
         'keyup input': _.bind(function(e) {
-          if (_.indexOf([27, 37, 39, 38, 40, 32, 13, 9], e.keyCode) === -1)
+          if (specialKeyCodes.indexOf(e.keyCode) === -1)
             this.update();
         }, this),
         'keydown input': 'keydown',
@@ -203,10 +207,10 @@ var DatePicker = Widget.extend({
       'mousedown': _.bind(function(e) {
         // Clicked outside the datepicker, hide it
         if (!(this.$element.is(e.target)
-            || this.$element.find(e.target).length
-            || this.picker.is(e.target)
-            || this.picker.find(e.target).length
-            || this.picker.hasClass('datepicker-inline'))) {
+          || this.$element.find(e.target).length
+          || this.picker.is(e.target)
+          || this.picker.find(e.target).length
+          || this.picker.hasClass('datepicker-inline'))) {
           this.viewDate = this.date || new Date();
           this.hide();
         }
@@ -288,12 +292,12 @@ var DatePicker = Widget.extend({
 
   fillDow: function() {
     var dowCnt = this.options.weekStart,
-        html = '<tr>';
+        html   = '<tr>';
     if (this.options.calendarWeeks) {
       this.picker.find('.datepicker-days .datepicker-switch')
-          .attr('colspan', function(i, val) {
-            return parseInt(val) + 1;
-          });
+        .attr('colspan', function(i, val) {
+          return parseInt(val) + 1;
+        });
       html += '<th class="cw">&#160;</th>';
     }
     while (dowCnt < this.options.weekStart + 7) {
@@ -314,8 +318,8 @@ var DatePicker = Widget.extend({
   },
 
   getClassNames: function(date) {
-    var cls = [],
-        year = this.viewDate.getFullYear(),
+    var cls   = [],
+        year  = this.viewDate.getFullYear(),
         month = this.viewDate.getMonth(),
         today = new Date();
 
@@ -329,24 +333,24 @@ var DatePicker = Widget.extend({
       cls.push('focused');
     // Compare internal  date with local today, not  today
     if (this.options.todayHighlight &&
-        date.getFullYear() === today.getFullYear() &&
-        date.getMonth() === today.getMonth() &&
-        date.getDate() === today.getDate()) {
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()) {
       cls.push('today');
     }
     if (this.date && isDateEquals(this.date, date))
       cls.push('active');
     if (date.valueOf() < this.options.startDate || date.valueOf() > this.options.endDate ||
-        _.indexOf(this.options.daysOfWeekDisabled, date.getDay()) !== -1) {
+      _.indexOf(this.options.daysOfWeekDisabled, date.getDay()) !== -1) {
       cls.push('disabled');
     }
     if (_.indexOf(this.options.daysOfWeekHighlighted, date.getDay()) !== -1) {
       cls.push('highlighted');
     }
     if (this.options.datesDisabled.length > 0 &&
-        _.find(this.options.datesDisabled, function(d) {
-          return isDateEquals(date, d);
-        })) {
+      _.find(this.options.datesDisabled, function(d) {
+        return isDateEquals(date, d);
+      })) {
       cls.push('disabled', 'disabled-date');
     }
 
@@ -362,18 +366,18 @@ var DatePicker = Widget.extend({
   },
 
   updateYears: function() {
-    var d = new Date(this.viewDate),
-        year = d.getFullYear(),
+    var d         = new Date(this.viewDate),
+        year      = d.getFullYear(),
         startYear = this.options.startDate !== -Infinity ? this.options.startDate.getFullYear() : -Infinity,
-        endYear = this.options.endDate !== Infinity ? this.options.endDate.getFullYear() : Infinity,
-        html = '';
+        endYear   = this.options.endDate !== Infinity ? this.options.endDate.getFullYear() : Infinity,
+        html      = '';
 
     year = parseInt(year / 10, 10) * 10;
     var yearCont = this.picker.find('.datepicker-years')
-        .find('.datepicker-switch')
-        .text(year + '-' + (year + 9))
-        .end()
-        .find('td');
+      .find('.datepicker-switch')
+      .text(year + '-' + (year + 9))
+      .end()
+      .find('td');
     year -= 1;
     var dateY = this.date && this.date.getFullYear(),
         classes;
@@ -396,18 +400,18 @@ var DatePicker = Widget.extend({
   },
 
   updateMonths: function() {
-    var d = new Date(this.viewDate),
-        year = d.getFullYear(),
-        startYear = this.options.startDate !== -Infinity ? this.options.startDate.getFullYear() : -Infinity,
+    var d          = new Date(this.viewDate),
+        year       = d.getFullYear(),
+        startYear  = this.options.startDate !== -Infinity ? this.options.startDate.getFullYear() : -Infinity,
         startMonth = this.options.startDate !== -Infinity ? this.options.startDate.getMonth() : -Infinity,
-        endYear = this.options.endDate !== Infinity ? this.options.endDate.getFullYear() : Infinity,
-        endMonth = this.options.endDate !== Infinity ? this.options.endDate.getMonth() : Infinity;
+        endYear    = this.options.endDate !== Infinity ? this.options.endDate.getFullYear() : Infinity,
+        endMonth   = this.options.endDate !== Infinity ? this.options.endDate.getMonth() : Infinity;
 
     var months = this.picker.find('.datepicker-months')
-        .find('.datepicker-switch')
-        .text(year)
-        .end()
-        .find('span').removeClass('active');
+      .find('.datepicker-switch')
+      .text(year)
+      .end()
+      .find('span').removeClass('active');
 
     if (this.date) {
       if (this.date.getFullYear() === year)
@@ -426,8 +430,8 @@ var DatePicker = Widget.extend({
   },
 
   updateDays: function() {
-    var d = new Date(this.viewDate),
-        year = d.getFullYear(),
+    var d     = new Date(this.viewDate),
+        year  = d.getFullYear(),
         month = d.getMonth(),
         hour, minute, second;
 
@@ -435,12 +439,12 @@ var DatePicker = Widget.extend({
       return;
 
     this.picker.find('.datepicker-days thead .datepicker-switch')
-        .text(util.format(new Date(year, month), 'YYYY-MM'));
+      .text(util.format(new Date(year, month), 'YYYY-MM'));
     this.picker.find('tfoot .today')
-        .toggle(this.options.todayBtn !== false);
+      .toggle(this.options.todayBtn !== false);
 
     var prevMonth = new Date(year, month - 1, 28),
-        day = util.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
+        day       = util.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
     prevMonth.setDate(day);
     prevMonth.setDate(day - (prevMonth.getDay() - this.options.weekStart + 7) % 7);
 
@@ -457,13 +461,13 @@ var DatePicker = Widget.extend({
           // ISO also states week starts on Monday, but we can be more abstract here.
           var
           // Start of current week: based on weekstart/current date
-              ws = new Date(+prevMonth + (this.options.weekStart - prevMonth.getDay() - 7) % 7 * 864e5),
+          ws      = new Date(+prevMonth + (this.options.weekStart - prevMonth.getDay() - 7) % 7 * 864e5),
           // Thursday of this week
-              th = new Date(Number(ws) + (7 + 4 - ws.getDay()) % 7 * 864e5),
+          th      = new Date(Number(ws) + (7 + 4 - ws.getDay()) % 7 * 864e5),
           // First Thursday of year, year from thursday
-              yth = new Date(Number(yth = new Date(th.getFullYear(), 0, 1)) + (7 + 4 - yth.getDay()) % 7 * 864e5),
+          yth     = new Date(Number(yth = new Date(th.getFullYear(), 0, 1)) + (7 + 4 - yth.getDay()) % 7 * 864e5),
           // Calendar week: ms between thursdays, div ms per day, div 7 days
-              calWeek = (th - yth) / 864e5 / 7 + 1;
+          calWeek = (th - yth) / 864e5 / 7 + 1;
           html.push('<td class="cw">' + calWeek + '</td>');
 
         }
@@ -497,10 +501,10 @@ var DatePicker = Widget.extend({
   },
 
   updateHours: function() {
-    var d = new Date(this.viewDate),
+    var d    = new Date(this.viewDate),
         hour = d.getHours(),
         html = '',
-        i = 0,
+        i    = 0,
         clsName,
         $template;
 
@@ -522,10 +526,10 @@ var DatePicker = Widget.extend({
   },
 
   updateMinutes: function() {
-    var d = new Date(this.viewDate),
+    var d      = new Date(this.viewDate),
         minute = d.getMinutes(),
-        html = '',
-        i = 0,
+        html   = '',
+        i      = 0,
         j, v, clsName, $template;
 
     $template = $(timeTemplate({
@@ -549,10 +553,10 @@ var DatePicker = Widget.extend({
   },
 
   updateSeconds: function() {
-    var d = new Date(this.viewDate),
+    var d      = new Date(this.viewDate),
         second = d.getSeconds(),
-        html = '',
-        i = 0,
+        html   = '',
+        i      = 0,
         j, v, clsName, $template;
 
     $template = $(timeTemplate({
@@ -717,14 +721,14 @@ var DatePicker = Widget.extend({
   place: function() {
     if (this.isInline)
       return this;
-    var calendarWidth = this.picker.outerWidth(),
+    var calendarWidth  = this.picker.outerWidth(),
         calendarHeight = this.picker.outerHeight(),
-        visualPadding = 10,
-        container = $(this.options.container),
-        windowWidth = container.width(),
-        windowHeight = container.height(),
-        scrollTop = container.scrollTop(),
-        appendOffset = container.offset();
+        visualPadding  = 10,
+        container      = $(this.options.container),
+        windowWidth    = container.width(),
+        windowHeight   = container.height(),
+        scrollTop      = container.scrollTop(),
+        appendOffset   = container.offset();
 
     var parentsZindex = [];
     this.$element.parents().each(function() {
@@ -736,11 +740,11 @@ var DatePicker = Widget.extend({
     var height = this.component ? this.component.outerHeight(true) : this.$element.outerHeight(false);
     var width = this.component ? this.component.outerWidth(true) : this.$element.outerWidth(false);
     var left = offset.left - appendOffset.left,
-        top = offset.top - appendOffset.top;
+        top  = offset.top - appendOffset.top;
 
     this.picker.removeClass(
-        'datepicker-orient-top datepicker-orient-bottom ' +
-        'datepicker-orient-right datepicker-orient-left'
+      'datepicker-orient-top datepicker-orient-bottom ' +
+      'datepicker-orient-right datepicker-orient-left'
     );
 
     if (this.options.orientation.x !== 'auto') {
@@ -804,20 +808,20 @@ var DatePicker = Widget.extend({
     if (!this._allow_update)
       return;
 
-    var d = new Date(this.viewDate),
-        year = d.getFullYear(),
+    var d     = new Date(this.viewDate),
+        year  = d.getFullYear(),
         month = d.getMonth();
     switch (this.viewMode) {
       case 0:
         if (this.options.startDate !== -Infinity && year <= this.options.startDate.getFullYear()
-            && month <= this.options.startDate.getMonth()) {
+          && month <= this.options.startDate.getMonth()) {
           this.picker.find('.prev').css({visibility: 'hidden'});
         }
         else {
           this.picker.find('.prev').css({visibility: 'visible'});
         }
         if (this.options.endDate !== Infinity && year >= this.options.endDate.getFullYear()
-            && month >= this.options.endDate.getMonth()) {
+          && month >= this.options.endDate.getMonth()) {
           this.picker.find('.next').css({visibility: 'hidden'});
         }
         else {
@@ -1032,7 +1036,7 @@ var DatePicker = Widget.extend({
     }
     var dateChanged = false,
         dir, newViewDate,
-        focusDate = this.focusDate || this.viewDate;
+        focusDate   = this.focusDate || this.viewDate;
 
     switch (e.keyCode) {
       case 27: // escape
