@@ -459,17 +459,17 @@ var DatePicker = Widget.extend({
         if (this.options.calendarWeeks) {
           // ISO 8601: First week contains first thursday.
           // ISO also states week starts on Monday, but we can be more abstract here.
-          var
-          // Start of current week: based on weekstart/current date
-          ws      = new Date(+prevMonth + (this.options.weekStart - prevMonth.getDay() - 7) % 7 * 864e5),
-          // Thursday of this week
-          th      = new Date(Number(ws) + (7 + 4 - ws.getDay()) % 7 * 864e5),
-          // First Thursday of year, year from thursday
-          yth     = new Date(Number(yth = new Date(th.getFullYear(), 0, 1)) + (7 + 4 - yth.getDay()) % 7 * 864e5),
-          // Calendar week: ms between thursdays, div ms per day, div 7 days
-          calWeek = (th - yth) / 864e5 / 7 + 1;
-          html.push('<td class="cw">' + calWeek + '</td>');
 
+          // Start of current week: based on weekstart/current date
+          var ws = new Date(+prevMonth + (this.options.weekStart - prevMonth.getDay() - 7) % 7 * 864e5),
+              // Thursday of this week
+              th = new Date(Number(ws) + (7 + 4 - ws.getDay()) % 7 * 864e5),
+              // First Thursday of year, year from thursday
+              yth = new Date(Number(yth = new Date(th.getFullYear(), 0, 1)) + (7 + 4 - yth.getDay()) % 7 * 864e5),
+              // Calendar week: ms between thursdays, div ms per day, div 7 days
+              calWeek = (th - yth) / 864e5 / 7 + 1;
+
+          html.push('<td class="cw">' + calWeek + '</td>');
         }
       }
       clsName = this.getClassNames(prevMonth);
