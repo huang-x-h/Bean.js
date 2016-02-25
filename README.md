@@ -1,6 +1,19 @@
 # Bean.js
 A Frontend framework base on jQuery
 
+## How to build
+1. Download project using git clone or fork to your own.
+
+     $ git clone https://github.com/davidshimjs/jaguarjs.git
+
+2. Install npm packages with a simple command
+
+     $ npm install
+
+3. Using a gulp
+
+     $ gulp
+
 ## Components
 
 [] alert
