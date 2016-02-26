@@ -1,7 +1,4 @@
-/**
- * Created by huangxinghui on 2015/5/15.
- */
+/** @namespace */
+var Bean = {};
 
-$ = require('jquery');
-
-module.exports = window.Bean = {};
+module.exports = window.Bean = Bean;

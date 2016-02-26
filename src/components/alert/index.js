@@ -1,5 +1,6 @@
 /**
- * Created by huangxinghui on 2015/5/20.
+ * @module Alert
+ * @extends Widget
  */
 
 var $ = require('jquery');
@@ -14,6 +15,11 @@ var TRANSITION_DURATION = 150;
 var dismiss = '[data-dismiss="alert"]';
 
 var Alert = Widget.extend({
+  /**
+   * @property {Object} options 参数信息
+   * @property {Number} [options.duration=2000] 延迟关闭，默认延迟2000ms
+   * @property {Boolean} [options.dismissible=false] 可点击关闭，默认false
+   */
   options: {
     duration: 2000,
     dismissible: false
@@ -30,6 +36,9 @@ var Alert = Widget.extend({
       setTimeout($.proxy(this.close, this), this.options.duration);
   },
 
+  /**
+   * 关闭提示信息
+   */
   close: function(e) {
     var $el = this.$element;
 
@@ -48,7 +57,7 @@ var Alert = Widget.extend({
     transition.supportsTransitionEnd && $el.hasClass('fade') ?
         $el.one(transition.TRANSITION_END, $.proxy(removeElement, this))
             .emulateTransitionEnd(TRANSITION_DURATION) :
-        removeElement()
+        removeElement();
   }
 });
 
@@ -64,6 +73,11 @@ function appendToToast($el) {
   $toast.append($el);
 }
 
+/**
+ * 成功提示
+ * @memberOf Bean
+ * @param {String} message 提示信息
+ */
 Bean.success = function(message) {
   appendToToast($(template({
     type: 'alert-success',
@@ -72,6 +86,11 @@ Bean.success = function(message) {
   })).alert());
 };
 
+/**
+ * 告警提示
+ * @memberOf Bean
+ * @param {String} message 提示信息
+ */
 Bean.warn = function(message) {
   appendToToast($(template({
     type: 'alert-warning',
@@ -80,6 +99,11 @@ Bean.warn = function(message) {
   })).alert());
 };
 
+/**
+ * 信息提示
+ * @memberOf Bean
+ * @param {String} message 提示信息
+ */
 Bean.info = function(message) {
   appendToToast($(template({
     type: 'alert-info',
@@ -88,6 +112,11 @@ Bean.info = function(message) {
   })).alert());
 };
 
+/**
+ * 错误提示
+ * @memberOf Bean
+ * @param {String} message 提示信息
+ */
 Bean.error = function(message) {
   appendToToast($(template({
     type: 'alert-danger',
