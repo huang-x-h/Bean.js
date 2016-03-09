@@ -2,6 +2,8 @@
  * Created by huangxinghui on 2016/1/12.
  */
 
+var Bean = require('../core');
+
 // refer to https://github.com/ded/bowser/blob/master/bowser.js
 function detect(ua) {
   var edgeVersion       = getFirstMatch(/edge\/(\d+(\.\d+)?)/i),
@@ -66,6 +68,6 @@ function detect(ua) {
   return result;
 }
 
-var browser = detect(navigator.userAgent);
+var browser = Bean.browser = detect(navigator.userAgent);
 
 module.exports = browser;
