@@ -36,4 +36,6 @@ require('./components/backtotop');
 require('./components/drop');
 require('./components/headroom');
 
+require('./events/resize');
+
 require('./bootstrap');

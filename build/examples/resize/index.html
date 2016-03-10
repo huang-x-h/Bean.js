@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+      <meta name="viewport"
+            content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <meta charset="UTF-8">
+      <title>Resize Event</title>
+      <link rel="stylesheet" href="../../main.css">
+      <link rel="stylesheet" href="/examples/doc.css">
+      <style>
+        #resizeDiv {
+          background-color: #ff0000;
+          width: 30%;
+          height: 100px;
+        }
+      </style>
+    </head>
+    <body>
+        <h2>Resize Event</h2>
+        <div class="bs-example">
+          <button type="button" class="btn btn-primary js-attach">Attach Resize Event</button>
+          <button type="button" class="btn btn-danger js-detach">Detach Resize Event</button>
+          <div id="resizeDiv">
+          </div>
+        </div>
+        <script src="../../bundle.js"></script>
+        <script>
+          $('.js-attach').click(function() {
+            $('#resizeDiv').on('resize', function(e, w, h) {
+              $('.bs-example').append('current size: w=' + w + ', h=' + h + '<br>');
+            });
+          });
+
+          $('.js-detach').click(function() {
+            $('#resizeDiv').off('resize');
+          });
+        </script>
+    </body>
+</html>
