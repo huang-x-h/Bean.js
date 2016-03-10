@@ -5,6 +5,7 @@
 var plugin = require('../../plugin');
 var Widget = require('../../widget');
 var DatePicker = require('./datepicker');
+var util = require('../../utils/string');
 
 var TimePicker = DatePicker.extend({
   options: {
@@ -33,14 +34,9 @@ var TimePicker = DatePicker.extend({
     var d = new Date(this.viewDate),
         hour, minute, second;
 
-    hour = d.getHours();
-    if (hour < 10) hour = '0' + hour;
-
-    minute = d.getMinutes();
-    if (minute < 10) minute = '0' + minute;
-
-    second = d.getSeconds();
-    if (second < 10) second = '0' + second;
+    hour = util.leftPad('' + d.getHours(), 2, '0');
+    minute = util.leftPad('' + d.getMinutes(), 2, '0');
+    second = util.leftPad('' + d.getSeconds(), 2, '0');
 
     this.picker.find('.label-hours').text(hour);
     this.picker.find('.label-minutes').text(minute);
