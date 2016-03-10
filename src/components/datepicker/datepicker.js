@@ -595,6 +595,9 @@ var DatePicker = Widget.extend({
       return this;
     if (!this.picker.is(':visible'))
       return this;
+
+    // remove times div
+    this.picker.find('.datepicker-times').remove();
     this.picker.hide().detach();
     this._detachSecondaryEvents();
     this.viewMode = this.options.startView;
