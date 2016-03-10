@@ -7,6 +7,7 @@ var $ = require('jquery');
 var elements = $();
 var RESIZE = 'resize';
 var DATA_RESIZE = RESIZE + '-special-event';
+var resizeRAF;
 
 function dirtyCheck() {
   elements.each(function() {
@@ -18,7 +19,7 @@ function dirtyCheck() {
     }
   });
 
-  requestAnimationFrame(dirtyCheck);
+  resizeRAF = requestAnimationFrame(dirtyCheck);
 }
 
 // custom resize event
@@ -27,13 +28,19 @@ $.event.special.resize = {
     var rect = this.getBoundingClientRect();
 
     elements = elements.add($(this));
-    this.__resizeRAF__ = requestAnimationFrame(dirtyCheck);
     $.data(this, DATA_RESIZE, {w: rect.width, h: rect.height});
+
+    if (elements.length === 1) {
+      resizeRAF = requestAnimationFrame(dirtyCheck);
+    }
   },
 
   teardown: function() {
     elements = elements.not($(this));
-    cancelAnimationFrame(this.__resizeRAF__);
-    $.data()
+    $.removeData(this, DATA_RESIZE);
+
+    if (elements.length === 0) {
+      cancelAnimationFrame(resizeRAF);
+    }
   }
 };

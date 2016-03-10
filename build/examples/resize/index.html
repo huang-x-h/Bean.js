@@ -13,6 +13,10 @@
           width: 30%;
           height: 100px;
         }
+
+        #consoleText {
+          height: 100px;
+        }
       </style>
     </head>
     <body>
@@ -20,19 +24,26 @@
         <div class="bs-example">
           <button type="button" class="btn btn-primary js-attach">Attach Resize Event</button>
           <button type="button" class="btn btn-danger js-detach">Detach Resize Event</button>
+          <button type="button" class="btn btn-default js-clear">Clear Console</button>
           <div id="resizeDiv">
+            Resize Me
           </div>
+          <textarea class="form-control" id="consoleText"></textarea>
         </div>
         <script src="../../bundle.js"></script>
         <script>
           $('.js-attach').click(function() {
             $('#resizeDiv').on('resize', function(e, w, h) {
-              $('.bs-example').append('current size: w=' + w + ', h=' + h + '<br>');
+              $('#consoleText').val($('#consoleText').val() + 'current size: w=' + w + ', h=' + h + '\n');
             });
           });
 
           $('.js-detach').click(function() {
             $('#resizeDiv').off('resize');
+          });
+
+          $('.js-clear').click(function() {
+            $('#consoleText').val('');
           });
         </script>
     </body>
