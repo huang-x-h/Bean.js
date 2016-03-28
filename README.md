@@ -4,15 +4,15 @@ A Frontend framework base on jQuery
 ## How to build
 1. Download project using git clone or fork to your own.
 
-     $ git clone git@github.com:huang-x-h/Bean.js.git
+        $ git clone git@github.com:huang-x-h/Bean.js.git
 
 2. Install npm packages with a simple command
 
-     $ npm install
+        $ npm install
 
 3. Using a gulp
 
-     $ gulp
+        $ gulp
 
 ## Components
 
