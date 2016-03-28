@@ -5,6 +5,7 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var Class = require('./clazz');
+var Bean = require('./core');
 var delegateEventSplitter = /^(\S+)\s*(.*)$/;
 
 module.exports = Class.extend({
@@ -16,6 +17,11 @@ module.exports = Class.extend({
     this.options = $.extend({}, this.options, this.$element.data(), options);
     this.bindings = $();
     this.eventNamespace = "." + this.widgetName;
+
+    // add data-bean-role attribute on element
+    if (!this.$element.attr(Bean.attr('role'))) {
+      this.$element.attr(Bean.attr('role'), this.widgetName.toLowerCase());
+    }
 
     this._create();
     this._on(this.events);
