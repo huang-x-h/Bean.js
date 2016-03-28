@@ -3,7 +3,7 @@
  */
 
 var $ = require('jquery');
-var affix = 'bean.';
+var Bean = require('./core');
 
 module.exports = plugin;
 
@@ -19,9 +19,9 @@ function plugin(widgetName, widgetClass) {
     if (isMethodCall) {
       this.each(function() {
         var $this = $(this);
-        var data = $this.data(affix + widgetName);
+        var data = $this.data(Bean.ns + widgetName);
 
-        if (!data) $this.data(affix + widgetName, data = new widgetClass(this));
+        if (!data) $this.data(Bean.ns + widgetName, data = new widgetClass(this));
         returnValue = data[option].apply(data, args);
       });
     } else {
@@ -29,7 +29,7 @@ function plugin(widgetName, widgetClass) {
         var $this = $(this);
         var options = typeof option == 'object' && option;
 
-        $this.data(affix + widgetName, new widgetClass(this, options));
+        $this.data(Bean.ns + widgetName, new widgetClass(this, options));
       });
     }
 
