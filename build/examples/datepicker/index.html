@@ -14,10 +14,10 @@
             <div class="bs-example">
                 <div class="form-group">
                     <div class='input-group date' id='timepicker'>
-                        <input type='text' class="form-control" />
-                    <span class="input-group-addon">
+                      <input type='text' class="form-control" />
+                      <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
+                      </span>
                     </div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
             <div class="bs-example">
                 <div class="form-group">
                     <div class='input-group date' id='datepicker'>
-                        <input type='text' class="form-control" />
+                        <input type='text' class="form-control" value="2015-07-18" />
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -101,8 +101,7 @@
                     format: 'YYYY/MM/DD'
                 });
                 $('#datepicker3').datepicker({
-                    startDate: '2015-08-13',
-                    endDate: '2015-09-13'
+                    endDate: new Date()
                 });
                 $('#datepicker4').datepicker({
                     showTime: true

@@ -31,6 +31,9 @@ var modes = [
 var specialKeyCodes = [keyboard.DOWN, keyboard.UP, keyboard.LEFT, keyboard.RIGHT
   , keyboard.SPACE, keyboard.ENTER, keyboard.TAB, keyboard.ESC];
 
+var DISABLED = 'disabled';
+var ACTIVE = 'active';
+
 function isDateEquals(date1, date2) {
   return date1.getFullYear() === date2.getFullYear()
     && date1.getMonth() === date2.getMonth()
@@ -339,10 +342,10 @@ var DatePicker = Widget.extend({
       cls.push('today');
     }
     if (this.date && isDateEquals(this.date, date))
-      cls.push('active');
+      cls.push(ACTIVE);
     if (date.valueOf() < this.options.startDate || date.valueOf() > this.options.endDate ||
       _.indexOf(this.options.daysOfWeekDisabled, date.getDay()) !== -1) {
-      cls.push('disabled');
+      cls.push(DISABLED);
     }
     if (_.indexOf(this.options.daysOfWeekHighlighted, date.getDay()) !== -1) {
       cls.push('highlighted');
@@ -351,7 +354,7 @@ var DatePicker = Widget.extend({
       _.find(this.options.datesDisabled, function(d) {
         return isDateEquals(date, d);
       })) {
-      cls.push('disabled', 'disabled-date');
+      cls.push(DISABLED, 'disabled-date');
     }
 
     if (this.range) {
@@ -389,9 +392,9 @@ var DatePicker = Widget.extend({
       else if (i === 10)
         classes.push('new');
       if (year === dateY)
-        classes.push('active');
+        classes.push(ACTIVE);
       if (year < startYear || year > endYear)
-        classes.push('disabled');
+        classes.push(DISABLED);
 
       html += '<span class="' + classes.join(' ') + '">' + year + '</span>';
       year += 1;
@@ -411,21 +414,21 @@ var DatePicker = Widget.extend({
       .find('.datepicker-switch')
       .text(year)
       .end()
-      .find('span').removeClass('active');
+      .find('span').removeClass(DISABLED).removeClass(ACTIVE);
 
     if (this.date) {
       if (this.date.getFullYear() === year)
-        months.eq(this.date.getMonth()).addClass('active');
+        months.eq(this.date.getMonth()).addClass(ACTIVE);
     }
 
     if (year < startYear || year > endYear) {
-      months.addClass('disabled');
+      months.addClass(DISABLED);
     }
     if (year === startYear) {
-      months.slice(0, startMonth).addClass('disabled');
+      months.slice(0, startMonth).addClass(DISABLED);
     }
     if (year === endYear) {
-      months.slice(endMonth + 1).addClass('disabled');
+      months.slice(endMonth + 1).addClass(DISABLED);
     }
   },
 
@@ -515,7 +518,7 @@ var DatePicker = Widget.extend({
     for (; i < 24; i++) {
       clsName = ['hour'];
       if (i === hour) {
-        clsName.push('active');
+        clsName.push(ACTIVE);
       }
       html += '<span class="' + clsName.join(' ') + '">' + i + '</span>';
     }
@@ -541,7 +544,7 @@ var DatePicker = Widget.extend({
         clsName = ['minute'];
         v = j + i * 10;
         if (v === minute) {
-          clsName.push('active');
+          clsName.push(ACTIVE);
         }
         html += '<span class="' + clsName.join(' ') + '">' + v + '</span>';
       }
@@ -568,7 +571,7 @@ var DatePicker = Widget.extend({
         clsName = ['second'];
         v = j + i * 10;
         if (v === second) {
-          clsName.push('active');
+          clsName.push(ACTIVE);
         }
         html += '<span class="' + clsName.join(' ') + '">' + v + '</span>';
       }
@@ -917,7 +920,7 @@ var DatePicker = Widget.extend({
   _spanClick: function(target) {
     var year, month, day, hour, minute, second;
 
-    if (!target.hasClass('disabled')) {
+    if (!target.hasClass(DISABLED)) {
       if (target.hasClass('month')) {
         month = target.parent().find('span').index(target);
         this.viewDate.setMonth(month);
@@ -965,7 +968,7 @@ var DatePicker = Widget.extend({
   _tdClick: function(target) {
     var year, month, day, hour, minute, second;
 
-    if (target.hasClass('day') && !target.hasClass('disabled')) {
+    if (target.hasClass('day') && !target.hasClass(DISABLED)) {
       day = parseInt(target.text(), 10) || 1;
       year = this.viewDate.getFullYear();
       month = this.viewDate.getMonth();
