@@ -16,11 +16,11 @@ module.exports = Class.extend({
     this.$element = $(element)
     this.options = $.extend({}, this.options, this.$element.data(), options)
     this.bindings = $()
-    this.eventNamespace = '.' + this.widgetName
+    this.eventNamespace = '.' + this.options.name
 
     // add data-bean-role attribute on element
     if (!this.$element.attr(Bean.attr('role'))) {
-      this.$element.attr(Bean.attr('role'), this.widgetName.toLowerCase())
+      this.$element.attr(Bean.attr('role'), this.options.name)
     }
 
     this._create()
@@ -28,7 +28,7 @@ module.exports = Class.extend({
   },
 
   _create: $.noop,
-
+  _resize: $.noop,
   _destroy: $.noop,
 
   _on: function(element, events) {
@@ -59,7 +59,7 @@ module.exports = Class.extend({
   _trigger: function(type, data) {
     var callback = this.options[type]
 
-    var e = $.Event((this.widgetName + ':' + type).toLowerCase())
+    var e = $.Event((this.options.name + ':' + type).toLowerCase())
     this.$element.trigger(e, data)
 
     return !(_.isFunction(callback) &&
@@ -67,11 +67,28 @@ module.exports = Class.extend({
     e.isDefaultPrevented())
   },
 
+  getSize: function() {
+    var domElement = this.$element[0];
+    return { width: domElement.offsetWidth, height: domElement.offsetHeight };
+  },
+
+  resize: function(force) {
+    var size = this.getSize(),
+      currentSize = this._size;
+
+    if (force || (size.width > 0 || size.height > 0) && (!currentSize || size.width !== currentSize.width || size.height !== currentSize.height)) {
+      this._size = size;
+      this._resize(size, force);
+      this._trigger("resize", size);
+    }
+  },
+
   destroy: function() {
     this._destroy()
 
+    this.$element.removeAttr(Bean.attr('role'));
     this.$element.off(this.eventNamespace)
-      .removeData(this.widgetName)
+      .removeData(this.options.name)
     this.bindings.off(this.eventNamespace)
     this.bindings = $()
   }
