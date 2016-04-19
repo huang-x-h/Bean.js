@@ -2,27 +2,22 @@
  * Created by huangxinghui on 2015/10/20.
  */
 
-var Widget = require('../../widget');
-var Collapse = require('./collapse');
+var Widget = require('../../widget')
+var Collapse = require('./collapse')
 
 var Panel = Widget.extend({
   _create: function() {
-    this.$trigger = this.$element.find('.close');
-    this.collapse = new Collapse(this.$element.find('.panel-collapse'));
-
-    this._on(this.$trigger, {
-      'click': 'toggle'
-    });
+    this.collapse = new Collapse(this.$element.find('.panel-collapse'))
+    this.collapse.$trigger = this.$element.find('[data-toggle="collapse"]')
   },
 
-  toggle: function() {
-    this.collapse.toggle();
-    this.$trigger.toggleClass('collapsed');
+  toggle: function(e) {
+    this.collapse.toggle()
   },
 
   isOpen: function() {
-    return this.collapse.isOpen();
+    return this.collapse.isOpen()
   }
-});
+})
 
-module.exports = Panel;
+module.exports = Panel

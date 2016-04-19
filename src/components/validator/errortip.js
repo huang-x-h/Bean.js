@@ -2,7 +2,7 @@
  * Created by huangxinghui on 2015/8/28.
  */
 
-var Tooltip = require('../tooltip');
+var Tooltip = require('../tooltip')
 
 var ErrorTip = Tooltip.extend({
   options: {
@@ -17,12 +17,12 @@ var ErrorTip = Tooltip.extend({
   },
 
   setContent: function() {
-    var $tip = this.tip();
-    var title = this.getTitle();
+    var $tip = this.tip()
+    var title = this.getTitle()
 
-    $tip.find('.errortip-inner')[this.options.html ? 'html' : 'text'](title);
-    $tip.removeClass('fade in top bottom left right');
+    $tip.find('.errortip-inner')[this.options.html ? 'html' : 'text'](title)
+    $tip.removeClass('fade in top bottom left right')
   }
-});
+})
 
-module.exports = ErrorTip;
+module.exports = ErrorTip

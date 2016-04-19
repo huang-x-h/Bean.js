@@ -2,8 +2,8 @@
  * Created by huangxinghui on 2015/9/7.
  */
 
-var _ = require('underscore');
-var $ = require('jquery');
+var _ = require('underscore')
+var $ = require('jquery')
 
 module.exports = {
   options: {
@@ -15,9 +15,9 @@ module.exports = {
 
   selectedIndex: function(index) {
     if (_.isUndefined(index)) {
-      return this._selectedIndex;
+      return this._selectedIndex
     } else if (this._selectedIndex != index) {
-      this._setSelectedIndex(index);
+      this._setSelectedIndex(index)
     }
   },
 
@@ -25,9 +25,9 @@ module.exports = {
 
   selectedItem: function(item) {
     if (_.isUndefined(item)) {
-      return this._selectedItem;
+      return this._selectedItem
     } else {
-      this._setSelectedItem(item);
+      this._setSelectedItem(item)
     }
   },
 
@@ -35,41 +35,41 @@ module.exports = {
 
   dataSource: function(value) {
     if (_.isUndefined(value)) {
-      return this._dataSource;
+      return this._dataSource
     } else {
-      this._setDataSource(value);
+      this._setDataSource(value)
     }
   },
 
   _setDataSource: $.noop,
 
   itemToLabel: function(data) {
-    var label = '';
+    var label = ''
     if (_.isString(data)) {
-      label = data;
+      label = data
     } else if (_.isObject(data)) {
-      label = data[this.options.dataTextField];
+      label = data[this.options.dataTextField]
     }
 
-    return label;
+    return label
   },
 
   itemToValue: function(data) {
-    var label = '';
+    var label = ''
     if (_.isString(data)) {
-      label = data;
+      label = data
     } else if (_.isObject(data)) {
-      label = data[this.options.dataValueField];
+      label = data[this.options.dataValueField]
     }
 
-    return label;
+    return label
   },
 
   text: function() {
-    return this.itemToLabel(this._selectedItem);
+    return this.itemToLabel(this._selectedItem)
   },
 
   value: function() {
-    return this.itemToValue(this._selectedItem);
+    return this.itemToValue(this._selectedItem)
   }
-};
+}

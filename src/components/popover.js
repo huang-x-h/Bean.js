@@ -2,9 +2,9 @@
  * Created by huangxinghui on 2015/5/18.
  */
 
-var $ = require('jquery');
-var plugin = require('../plugin');
-var Tooltips = require('./tooltip');
+var $ = require('jquery')
+var plugin = require('../plugin')
+var Tooltips = require('./tooltip')
 
 var PopOver = Tooltips.extend({
   options: {
@@ -20,41 +20,41 @@ var PopOver = Tooltips.extend({
   },
 
   setContent: function() {
-    var $tip = this.tip();
-    var title = this.getTitle();
-    var content = this.getContent();
+    var $tip = this.tip()
+    var title = this.getTitle()
+    var content = this.getContent()
 
-    $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title);
+    $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
     $tip.find('.popover-content').children().detach().end()[ // we use append for html objects to maintain js events
-        this.options.html ? (typeof content == 'string' ? 'html' : 'append') : 'text'
-        ](content);
+      this.options.html ? (typeof content == 'string' ? 'html' : 'append') : 'text'
+      ](content)
 
-    $tip.removeClass('fade top bottom left right in');
+    $tip.removeClass('fade top bottom left right in')
 
     // IE8 doesn't accept hiding via the `:empty` pseudo selector, we have to do
     // this manually by checking the contents.
-    if (!$tip.find('.popover-title').html()) $tip.find('.popover-title').hide();
+    if (!$tip.find('.popover-title').html()) $tip.find('.popover-title').hide()
   },
 
   hasContent: function() {
-    return this.getTitle() || this.getContent();
+    return this.getTitle() || this.getContent()
   },
 
   getContent: function() {
-    var $e = this.$element;
-    var o = this.options;
+    var $e = this.$element
+    var o = this.options
 
     return $e.attr('data-content')
-        || (typeof o.content == 'function' ?
-            o.content.call($e[0]) :
-            o.content);
+      || (typeof o.content == 'function' ?
+        o.content.call($e[0]) :
+        o.content)
   },
 
   arrow: function() {
-    return (this.$arrow = this.$arrow || this.tip().find('.arrow'));
+    return (this.$arrow = this.$arrow || this.tip().find('.arrow'))
   }
-});
+})
 
-plugin('popover', PopOver);
+plugin('popover', PopOver)
 
-module.exports = PopOver;
+module.exports = PopOver

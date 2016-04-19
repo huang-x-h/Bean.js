@@ -2,15 +2,15 @@
  * Created by huangxinghui on 2015/5/19.
  */
 
-var $ = require('jquery');
-var _ = require('underscore');
-var plugin = require('../plugin');
-var Widget = require('../widget');
-var $document = require('../document');
-var DATA_TOGGLE = '[data-toggle="dropdown"]';
+var $ = require('jquery')
+var _ = require('underscore')
+var plugin = require('../plugin')
+var Widget = require('../widget')
+var $document = require('../document')
+var DATA_TOGGLE = '[data-toggle="dropdown"]'
 var CLASS_NAME = {
   OPEN: 'open'
-};
+}
 
 var DropDown = Widget.extend({
   options: {
@@ -23,68 +23,68 @@ var DropDown = Widget.extend({
   },
 
   _create: function() {
-    this.$parent = this.getParent();
+    this.$parent = this.getParent()
   },
 
   open: function() {
-    this.$parent.addClass(CLASS_NAME.OPEN);
-    this._trigger('open');
+    this.$parent.addClass(CLASS_NAME.OPEN)
+    this._trigger('open')
   },
 
   close: function() {
-    if (!this._trigger('beforeClose')){
-      return false;
+    if (!this._trigger('beforeClose')) {
+      return false
     }
 
-    this.$parent.removeClass(CLASS_NAME.OPEN);
-    this._trigger('close');
-    return true;
+    this.$parent.removeClass(CLASS_NAME.OPEN)
+    this._trigger('close')
+    return true
   },
 
   toggle: function(e) {
-    var isActive = this.$parent.hasClass(CLASS_NAME.OPEN);
+    var isActive = this.$parent.hasClass(CLASS_NAME.OPEN)
 
-    clearMenus(e);
+    clearMenus(e)
 
-    if (!isActive) this.open();
-    return false;
+    if (!isActive) this.open()
+    return false
   },
 
   getParent: function() {
     if (this.options.target) {
-      return (this.options.target instanceof $ ? this.options.target : $(this.options.target)).parent();
+      return (this.options.target instanceof $ ? this.options.target : $(this.options.target)).parent()
     } else {
-      return this.$element.parent();
+      return this.$element.parent()
     }
   }
-});
+})
 
-plugin('dropdown', DropDown);
+plugin('dropdown', DropDown)
 
-module.exports = DropDown;
+module.exports = DropDown
 
 function clearMenus(e) {
-  if (e && e.which === 3) return;
+  if (e && e.which === 3) return
 
   var toggles = $.makeArray($(DATA_TOGGLE)),
-      i = 0,
-      n = toggles.length,
-      $parent, $toggle;
+    i = 0,
+    n = toggles.length,
+    $parent, $toggle
 
   for (; i < n; i++) {
-    $toggle = $(toggles[i]);
-    $parent = $toggle.dropdown('getParent');
+    $toggle = $(toggles[i])
+    $parent = $toggle.dropdown('getParent')
 
-    if (!$parent.hasClass(CLASS_NAME.OPEN)) continue;
+    if (!$parent.hasClass(CLASS_NAME.OPEN)) continue
 
     if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
 
-    if (!$toggle.dropdown('close')) return;
+    if (!$toggle.dropdown('close')) return
   }
 }
 
 $document
-    .on('click.dropdown.data-api', clearMenus)
-    .on('click.dropdown.data-api', DATA_TOGGLE, function(e) {
-      return $(this).dropdown('toggle');
-    });
+  .on('click.dropdown.data-api', clearMenus)
+  .on('click.dropdown.data-api', DATA_TOGGLE, function(e) {
+    return $(this).dropdown('toggle')
+  })

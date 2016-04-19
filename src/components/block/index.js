@@ -1,12 +1,13 @@
 /**
- * Created by huangxinghui on 2015/11/6.
+ * @class Block
+ * @extends Widget
  */
 
-var Widget = require('../../widget');
-var plugin = require('../../plugin');
-var wrapperTemplate = require('./wrapper.hbs');
-var loadingTemplate = require('./loading.hbs');
-var backdropTemplate = require('./backdrop.hbs');
+var Widget = require('../../widget')
+var plugin = require('../../plugin')
+var wrapperTemplate = require('./wrapper.hbs')
+var loadingTemplate = require('./loading.hbs')
+var backdropTemplate = require('./backdrop.hbs')
 
 var Block = Widget.extend({
   options: {
@@ -14,28 +15,28 @@ var Block = Widget.extend({
   },
 
   _create: function() {
-    var fixed = false;
+    var fixed = false
     if (this.$element.is('body')) {
-      fixed = true;
+      fixed = true
     }
 
-    this.$block = $(wrapperTemplate({template: this.options.template, fixed: fixed}));
-    this.$backdrop = $(backdropTemplate({fixed: fixed}));
+    this.$block = $(wrapperTemplate({ template: this.options.template, fixed: fixed }))
+    this.$backdrop = $(backdropTemplate({ fixed: fixed }))
   },
 
   show: function() {
-    this.$element.addClass('block');
-    this.$element.append(this.$backdrop);
-    this.$element.append(this.$block);
+    this.$element.addClass('block')
+    this.$element.append(this.$backdrop)
+    this.$element.append(this.$block)
   },
 
   hide: function() {
-    this.$element.removeClass('block');
-    this.$backdrop.remove();
-    this.$block.remove();
+    this.$element.removeClass('block')
+    this.$backdrop.remove()
+    this.$block.remove()
   }
-});
+})
 
-plugin('block', Block);
+plugin('block', Block)
 
-module.exports = Block;
+module.exports = Block

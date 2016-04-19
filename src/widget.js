@@ -1,30 +1,30 @@
 /**
- * Created by huangxinghui on 2015/5/15.
+ * @class Widget
  */
 
-var $ = require('jquery');
-var _ = require('underscore');
-var Class = require('./clazz');
-var Bean = require('./core');
-var delegateEventSplitter = /^(\S+)\s*(.*)$/;
+var $ = require('jquery')
+var _ = require('underscore')
+var Class = require('./clazz')
+var Bean = require('./core')
+var delegateEventSplitter = /^(\S+)\s*(.*)$/
 
 module.exports = Class.extend({
   options: null,
   events: null,
 
   init: function(element, options) {
-    this.$element = $(element);
-    this.options = $.extend({}, this.options, this.$element.data(), options);
-    this.bindings = $();
-    this.eventNamespace = "." + this.widgetName;
+    this.$element = $(element)
+    this.options = $.extend({}, this.options, this.$element.data(), options)
+    this.bindings = $()
+    this.eventNamespace = '.' + this.widgetName
 
     // add data-bean-role attribute on element
     if (!this.$element.attr(Bean.attr('role'))) {
-      this.$element.attr(Bean.attr('role'), this.widgetName.toLowerCase());
+      this.$element.attr(Bean.attr('role'), this.widgetName.toLowerCase())
     }
 
-    this._create();
-    this._on(this.events);
+    this._create()
+    this._on(this.events)
   },
 
   _create: $.noop,
@@ -33,48 +33,46 @@ module.exports = Class.extend({
 
   _on: function(element, events) {
     if (!events) {
-      events = element;
-      element = this.$element;
+      events = element
+      element = this.$element
     }
 
-    if (element !== this.$element)
-      this.bindings = this.bindings.add(element);
+    if (element !== this.$element) this.bindings = this.bindings.add(element)
 
-    var key, method, match;
+    var key, method, match
     for (key in events) {
-      method = events[key];
-      if (!_.isFunction(method)) method = this[events[key]];
-      if (!method) continue;
-      match = key.match(delegateEventSplitter);
-      element.on(match[1] + this.eventNamespace, match[2], _.bind(method, this));
+      method = events[key]
+      if (!_.isFunction(method)) method = this[events[key]]
+      if (!method) continue
+      match = key.match(delegateEventSplitter)
+      element.on(match[1] + this.eventNamespace, match[2], _.bind(method, this))
     }
   },
 
   _off: function(element, eventName) {
-    eventName = (eventName || "").split(" ").join(this.eventNamespace + " ") + this.eventNamespace;
-    element.off(eventName);
+    eventName = (eventName || '').split(' ').join(this.eventNamespace + ' ') + this.eventNamespace
+    element.off(eventName)
 
-    if (arguments.length === 1)
-      this.bindings = $(this.bindings.not(element).get());
+    if (arguments.length === 1) this.bindings = $(this.bindings.not(element).get())
   },
 
   _trigger: function(type, data) {
-    var callback = this.options[type];
+    var callback = this.options[type]
 
-    var e = $.Event((this.widgetName + ':' + type).toLowerCase());
-    this.$element.trigger(e, data);
+    var e = $.Event((this.widgetName + ':' + type).toLowerCase())
+    this.$element.trigger(e, data)
 
-    return !(_.isFunction(callback)
-        && callback.apply(this, [e].concat(data)) === false
-        || e.isDefaultPrevented());
+    return !(_.isFunction(callback) &&
+    callback.apply(this, [e].concat(data)) === false ||
+    e.isDefaultPrevented())
   },
 
   destroy: function() {
-    this._destroy();
+    this._destroy()
 
     this.$element.off(this.eventNamespace)
-        .removeData(this.widgetName);
-    this.bindings.off(this.eventNamespace);
-    this.bindings = $();
+      .removeData(this.widgetName)
+    this.bindings.off(this.eventNamespace)
+    this.bindings = $()
   }
-});
+})

@@ -2,9 +2,9 @@
  * Created by huangxinghui on 2015/8/10.
  */
 
-var $ = require('jquery');
-var Bean = require('./core');
-var deferred = $.Deferred();
+var $ = require('jquery')
+var Bean = require('./core')
+var deferred = $.Deferred()
 
 Bean.locale = {
   validator: {
@@ -28,27 +28,27 @@ Bean.locale = {
     numberBetweenError: 'The {0} should be {1} between {2} and {3}. Please input again.'
   },
   datepicker: {
-    days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-    daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September"
-      , "October", "November", "December"],
-    monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    today: "Today",
+    days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+    months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September'
+      , 'October', 'November', 'December'],
+    monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    today: 'Today',
     now: 'Now',
     ok: 'OK'
   }
-};
+}
 
 function getLocale(fn) {
-  return deferred.promise().done(fn);
+  return deferred.promise().done(fn)
 }
 
 function publish() {
-  deferred.resolve(Bean.locale);
+  deferred.resolve(Bean.locale)
 }
 
 module.exports = {
   get: getLocale,
   publish: publish
-};
+}

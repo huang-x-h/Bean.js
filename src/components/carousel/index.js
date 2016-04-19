@@ -2,11 +2,11 @@
  * Created by huangxinghui on 2015/6/26.
  */
 
-var $ = require('jquery');
-var Widget = require('../../widget');
+var $ = require('jquery')
+var Widget = require('../../widget')
 
-var prevTemplate = require('./prev.hbs')();
-var nextTemplate = require('./next.hbs')();
+var prevTemplate = require('./prev.hbs')()
+var nextTemplate = require('./next.hbs')()
 
 var Carousel = Widget.extend({
   options: {
@@ -22,13 +22,13 @@ var Carousel = Widget.extend({
     prevArrow: null,
     nextArrow: null,
     customPaging: function(slider, i) {
-      return '';
+      return ''
     },
   },
   events: {},
 
   _create: function() {
-    this.$list = this.$element.children().eq[0];
-    this.items = this.$list.children();
+    this.$list = this.$element.children().eq[0]
+    this.items = this.$list.children()
   },
-});
+})

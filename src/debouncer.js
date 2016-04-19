@@ -3,32 +3,32 @@
  */
 
 // see https://github.com/WickyNilliams/headroom.js/blob/master/src/Debouncer.js
-require('./polyfills/raf');
-var $ = require('jquery');
+require('./polyfills/raf')
+var $ = require('jquery')
 
 function Debouncer(callback) {
-  this.callback = callback;
-  this.ticking = false;
+  this.callback = callback
+  this.ticking = false
 }
 
 Debouncer.prototype = {
   update: function() {
-    this.callback && this.callback();
-    this.ticking = false;
+    this.callback && this.callback()
+    this.ticking = false
   },
 
   requestTick: function() {
     if (!this.ticking) {
-      requestAnimationFrame(this.rafCallback || (this.rafCallback = $.proxy(this.update, this)));
+      requestAnimationFrame(this.rafCallback || (this.rafCallback = $.proxy(this.update, this)))
     }
 
-    this.ticking = true;
+    this.ticking = true
   },
 
   // EventListener implement
   handleEvent: function() {
-    this.requestTick();
+    this.requestTick()
   }
-};
+}
 
-module.exports = Debouncer;
+module.exports = Debouncer

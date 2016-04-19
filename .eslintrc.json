@@ -1,16 +1,10 @@
 {
+  "extends": "standard",
   "env": {
     "commonjs": true
   },
   "rules": {
-    "indent": [2, 2, {
-      "SwitchCase": 1,
-      "VariableDeclarator": 2
-    }],
-    "space-before-function-paren": [2, "never"],
-    "max-len": [1, 120, 4, {
-      "ignoreComments": true,
-      "ignoreUrls": true
-    }]
+    "one-var": 0,
+    "space-before-function-paren": 0
   }
 }

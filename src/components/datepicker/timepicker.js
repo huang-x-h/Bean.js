@@ -2,10 +2,9 @@
  * Created by huangxinghui on 2015/8/13.
  */
 
-var plugin = require('../../plugin');
-var Widget = require('../../widget');
-var DatePicker = require('./datepicker');
-var util = require('../../utils/string');
+var plugin = require('../../plugin')
+var DatePicker = require('./datepicker')
+var util = require('../../utils/string')
 
 var TimePicker = DatePicker.extend({
   options: {
@@ -13,7 +12,7 @@ var TimePicker = DatePicker.extend({
     startView: 0,
     endView: 0,
     defaultViewDate: new Date(),
-    orientation: "auto",
+    orientation: 'auto',
     rtl: false,
     immediateUpdates: false,
     autoclose: true,
@@ -25,35 +24,34 @@ var TimePicker = DatePicker.extend({
   },
 
   _buildView: function() {
-    this.parseFormat = 'HH:mm:ss';
+    this.parseFormat = 'HH:mm:ss'
 
-    this.picker.append('<div><table><tfoot>' + this.getNowTemplate() + '</tfoot></table></div>');
+    this.picker.append('<div><table><tfoot>' + this.getNowTemplate() + '</tfoot></table></div>')
   },
 
   showMode: function() {
     var d = new Date(this.viewDate),
-        hour, minute, second;
+      hour, minute, second
 
-    hour = util.leftPad('' + d.getHours(), 2, '0');
-    minute = util.leftPad('' + d.getMinutes(), 2, '0');
-    second = util.leftPad('' + d.getSeconds(), 2, '0');
+    hour = util.leftPad('' + d.getHours(), 2, '0')
+    minute = util.leftPad('' + d.getMinutes(), 2, '0')
+    second = util.leftPad('' + d.getSeconds(), 2, '0')
 
-    this.picker.find('.label-hours').text(hour);
-    this.picker.find('.label-minutes').text(minute);
-    this.picker.find('.label-seconds').text(second);
+    this.picker.find('.label-hours').text(hour)
+    this.picker.find('.label-minutes').text(minute)
+    this.picker.find('.label-seconds').text(second)
 
-    this.picker.children('div').show();
+    this.picker.children('div').show()
   },
 
-  keydown: function() {
+  keydown: function(e) {
     if (!this.picker.is(':visible')) {
-      if (e.keyCode === 40 || e.keyCode === 27) // allow down to re-show picker
-        this.show();
-      return;
+      // allow down to re-show picker
+      if (e.keyCode === 40 || e.keyCode === 27) this.show()
     }
   }
-});
+})
 
-plugin('timepicker', TimePicker);
+plugin('timepicker', TimePicker)
 
-module.exports = TimePicker;
+module.exports = TimePicker

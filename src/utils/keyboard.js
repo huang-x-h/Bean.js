@@ -11,4 +11,4 @@ module.exports = {
   ESC: 27,
   SPACE: 32,
   TAB: 9
-};
+}

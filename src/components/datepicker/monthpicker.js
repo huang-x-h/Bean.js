@@ -2,9 +2,8 @@
  * Created by huangxinghui on 2015/8/6.
  */
 
-var plugin = require('../../plugin');
-var Widget = require('../../widget');
-var DatePicker = require('./datepicker');
+var plugin = require('../../plugin')
+var DatePicker = require('./datepicker')
 
 var MonthPicker = DatePicker.extend({
   options: {
@@ -12,7 +11,7 @@ var MonthPicker = DatePicker.extend({
     startView: 1,
     endView: 2,
     defaultViewDate: new Date(),
-    orientation: "auto",
+    orientation: 'auto',
     rtl: false,
     immediateUpdates: false,
     autoclose: true,
@@ -26,35 +25,35 @@ var MonthPicker = DatePicker.extend({
   },
 
   _buildView: function() {
-    this.parseFormat = 'YYYY-MM';
+    this.parseFormat = 'YYYY-MM'
 
-    this.setStartDate(this.options.startDate);
-    this.setEndDate(this.options.endDate);
+    this.setStartDate(this.options.startDate)
+    this.setEndDate(this.options.endDate)
 
-    this._buildMonthAndYearView();
+    this._buildMonthAndYearView()
   },
 
   _spanClick: function(target) {
-    var year, month;
+    var year, month
 
     if (!target.hasClass('disabled')) {
-      this.viewDate.setDate(1);
+      this.viewDate.setDate(1)
       if (target.hasClass('month')) {
-        month = target.parent().find('span').index(target);
-        year = this.viewDate.getFullYear();
-        this.viewDate.setMonth(month);
-        this._setDate(new Date(year, month));
-        this._trigger('changeMonth', this.viewDate);
+        month = target.parent().find('span').index(target)
+        year = this.viewDate.getFullYear()
+        this.viewDate.setMonth(month)
+        this._setDate(new Date(year, month))
+        this._trigger('changeMonth', this.viewDate)
       } else if (target.hasClass('year')) {
-        year = parseInt(target.text(), 10) || 0;
-        this.viewDate.setFullYear(year);
-        this.showMode(-1);
-        this._trigger('changeYear', this.viewDate);
+        year = parseInt(target.text(), 10) || 0
+        this.viewDate.setFullYear(year)
+        this.showMode(-1)
+        this._trigger('changeYear', this.viewDate)
       }
     }
   }
-});
+})
 
-plugin('monthpicker', MonthPicker);
+plugin('monthpicker', MonthPicker)
 
-module.exports = MonthPicker;
+module.exports = MonthPicker

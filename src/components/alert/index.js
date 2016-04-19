@@ -1,18 +1,18 @@
 /**
- * @module Alert
+ * @class Alert
  * @extends Widget
  */
 
-var $ = require('jquery');
-var plugin = require('../../plugin');
-var transition = require('../../transition');
-var Widget = require('../../widget');
-var Bean = require('../../core');
-var $body = require('../../body');
-var template = require('./alert.hbs');
+var $ = require('jquery')
+var plugin = require('../../plugin')
+var transition = require('../../transition')
+var Widget = require('../../widget')
+var Bean = require('../../core')
+var $body = require('../../body')
+var template = require('./alert.hbs')
 
-var TRANSITION_DURATION = 150;
-var dismiss = '[data-dismiss="alert"]';
+var TRANSITION_DURATION = 150
+var dismiss = '[data-dismiss="alert"]'
 
 var Alert = Widget.extend({
   /**
@@ -27,50 +27,49 @@ var Alert = Widget.extend({
 
   _create: function() {
     if (this.options.dismissible) {
-      var events = {};
-      events['click ' + dismiss] = 'close';
+      var events = {}
+      events['click ' + dismiss] = 'close'
 
-      this._on(events);
+      this._on(events)
+    } else {
+      setTimeout($.proxy(this.close, this), this.options.duration)
     }
-    else
-      setTimeout($.proxy(this.close, this), this.options.duration);
   },
 
   /**
    * 关闭提示信息
    */
   close: function(e) {
-    var $el = this.$element;
+    var $el = this.$element
 
-    if (e) e.preventDefault();
+    if (e) e.preventDefault()
 
-    if (!this._trigger('beforeClose')) return;
+    if (!this._trigger('beforeClose')) return
 
-    $el.removeClass('in');
+    $el.removeClass('in')
 
     function removeElement() {
       // detach from parent, fire event then clean up data
-      this.destroy();
-      $el.remove();
+      this.destroy()
+      $el.remove()
     }
 
-    transition.supportsTransitionEnd && $el.hasClass('fade') ?
-        $el.one(transition.TRANSITION_END, $.proxy(removeElement, this))
-            .emulateTransitionEnd(TRANSITION_DURATION) :
-        removeElement();
+    transition.supportsTransitionEnd && $el.hasClass('fade')
+      ? $el.one(transition.TRANSITION_END, $.proxy(removeElement, this)).emulateTransitionEnd(TRANSITION_DURATION)
+      : removeElement()
   }
-});
+})
 
-plugin('alert', Alert);
+plugin('alert', Alert)
 
-var $toast;
+var $toast
 
 function appendToToast($el) {
   if (!$toast) {
-    $toast = $('<div class="alert-toast"></div>').appendTo($body);
+    $toast = $('<div class="alert-toast"></div>').appendTo($body)
   }
 
-  $toast.append($el);
+  $toast.append($el)
 }
 
 /**
@@ -83,8 +82,8 @@ Bean.success = function(message) {
     type: 'alert-success',
     message: message,
     dismissible: false
-  })).alert());
-};
+  })).alert())
+}
 
 /**
  * 告警提示
@@ -96,8 +95,8 @@ Bean.warn = function(message) {
     type: 'alert-warning',
     message: message,
     dismissible: false
-  })).alert());
-};
+  })).alert())
+}
 
 /**
  * 信息提示
@@ -109,8 +108,8 @@ Bean.info = function(message) {
     type: 'alert-info',
     message: message,
     dismissible: false
-  })).alert());
-};
+  })).alert())
+}
 
 /**
  * 错误提示
@@ -124,5 +123,5 @@ Bean.error = function(message) {
     dismissible: true
   })).alert({
     dismissible: true
-  }));
-};
+  }))
+}

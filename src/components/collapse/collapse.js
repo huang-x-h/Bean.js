@@ -1,93 +1,107 @@
 /**
  * Created by huangxinghui on 2015/5/19.
  */
-var $ = require('jquery');
-var transition = require('../../transition');
-var util = require('../../utils/element');
-var Widget = require('../../widget');
-var TRANSITION_DURATION = 350;
+var $ = require('jquery')
+var transition = require('../../transition')
+var util = require('../../utils/element')
+var Widget = require('../../widget')
+var TRANSITION_DURATION = 350
+var ClassName = {
+  IN: 'in',
+  COLLAPSE: 'collapse',
+  COLLAPSING: 'collapsing',
+  COLLAPSED: 'collapsed'
+}
 
 var Collapse = Widget.extend({
   _create: function() {
-    this.transitioning = null;
+    var element = this.$element[0]
+
+    this.transitioning = null
+    this.$trigger = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+      '[data-toggle="collapse"][data-target="#' + element.id + '"]')
   },
 
   dimension: function() {
-    var hasWidth = this.$element.hasClass('width');
+    var hasWidth = this.$element.hasClass('width')
     return hasWidth ? 'width' : 'height'
   },
 
   show: function() {
-    if (this.transitioning || this.$element.hasClass('in')) return;
+    if (this.transitioning || this.$element.hasClass(ClassName.IN)) return
 
-    if (!this._trigger('beforeShow')) return;
+    if (!this._trigger('beforeShow')) return
 
-    var dimension = this.dimension();
+    var dimension = this.dimension()
 
     this.$element
-        .removeClass('collapse')
-        .addClass('collapsing')[dimension](0)
-        .attr('aria-expanded', true);
+      .removeClass(ClassName.COLLAPSE)
+      .addClass(ClassName.COLLAPSING)[dimension](0)
 
-    this.transitioning = 1;
+    this.$trigger.removeClass(ClassName.COLLAPSED)
+
+    this.transitioning = 1
 
     var complete = function() {
       this.$element
-          .removeClass('collapsing')
-          .addClass('collapse in')[dimension]('');
-      this.transitioning = 0;
-      this._trigger('show');
-    };
+        .removeClass(ClassName.COLLAPSING)
+        .addClass(ClassName.COLLAPSE)
+        .addClass(ClassName.IN)[dimension]('')
+      this.transitioning = 0
+      this._trigger('show')
+    }
 
-    if (!transition.supportsTransitionEnd) return complete.call(this);
+    if (!transition.supportsTransitionEnd) return complete.call(this)
 
-    var scrollSize = $.camelCase(['scroll', dimension].join('-'));
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
 
     this.$element
-        .one(transition.TRANSITION_END, $.proxy(complete, this))
-        .emulateTransitionEnd(TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+      .one(transition.TRANSITION_END, $.proxy(complete, this))
+      .emulateTransitionEnd(TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
   },
 
   hide: function() {
-    if (this.transitioning || !this.$element.hasClass('in')) return;
+    if (this.transitioning || !this.$element.hasClass(ClassName.IN)) return
 
-    if (!this._trigger('beforeCollapse')) return;
+    if (!this._trigger('beforeCollapse')) return
 
-    var dimension = this.dimension();
+    var dimension = this.dimension()
 
-    this.$element[dimension](this.$element[dimension]());
-    util.reflow(this.$element);
+    this.$element[dimension](this.$element[dimension]())
+    util.reflow(this.$element)
 
     this.$element
-        .addClass('collapsing')
-        .removeClass('collapse in')
-        .attr('aria-expanded', false);
+      .addClass(ClassName.COLLAPSING)
+      .removeClass(ClassName.COLLAPSE)
+      .removeClass(ClassName.IN)
 
-    this.transitioning = 1;
+    this.$trigger.addClass(ClassName.COLLAPSED)
+
+    this.transitioning = 1
 
     var complete = function() {
-      this.transitioning = 0;
+      this.transitioning = 0
       this.$element
-          .removeClass('collapsing')
-          .addClass('collapse');
-      this._trigger('hide');
-    };
+        .removeClass(ClassName.COLLAPSING)
+        .addClass(ClassName.COLLAPSE)
+      this._trigger('hide')
+    }
 
-    if (!transition.supportsTransitionEnd) return complete.call(this);
+    if (!transition.supportsTransitionEnd) return complete.call(this)
 
     this.$element
-        [dimension](0)
-        .one(transition.TRANSITION_END, $.proxy(complete, this))
-        .emulateTransitionEnd(TRANSITION_DURATION);
+      [dimension](0)
+      .one(transition.TRANSITION_END, $.proxy(complete, this))
+      .emulateTransitionEnd(TRANSITION_DURATION)
   },
 
-  toggle: function() {
-    this[this.isOpen() ? 'hide' : 'show']();
+  toggle: function(e) {
+    this[this.isOpen() ? 'hide' : 'show']()
   },
 
   isOpen: function() {
-    return this.$element.hasClass('in');
+    return this.$element.hasClass(ClassName.IN)
   }
-});
+})
 
-module.exports = Collapse;
+module.exports = Collapse
