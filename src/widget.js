@@ -16,11 +16,11 @@ module.exports = Class.extend({
     this.$element = $(element)
     this.options = $.extend({}, this.options, this.$element.data(), options)
     this.bindings = $()
-    this.eventNamespace = '.' + this.options.name
+    this.eventNamespace = '.' + this.widgetName
 
     // add data-bean-role attribute on element
     if (!this.$element.attr(Bean.attr('role'))) {
-      this.$element.attr(Bean.attr('role'), this.options.name)
+      this.$element.attr(Bean.attr('role'), this.widgetName)
     }
 
     this._create()
@@ -59,7 +59,7 @@ module.exports = Class.extend({
   _trigger: function(type, data) {
     var callback = this.options[type]
 
-    var e = $.Event((this.options.name + ':' + type).toLowerCase())
+    var e = $.Event((this.widgetName + ':' + type).toLowerCase())
     this.$element.trigger(e, data)
 
     return !(_.isFunction(callback) &&
@@ -88,7 +88,7 @@ module.exports = Class.extend({
 
     this.$element.removeAttr(Bean.attr('role'));
     this.$element.off(this.eventNamespace)
-      .removeData(this.options.name)
+      .removeData(Bean.ns + this.widgetName)
     this.bindings.off(this.eventNamespace)
     this.bindings = $()
   }
