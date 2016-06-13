@@ -7,8 +7,8 @@ var $ = require('jquery')
 var Immutable = require('immutable')
 var plugin = require('../../plugin')
 var Widget = require('../../widget')
+var Typeahead = require('../typeahead')
 var DropList = require('../droplist')
-var keyboard = require('../../utils/keyboard')
 
 var EmailList = DropList.extend({
   _setDataSource: function(value, prefix) {
@@ -27,75 +27,37 @@ var EmailList = DropList.extend({
   }
 })
 
-var EmailAutoComplete = Widget.extend({
+var EmailAutoComplete = Typeahead.extend({
   options: {
     suffixes: ['qq.com', 'gmail.com', '126.com', '163.com', 'hotmail.com', '263.com',
-      '21cn.com', 'yahoo.com', 'yahoo.com.cn', 'live.com', 'sohu.com', 'sina.com', 'sina.com.cn']
+      '21cn.com', 'yahoo.com', 'yahoo.com.cn', 'live.com', 'sohu.com', 'sina.com', 'sina.com.cn'],
+    maxChars: 1
   },
 
-  events: {
-    'keydown': '_onKeyDown'
+  _getDropListClass: function() {
+    return EmailList
   },
 
-  _create: function() {
-    var that = this
-    this.$element.attr({
-      autocomplete: 'off',
-      spellcheck: false
-    })
-
-    this.dropList = new EmailList($('<ul></ul>'), {
-      target: this.$element,
-      remove: true,
-      change: function(e) {
-        that._selectedItem = this.selectedItem()
-        that.$element.val(this.text())
-        that._trigger('change', that._selectedItem)
-      }
-    })
-  },
-
-  _onInput: function() {
+  _evaluate: function() {
     var text = this.$element.val(),
-      arr = text.split('@'),
-      suffixes
+      arr, suffixes
 
-    if (arr.length === 1 || arr[1] === '') {
-      suffixes = this.options.suffixes
-    } else {
-      suffixes = this.options.suffixes.filter(function(suffix) {
-        return suffix.indexOf(arr[1]) !== -1
-      })
-    }
-
-    this.dropList._setDataSource(suffixes, arr[0])
-    this.dropList.open()
-  },
-
-  _onKeyDown: function(e) {
-    var c = e.keyCode
-
-    if (this.dropList.isOpened()) {
-      switch (c) {
-        case keyboard.ENTER:
-          e.preventDefault()
-          this.dropList.selectHighlightedOption()
-          this.dropList.close()
-          return
-        case keyboard.ESC:
-          this.dropList.close()
-          return
-        case keyboard.DOWN:
-        case keyboard.UP:
-          this.dropList.moveHighlight(c)
-          return
+    if (text) {
+      arr = text.split('@')
+      if (arr.length === 1 || arr[1] === '') {
+        suffixes = this.options.suffixes
+      } else {
+        suffixes = this.options.suffixes.filter(function(suffix) {
+          return suffix.indexOf(arr[1]) !== -1
+        })
       }
-    }
 
-    this._onInput()
+      this.dropList._setDataSource(suffixes, arr[0])
+      this.dropList.open()
+    } else {
+      this.dropList.close()
+    }
   }
 })
 
 plugin('emailautocomplete', EmailAutoComplete)
-
-module.exports = EmailAutoComplete

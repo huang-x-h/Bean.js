@@ -28,5 +28,9 @@ module.exports = {
     }
 
     return element.offsetHeight
+  },
+
+  inDocument: function(element) {
+    return element === document.documentElement || document.documentElement.contains(element)
   }
 }

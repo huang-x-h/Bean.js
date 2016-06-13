@@ -32,7 +32,9 @@ var Typeahead = Widget.extend({
   },
 
   _create: function() {
-    var that = this
+    var listClass = this._getDropListClass(),
+      that = this
+
     this.$input = this.$element.find('input').attr({
       autocomplete: "off",
       spellcheck: false
@@ -40,7 +42,7 @@ var Typeahead = Widget.extend({
     this.$close = this.$element.find('.glyphicon-remove')
     this._inputHandler = _.debounce(this._evaluate, this.options.delay)
 
-    this.dropList = new HighlightList($('<ul></ul>'), {
+    this.dropList = new listClass($('<ul></ul>'), {
       target: this.$element,
       remove: true,
       change: function(e) {
@@ -80,6 +82,10 @@ var Typeahead = Widget.extend({
         'keydown': '_onSpecialInput'
       })
     }
+  },
+
+  _getDropListClass: function() {
+    return HighlightList
   },
 
   _onBlur: function(e) {
@@ -184,3 +190,5 @@ var Typeahead = Widget.extend({
 mixin(Typeahead, ListMixin)
 
 plugin('typeahead', Typeahead)
+
+module.exports = Typeahead
