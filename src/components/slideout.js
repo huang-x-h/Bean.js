@@ -43,7 +43,7 @@ var SlideOut = Widget.extend({
       $body.on('click.slideout', $.proxy(that._bodyClick, that))
     }
 
-    this.$element.one(transition.eventType, complete)
+    this.$element.one(transition.TRANSITION_END, complete)
       .emulateTransitionEnd(TRANSITION_DURATION)
 
     return this
@@ -65,7 +65,7 @@ var SlideOut = Widget.extend({
       that.panel[0].style['-webkit-transform'] = that.panel[0].style.transform = ''
     }
 
-    this.$element.one(transition.eventType, complete)
+    this.$element.one(transition.TRANSITION_END, complete)
       .emulateTransitionEnd(TRANSITION_DURATION)
     return this
   },
